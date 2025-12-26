@@ -6,7 +6,13 @@ This repository contains the source code and configuration for the eTabib platfo
 
 - **etabib_source/**: Main Django application source code (extracted from deployment container).
 - **medica-ai/**: AI services and backend.
-- **offline_deployment_package/**: Deployment configuration (docker-compose, settings).
+- **offline_deployment_package/**: Deployment configuration (docker-compose, settings, Jitsi).
+
+## 📹 Jitsi Integration
+Jitsi configuration is included in:
+- `offline_deployment_package/docker-compose.jitsi.yml`
+- `offline_deployment_package/.env.jitsi.prod`
+- `etabib_source/JITSI_INTEGRATION.md`
 
 ## 🚀 Deployment
 
