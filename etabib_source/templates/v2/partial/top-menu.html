@@ -1,0 +1,33 @@
+{% load i18n static role_tags %}
+<div dir="ltr" id="top-menu" class="top-menu">
+    <!-- begin nav -->
+    <ul class="nav">
+        {% if user|is_doctor %}
+        <li>
+            <a href="{% url 'doctor-offers' %}">
+                <i class="fa fa-gift"></i>
+                <span class="text-danger pulseanimation">
+                    {% trans 'Promotions du moment' %}
+                </span>
+            </a>
+        </li>
+        <li>
+            <a target="_blank" href="https://etabib-support.tawk.help/">
+                <i class="fa fa-life-ring"></i>
+                <span>
+                    {% trans 'Documentation et support' %}
+                </span>
+            </a>
+        </li>
+        {% endif %}
+        <li>
+            <a href="{% url 'mobile-app' %}">
+                <img src="{% static 'v2/icons/rounded/51.svg' %}" height="25px">
+                <span>
+                    {% trans "Téléchargez l'application mobile" %}
+                </span>
+            </a>
+        </li>
+
+    </ul>
+</div>

@@ -1,0 +1,26 @@
+{% load i18n %}
+{% load crispy_forms_tags %}
+
+<form method="post" action="{% url 'doctor-contact-create' %}" onsubmit="return saveForm(event, this);">
+    {% csrf_token %}
+    <div class="modal-header">
+        <h4 class="modal-title">{% trans 'Créer un Compte pour un patient' %}</h4>
+    </div>
+    <div class="modal-body">
+        {% crispy form %}
+        <a href="#" class="btn btn-etabib m-3" onclick="loadCarteIDForm()">
+            <!--    loadCarteIDForm() is in contact_template.html        -->
+          <span class="d-flex align-items-center text-left">
+            <i class="far fa-address-card fa-2x mr-3"></i>
+            <span>
+              <span class="d-block mb-n1" ><b>{% trans "Scanner la Carte d'Identité" %}</b></span>
+              <span class="f-s-12 f-w-600 text-white-transparent-7">(Version BêTa)</span>
+            </span>
+          </span>
+        </a>
+    </div>
+    <div class="modal-footer">
+        <button id="create" type="submit" class="btn btn-primary">{% trans 'Créer' %}</button>
+        <button type="button" class="btn btn-default" data-dismiss="modal">{% trans 'Annuler' %}</button>
+    </div>
+</form>

@@ -1,0 +1,21 @@
+{% load i18n %}
+{% load app_store_tags %}
+<div id="modal"
+	class="modal modal-edu-general default-popup-PrimaryModal fade"
+	role="dialog">
+	<div class="modal-dialog">
+		<div class="modal-content">
+			<div class="modal-body">
+				<div class="modal-close-area modal-close-df">
+					<a class="close" data-dismiss="modal" href="#"><i
+						class="fa fa-close"></i></a>
+				</div>
+				<i class="educate-icon educate-info modal-check-pro information-icon-pro"></i>
+				<span id="modal-body"></span>
+			</div>
+			<div class="modal-footer">
+				<a data-dismiss="modal" href="#">{% trans 'Cancel' %}</a> <a id="install" href="#">{% trans 'Valider' %}</a>
+			</div>
+		</div>
+	</div>
+</div>

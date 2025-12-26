@@ -1,0 +1,42 @@
+{% load i18n congre_tags %}
+<div class="btn-group btn-group-vertical" role="group">
+    {% if not congre|is_canceled %}
+    <a title="{% trans 'Détail' %}"
+       href="{% url 'organizer-congress-detail' congre.id %}"
+       class="btn btn-default">
+        <i class="fa fa-file-text-o" aria-hidden="true"></i>
+        {% trans 'Détail' %}
+    </a>
+    <a title="{% trans 'Mettre à jour' %}" href="{% url 'organizer-congress-update' congre.id %}"
+       data-fm-ok="{% trans 'Mettre à jour' %}"
+       class="btn btn-etabib fm-update" data-fm-head="" data-fm-callback="reload">
+        <i class="fa fa-pencil-square-o" aria-hidden="true"></i>
+        {% trans 'Mettre à jour' %}
+    </a>
+        {% if not congre|is_published %}
+        <a title="{% trans 'Publier' %}" href="{% url 'organizer-congress-publish' congre.id %}"
+           data-fm-ok="{% trans 'Oui' %}"
+           class="btn btn-success fm-update" data-fm-head="{% trans 'Publier le congrès' %}"
+           data-fm-callback="reload">
+            <i class="fa fa-check" aria-hidden="true"></i>
+            {% trans 'Publier' %}
+        </a>
+        {% else %}
+            {% if not congre|is_expired %}
+            <a title="{% trans 'Annuler' %}" href="{% url 'organizer-congress-cancel' congre.id %}"
+               data-fm-ok="{% trans 'Oui' %}" data-fm-ok="{% trans 'Oui' %}"
+               class="btn btn-danger fm-update" data-fm-head="{% trans 'Annuler le congrès' %}" data-fm-callback="reload">
+                <i class="fa fa-remove" aria-hidden="true"></i>
+                {% trans 'Annuler' %}
+            </a>
+            {% endif %}
+        {% endif %}
+    {% endif %}
+    <a title="{% trans 'Supprimer' %}" href="{% url 'organizer-congress-archive' congre.id %}"
+       data-fm-ok="{% trans 'Supprimer' %}"
+       class="btn btn-info fm-update" data-fm-head="{% trans 'Supprimer le congrès' %}"
+       data-fm-callback="reload">
+        <i class="fa fa-archive" aria-hidden="true"></i>
+        {% trans 'Supprimer' %}
+    </a>
+</div>

@@ -1,0 +1,57 @@
+{% load el_pagination_tags %}
+{% load role_tags i18n %}
+{% load utils_tags %}
+{% paginate 12 catalogues %}
+<div class="row">
+    <div class="col-md-12">
+        {% for c in catalogues %}
+        <div class="col-md-3 xs-margin-20px-bottom">
+            <div class="card categories-card">
+                <div class="card-img">
+                    {% if c.link %}
+                    <a href="{{c.link}}"><img src="{{c.image.url}}" alt=""></a>
+                    {% else %}
+                    <img src="{{c.image.url}}" alt="">
+                    {% endif %}
+                </div>
+                <div class="card-img-overlay align-items-center">
+                    <div class="bg-white-opacity">
+                        <h3><a>{{c.titre}}</a></h3>
+                        <p class="line position-relative">{{c.brand}}</p>
+                        <p class="line position-relative">{{c.npages}}</p>
+                        </ul>
+                        <ul class="categories-02">
+                            {% if user|is_partner %}
+                            <a title="{% trans 'Modifier' %}"
+                               href="{% url 'partner-update-catalogue' c.id %}"
+                               class="btn btn-etabib fm-update"
+                               data-fm-head="Modifier Catalogue"
+                               data-fm-callback="reload">
+                                <i class="fa fa-pencil-square-o" aria-hidden="true"></i>
+                                {% trans 'Modifier' %}
+                            </a>
+                            <a title="{% trans 'Supprimer' %}"
+                               href="{% url 'partner-delete-catalogue' c.id %}"
+                               class="btn btn-default fm-delete btn-sm"
+                               data-fm-head="{% trans 'Supprimer le catalogue' %}: "
+                               data-fm-callback="redirect"
+                               data-fm-target="{% url 'partner-list-catalogue' %}">
+                                <i class="fa fa-trash" aria-hidden="true"></i>
+                                {% trans 'Supprimer' %}
+                            </a>
+                        </ul>
+                        {% endif %}
+                    </div>
+                </div>
+            </div>
+        </div>
+        {% endfor %}
+    </div>
+</div>
+{% get_pages %}
+{% if pages.paginated %}
+<div class="row text-center">
+    {% show_current_number as page_number %}
+    {% include 'partial/pagination.html' with pages=pages current_page_number=page_number %}
+</div>
+{% endif %}

@@ -1,0 +1,28 @@
+{% load i18n role_tags teleconsultation_tags %}
+{% if not demande.acceptee and not demande.refusee and not demande.annulee %}
+{% if user == demande.destinataire %}
+<a title="{% trans 'Traiter cette demande' %}"
+   href="{% url 'process-appointment-request' demande.pk %}"
+   class="btn btn-etabib fm-update"
+   data-fm-head="Demande de {{ demande.demandeur.last_name }} {{ demande.demandeur.first_name }} "
+   data-fm-callback="reload">
+    <i class="fa fa-edit" aria-hidden="true"></i>
+    {% trans 'Traiter' %}
+</a>
+{% endif %}
+{% endif %}
+{% if demande|is_online %}
+    {% if demande.acceptee and demande.tdemand.unique_id %}
+        {% if demande.medecin.tarif_consultation %}
+            {% if not demande.tdemand.facturee %}
+            <a title="{% trans 'Conmmencer la consultation video' %}" onclick="return CheckBrowserCompatibility();"
+               href="{% if user|is_patient %}{% url 'patient-teleconsultation' demande.tdemand.unique_id %}
+               {% elif user|is_doctor %}{% url 'doctor-teleconsultation' demande.tdemand.unique_id %}{% endif %}"
+               target="_blank"
+               class="btn btn-etabib">
+                <i class="fa fa-video-camera" aria-hidden="true"></i>
+            </a>
+            {% endif %}
+        {% endif %}
+    {% endif %}
+{% endif %}

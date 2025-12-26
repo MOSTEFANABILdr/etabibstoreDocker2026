@@ -1,0 +1,219 @@
+{% extends "base.html" %}
+{% load i18n %}
+{% load static %}
+{% load role_tags %}
+{% block title %} {% trans 'Mes catalogues' %} {% endblock %}
+{% block style %}
+<!-- Google Fonts
+                    ============================================ -->
+<link
+        href="https://fonts.googleapis.com/css?family=Roboto:100,300,400,700,900"
+        rel="stylesheet">
+<!-- Bootstrap CSS
+                    ============================================ -->
+<link rel="stylesheet" href='{% static "css/bootstrap.min.css" %}'>
+<!-- Bootstrap CSS
+                    ============================================ -->
+<link rel="stylesheet" href='{% static "css/font-awesome.min.css" %}'>
+<!-- owl.carousel CSS
+                    ============================================ -->
+<link rel="stylesheet" href='{% static "css/owl.carousel.css" %}'>
+<link rel="stylesheet" href='{% static "css/owl.theme.css" %}'>
+<link rel="stylesheet" href='{% static "css/owl.transitions.css" %}'>
+<!-- animate CSS
+                    ============================================ -->
+<link rel="stylesheet" href='{% static "css/animate.css" %}'>
+<!-- normalize CSS
+                    ============================================ -->
+<link rel="stylesheet" href='{% static "css/normalize.css" %}'>
+<!-- meanmenu icon CSS
+                    ============================================ -->
+<link rel="stylesheet" href='{% static "css/meanmenu.min.css" %}'>
+<!-- main CSS
+                    ============================================ -->
+<link rel="stylesheet" href='{% static "css/main.css" %}'>
+<!-- educate icon CSS
+                    ============================================ -->
+<link rel="stylesheet" href='{% static "css/educate-custon-icon.css" %}'>
+<!-- mCustomScrollbar CSS
+                    ============================================ -->
+<link rel="stylesheet"
+      href='{% static "css/scrollbar/jquery.mCustomScrollbar.min.css" %}'>
+<!-- metisMenu CSS
+                    ============================================ -->
+<link rel="stylesheet"
+      href='{% static "css/metisMenu/metisMenu.min.css" %}'>
+<link rel="stylesheet"
+      href='{% static "css/metisMenu/metisMenu-vertical.css" %}'>
+<!-- modernizr JS
+                    ============================================ -->
+<script src='{% static "js/vendor/modernizr-2.8.3.min.js" %}'></script>
+<!-- jquery.dataTables CSS ============================================ -->
+<link rel="stylesheet" href='{% static "js/data-table/jquery.dataTables.min.css" %}'>
+<!-- duallistbox CSS ============================================ -->
+<link rel="stylesheet" href='{% static "css/duallistbox/dual-listbox.css" %}'>
+<style>
+
+.categories-card.card {
+    border: none;
+    box-shadow: none
+}
+
+.categories-card .card-img-overlay {
+    display: flex
+}
+
+.categories-card .card-img-overlay>* {
+    flex: 1
+}
+
+.categories-card h3 {
+    margin-bottom: 5px;
+    font-size: 14px;
+    font-weight: 600;
+    text-transform: uppercase;
+    letter-spacing: 1px
+}
+
+.categories-card .bg-white-opacity {
+    text-align: center;
+    padding: 20px 20px 18px 20px
+}
+
+.card {
+    position: relative;
+    display: -ms-flexbox;
+    display: flex;
+    -ms-flex-direction: column;
+    flex-direction: column;
+    min-width: 0;
+    word-wrap: break-word;
+    background-color: #fff;
+    background-clip: border-box;
+    border: 1px solid rgba(0,0,0,.125);
+    border-radius: .25rem;
+}
+
+.bg-white-opacity {
+    background-color: rgba(255,255,255,0.85);
+}
+
+.categories-02 {
+    padding: 0;
+    margin: 0;
+}
+
+.categories-02 li {
+    display: inline-block;
+    margin-right: 20px;
+    font-size: 14px;
+    font-weight: 600;
+    opacity: .8;
+    vertical-align: middle;
+}
+
+.categories-02 li a {
+    color: rgba(0,0,0,0.85);
+}
+
+a, a:active, a:focus {
+    color: #5e6973;
+    text-decoration: none;
+    transition-timing-function: ease-in-out;
+    -ms-transition-timing-function: ease-in-out;
+    -moz-transition-timing-function: ease-in-out;
+    -webkit-transition-timing-function: ease-in-out;
+    -o-transition-timing-function: ease-in-out;
+    transition-duration: .2s;
+    -ms-transition-duration: .2s;
+    -moz-transition-duration: .2s;
+    -webkit-transition-duration: .2s;
+    -o-transition-duration: .2s;
+}
+
+.card-img, .card-img-bottom {
+    border-bottom-right-radius: calc(.25rem - 1px);
+    border-bottom-left-radius: calc(.25rem - 1px);
+}
+.card-img, .card-img-top {
+    border-top-left-radius: calc(.25rem - 1px);
+    border-top-right-radius: calc(.25rem - 1px);
+}
+.card-img, .card-img-bottom, .card-img-top {
+    -ms-flex-negative: 0;
+    flex-shrink: 0;
+    width: 100%;
+}
+img {
+    max-width: 100%;
+}
+
+
+</style>
+{% endblock %}
+{% block content %}
+<div class="blog-details-area mg-b-15">
+    <div class="container-fluid">
+        <div class="row">
+            <div class="col-lg-12 col-md-12 col-sm-12 col-xs-12">
+                {% include 'partial/messages-alerts.html' %}
+                <div class="col-lg-12 col-md-12 col-sm-12 col-xs-12">
+                    <div class="row">
+                        {% if user|is_partner %}
+                        <a title="{% trans 'Ajouter un catalogue' %}"
+                           href="{% url 'partner-create-catalogue' %}"
+                           class="btn btn-etabib fm-create floatright"
+                           data-fm-head="{% trans 'Ajouter un catalogue' %}"
+                           data-fm-callback="reload">
+                            <i class="fa fa-edit" aria-hidden="true"></i>
+                            {% trans 'Ajouter un catalogue' %}
+                        </a>
+                        <h3>{% trans 'Mes catalogues' %}</h3>
+                        {% else %}
+                        <h3>{% trans 'Liste des catalogues' %}</h3>
+                        {% endif %}
+                        <div class="endless_page_template ">
+                            {% include page_template %}
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}
+{% block js %}
+<!-- bootstrap JS ============================================ -->
+<script src='{% static "js/bootstrap.min.js" %}'></script>
+<!-- wow JS ============================================ -->
+<script src='{% static "js/wow.min.js" %}'></script>
+<!-- meanmenu JS ============================================ -->
+<script src='{% static "js/jquery.meanmenu.js" %}'></script>
+<!-- owl.carousel JS ============================================ -->
+<script src='{% static "js/owl.carousel.min.js" %}'></script>
+<!-- sticky JS ============================================ -->
+<script src='{% static "js/jquery.sticky.js" %}'></script>
+<!-- scrollUp JS ============================================ -->
+<script src='{% static "js/jquery.scrollUp.min.js" %}'></script>
+<!-- mCustomScrollbar JS ============================================ -->
+<script src='{% static "js/scrollbar/jquery.mCustomScrollbar.concat.min.js" %}'></script>
+<script src='{% static "js/scrollbar/mCustomScrollbar-active.js" %}'></script>
+<!-- metisMenu JS ============================================ -->
+<script src='{% static "js/metisMenu/metisMenu.min.js" %}'></script>
+<script src='{% static "js/metisMenu/metisMenu-active.js" %}'></script>
+<!-- plugins JS ============================================ -->
+<script src='{% static "js/plugins.js" %}'></script>
+<!-- main JS ============================================ -->
+<script src='{% static "js/main.js" %}'></script>
+<!-- endless pagination JS ============================================ -->
+<script src='{% static "el-pagination/js/el-pagination.js" %}'></script>
+<!-- tawk chat JS ============================================ -->
+{% include 'partial/tawk-script.html' %}
+<script>
+  $(document).ready(function () {
+  //Endlesss pagination
+    $.endlessPaginate();
+});
+
+</script>
+{% endblock %}

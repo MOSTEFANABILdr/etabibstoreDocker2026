@@ -1,0 +1,42 @@
+{% load static i18n %}
+{% load analytical %}
+{% get_current_language as LANGUAGE_CODE %}
+<!doctype html>
+<html class="no-js" dir="{{LANGUAGE_DIRECTION}}" lang="{{LANGUAGE_CODE}}">
+<head>
+    {% analytical_head_top %}
+    <meta charset="utf-8">
+    <meta http-equiv="x-ua-compatible" content="ie=edge">
+    <title>{% block title %} {% endblock %} | eTabib</title>
+    <meta name="description" content="">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <!-- favicon ============================================ -->
+    <link rel="shortcut icon" type="image/x-icon"
+          href='{% static "img/logo/logdo.png" %}'>
+    <!-- Font driod    -->
+    <link rel="stylesheet" media="screen" href="{% static 'css/fonts/droid-arabic-kufi.css' %}" type="text/css"/>
+    <link href="https://fonts.googleapis.com/css?family=Cairo&display=swap" rel="stylesheet">
+    {% block style %} {% endblock %}
+    <!-- style CSS ============================================ -->
+    <link rel="stylesheet" href='{% static "style.css" %}?v=1.28'>
+    <!-- responsive CSS ============================================ -->
+    <link rel="stylesheet" href='{% static "css/responsive.css" %}?v=1.22'>
+    <!-- jquery ============================================ -->
+    <script src='{% static "js/vendor/jquery-1.12.4.min.js" %}'></script>
+    {% analytical_head_bottom %}
+</head>
+<body id="bg">
+{% analytical_body_top %}
+<!--[if lt IE 8]>
+<p class="browserupgrade">You are using an <strong>outdated</strong> browser. Please <a href="http://browsehappy.com/">upgrade
+    your browser</a> to improve your experience.</p>
+<![endif]-->
+<!-- Content start -->
+{% block content %} {% endblock %}
+<!-- Content end -->
+<!-- JavaScript Start -->
+{% block js %} {% endblock %}
+<!-- JavaScript End -->
+{% analytical_body_bottom %}
+</body>
+</html>

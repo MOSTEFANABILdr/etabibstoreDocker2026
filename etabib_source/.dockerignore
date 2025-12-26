@@ -1,0 +1,15 @@
+media
+media_backup_*
+*.sql
+*.sqlite3
+__pycache__
+*.pyc
+.git
+.idea
+venv
+env
+.venv
+tmp
+build_log*.txt
+jitsi_config
+jitsi_config_old

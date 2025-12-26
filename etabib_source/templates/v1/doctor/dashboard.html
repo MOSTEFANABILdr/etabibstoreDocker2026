@@ -1,0 +1,273 @@
+{% extends "base.html" %}
+{% load i18n %}
+{% load static ads_tags utils_tags role_tags %}
+{% block title %} {% trans 'Dashboard' %} {% endblock %}
+{% block style %}
+<!-- Google Fonts
+                    ============================================ -->
+<link href="https://fonts.googleapis.com/css?family=Roboto:100,300,400,700,900" rel="stylesheet">
+<!-- Bootstrap CSS
+                    ============================================ -->
+<link rel="stylesheet" href='{% static "css/bootstrap.min.css" %}'>
+<!-- Bootstrap CSS
+                    ============================================ -->
+<link rel="stylesheet" href='{% static "css/font-awesome.min.css" %}'>
+<!-- owl.carousel CSS
+                    ============================================ -->
+<link rel="stylesheet" href='{% static "css/owl.carousel.css" %}'>
+<link rel="stylesheet" href='{% static "css/owl.theme.css" %}'>
+<link rel="stylesheet" href='{% static "css/owl.transitions.css" %}'>
+<!-- animate CSS
+                    ============================================ -->
+<link rel="stylesheet" href='{% static "css/animate.css" %}'>
+<!-- normalize CSS
+                    ============================================ -->
+<link rel="stylesheet" href='{% static "css/normalize.css" %}'>
+<!-- meanmenu icon CSS
+                    ============================================ -->
+<link rel="stylesheet" href='{% static "css/meanmenu.min.css" %}'>
+<!-- main CSS
+                    ============================================ -->
+<link rel="stylesheet" href='{% static "css/main.css" %}'>
+<!-- educate icon CSS
+                    ============================================ -->
+<link rel="stylesheet" href='{% static "css/educate-custon-icon.css" %}'>
+<!-- mCustomScrollbar CSS
+                    ============================================ -->
+<link rel="stylesheet" href='{% static "css/scrollbar/jquery.mCustomScrollbar.min.css" %}'>
+<!-- metisMenu CSS
+                    ============================================ -->
+<link rel="stylesheet" href='{% static "css/metisMenu/metisMenu.min.css" %}'>
+<link rel="stylesheet" href='{% static "css/metisMenu/metisMenu-vertical.css" %}'>
+<link href="https://vjs.zencdn.net/7.10.2/video-js.css" rel="stylesheet" />
+<!-- modernizr JS
+                    ============================================ -->
+<script src='{% static "js/vendor/modernizr-2.8.3.min.js" %}'></script>
+{% endblock %}
+{% block content %}
+<div class="widgets-programs-area">
+    <div class="container-fluid">
+        <div class="row">
+            <div class="col-lg-12">
+                {% include 'partial/messages-alerts.html' %}
+            </div>
+        </div>
+        {% ad728x360 request as annonce %}
+        {% if annonce %}
+        {% include 'partial/banner_ads.html' with annonce=annonce %}
+        <br>
+        {% endif %}
+        <div class="traffic-analysis-area">
+            <div class="container-fluid">
+                <div class="row">
+                    <div class="col-lg-4 col-md-6 col-sm-6 col-xs-12">
+                        <div class="social-media-edu twitter-cl table-mg-t-pro-n">
+                            <i class="fa fa-calendar"></i>
+                            <div class="social-edu-ctn">
+                                <h3>{{untreated_appointments}}</h3>
+                                <p>{% trans 'Rendez-vous non traités' %}</p>
+                                <a href="{% url 'doctor-appointments' %}">{% trans "Voir plus" %}</a>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="col-lg-4 col-md-6 col-sm-6 col-xs-12">
+                        <div class="social-media-edu res-mg-t-30 res-tablet-mg-t-30 dk-res-t-pro-30">
+                            <i class="fa fa-bullhorn"></i>
+                            <div class="social-edu-ctn">
+                                <h3>{{today_appointments}}</h3>
+                                <p>{% trans "Rendez-vous d'aujourd'hui" %}</p>
+                                <a href="{% url 'appointments-agenda' %}">{% trans "Voir plus" %}</a>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div class="library-book-area mg-t-30">
+            <div class="container-fluid">
+                <div class="row">
+                    <div class="col-lg-4 col-md-6 col-sm-6 col-xs-12">
+                        <div class="single-review-st-item table-mg-t-pro-n">
+                            <div class="single-review-st-hd">
+                                <h2>{% trans "Équipe de soins" %}</h2>
+                                <small class="dark-blue">{% trans "Demandes" %} ({{care_team_requests.count}})</small>
+                            </div>
+                            <div class="endless_page_template">
+                                {% include page_template %}
+                            </div>
+                        </div>
+                    </div>
+                    <div class="col-lg-8 col-md-6 col-sm-6 col-xs-12">
+                        <div class="single-review-st-item res-mg-t-30 table-mg-t-pro-n">
+                            <video width="100%" height="450" class="img-responsive center-block" id="adsVideo"
+                                playsinline muted controls>
+                                <!-- Source will be set by JS -->
+                            </video>
+                            <script>
+                                document.addEventListener("DOMContentLoaded", function () {
+                                    var playlistBaseUrl = "https://ads.etabib.dz/vids/etabib/";
+                                    var playlistUrl = playlistBaseUrl + "playlist.json";
+                                    var videoPlayer = document.getElementById('adsVideo');
+                                    var videoList = [];
+                                    var currentIndex = 0;
+
+                                    function playNext() {
+                                        if (videoList.length === 0) return;
+                                        currentIndex++;
+                                        if (currentIndex >= videoList.length) {
+                                            currentIndex = 0; // Loop
+                                        }
+                                        loadVideo(currentIndex);
+                                    }
+
+                                    function loadVideo(index) {
+                                        if (videoList.length > 0 && videoList[index]) {
+                                            videoPlayer.src = playlistBaseUrl + videoList[index];
+                                            videoPlayer.play().catch(e => console.log("Auto-play prevented:", e));
+                                        }
+                                    }
+
+                                    // Fetch playlist
+                                    fetch(playlistUrl)
+                                        .then(response => {
+                                            if (!response.ok) throw new Error("Playlist not found");
+                                            return response.json();
+                                        })
+                                        .then(data => {
+                                            // Expecting data to be an array of filenames: ["vid1.mp4", "vid2.mp4"]
+                                            if (Array.isArray(data) && data.length > 0) {
+                                                videoList = data;
+                                                currentIndex = 0;
+                                                loadVideo(currentIndex);
+                                            } else {
+                                                console.warn("Playlist is empty or invalid format");
+                                            }
+                                        })
+                                        .catch(err => {
+                                            console.error("Error loading playlist:", err);
+                                            // Fallback: Try to play a default if one exists, or hide
+                                        });
+
+                                    videoPlayer.addEventListener('ended', playNext);
+                                });
+                            </script>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div class="row  mg-t-30">
+            {% is_mobile_app request as mobile_app %}
+            {% if not mobile_app %}
+            <div class="col-lg-12 visible-xs text-center">
+                <h1>حمل تطبيقنا على الأندرويد</h1>
+                <h1 class="text-danger">Pour accéder aux webinars veuillez télécharger notre application</h1>
+                <p class="gray">Appuyez ci-dessous pour lancer le téléchargement</p>
+                <a
+                    href='https://play.google.com/store/apps/details?id=com.ibnhamza.tele&pcampaignid=pcampaignidMKT-Other-global-all-co-prtnr-py-PartBadge-Mar2515-1'>
+                    <img class="img-responsive" alt='احصل عليه من Google Play'
+                        src='https://play.google.com/intl/en_us/badges/static/images/badges/ar_badge_web_generic.png' />
+                </a>
+            </div>
+            {% endif %}
+        </div>
+    </div>
+</div>
+
+{% endblock %}
+{% block js %}
+<!-- bootstrap JS
+                    ============================================ -->
+<script src='{% static "js/bootstrap.min.js" %}'></script>
+<!-- wow JS
+                    ============================================ -->
+<script src='{% static "js/wow.min.js" %}'></script>
+<!-- price-slider JS
+                    ============================================ -->
+<script src='{% static "js/jquery-price-slider.js" %}'></script>
+<!-- meanmenu JS
+                    ============================================ -->
+<script src='{% static "js/jquery.meanmenu.js" %}'></script>
+<!-- owl.carousel JS
+                    ============================================ -->
+<script src='{% static "js/owl.carousel.min.js" %}'></script>
+<!-- sticky JS
+                    ============================================ -->
+<script src='{% static "js/jquery.sticky.js" %}'></script>
+<!-- scrollUp JS
+                    ============================================ -->
+<script src='{% static "js/jquery.scrollUp.min.js" %}'></script>
+<!-- counterup JS
+                    ============================================ -->
+<script src='{% static "js/counterup/jquery.counterup.min.js" %}'></script>
+<script src='{% static "js/counterup/waypoints.min.js" %}'></script>
+<script src='{% static "js/counterup/counterup-active.js" %}'></script>
+<!-- mCustomScrollbar JS
+                    ============================================ -->
+<script src='{% static "js/scrollbar/jquery.mCustomScrollbar.concat.min.js" %}'></script>
+<script src='{% static "js/scrollbar/mCustomScrollbar-active.js" %}'></script>
+<!-- metisMenu JS
+                    ============================================ -->
+<script src='{% static "js/metisMenu/metisMenu.min.js" %}'></script>
+<script src='{% static "js/metisMenu/metisMenu-active.js" %}'></script>
+<!-- plugins JS
+                    ============================================ -->
+<script src='{% static "js/plugins.js" %}'></script>
+<!-- main JS
+                    ============================================ -->
+<script src='{% static "js/main.js" %}'></script>
+<!-- tawk chat JS
+                    ============================================ -->
+{% include 'partial/tawk-script.html' %}
+<script src="https://vjs.zencdn.net/7.10.2/video.js"></script>
+<!-- endless pagination JS ============================================ -->
+<script src='{% static "el-pagination/js/el-pagination.js" %}'></script>
+<script>
+    function treatRequest(data, element) {
+        $.post("{% url 'doctor-care-team-treat' %}", data)
+            .fail(function (xhr, status, error) {
+                console.log(error);
+            })
+            .done(function (data, statusText, xhr) {
+                var status = xhr.status;
+                if (status == 200) {
+                    element.closest(".single-review-st-text").remove();
+                    if (data.accepte) {
+                        Lobibox.notify(
+                            'success', {
+                            size: 'mini'
+                            , msg: data.patient + " " + "{% trans 'est ajouté à votre liste de contacts' %}"
+                            , position: 'right top'
+                        });
+                    }
+                }
+            });
+    }
+    $(function () {
+        //Endlesss pagination
+        $.endlessPaginate();
+
+        //
+        $(document).on("click", ".ct-request-accepte", function (e) {
+            e.preventDefault();
+            var id = $(this).data("id");
+            var data = {
+                "id": id,
+                'csrfmiddlewaretoken': '{{ csrf_token }}',
+                'accepte': 1
+            };
+            treatRequest(data, $(this));
+        });
+        $(document).on("click", ".ct-request-delete", function (e) {
+            e.preventDefault();
+            var id = $(this).data("id");
+            var data = {
+                "id": id,
+                'csrfmiddlewaretoken': '{{ csrf_token }}',
+                'accepte': 0
+            };
+            treatRequest(data, $(this));
+        });
+    })
+</script>
+{% endblock %}

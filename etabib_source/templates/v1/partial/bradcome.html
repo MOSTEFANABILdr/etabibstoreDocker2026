@@ -1,0 +1,49 @@
+{% load i18n %}
+{% load utils_tags %}
+<div class="breadcome-area">
+    <div class="container-fluid">
+        <div class="row">
+            <div class="col-lg-12 col-md-12 col-sm-12 col-xs-12">
+                {% if show_breadcome %}
+                <div class="breadcome-list">
+                    <div class="row">
+                        <div class="col-lg-6 col-md-6 col-sm-6 col-xs-12">
+                            <div class="breadcome-heading">
+                                {% if request.path|isSearchedUrl %}
+                                <form role="search" method="get" action="{{request.path|getSearchPageUrl}}"
+                                      class="sr-input-func">
+                                    {% csrf_token %}
+                                    <input id="nav-search" name="q" type="text" placeholder="{% trans 'Search...' %}"
+                                           class="search-int form-control">
+                                    <a href="#">
+                                        <i class="fa fa-search"></i>
+                                    </a>
+                                </form>
+                                {% endif %}
+                            </div>
+                        </div>
+                        <div class="col-lg-6 col-md-6 col-sm-6 col-xs-12">
+                            <ul class="breadcome-menu">
+                                <li>
+                                    <a href="/">{% trans "Home" %}</a>
+                                    <span class="bread-slash">/</span>
+                                </li>
+                                {% if title_pager %}
+                                <li><span class="bread-blod">{{title_pager}}</span></li>
+                                {% else %}
+                                {% for item in bradcome_items %}
+                                <li>
+                                    <a href="{{item.url}}">{{item.nom}}</a>
+                                    <span class="bread-slash">/</span>
+                                </li>
+                                {% endfor %}
+                                {% endif %}
+                            </ul>
+                        </div>
+                    </div>
+                </div>
+                {% endif %}
+            </div>
+        </div>
+    </div>
+</div>

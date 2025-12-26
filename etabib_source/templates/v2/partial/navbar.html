@@ -1,0 +1,121 @@
+{% load static i18n avatar_tags role_tags utils_tags %}
+<!-- begin navbar-header -->
+<ul class="navbar-nav navbar-left ">
+    <li class="d-none d-sm-block">
+        <a href="/" class="navbar-brand">
+            <img src="{% static 'v2/img/logo/etabib_white.png' %}">
+        </a>
+    </li>
+</ul>
+<!-- end navbar-header -->
+<!-- begin header-nav -->
+{% with is_patient=request.user|is_patient %}
+<ul class="nav navbar-nav mx-auto">
+    <li class="navbar-form  ml-auto">
+        <form method="POST" name="global_search_form" class="global_search_form"
+              action="{% if request.user|is_patient %}{% url 'list-virtual-offices' %}{% endif %}">
+            {% csrf_token %}
+            <div class="form-group dropdown">
+                {% if is_patient %}
+                <a id="adv-search-dropdown-toggle" class="btn btn-search dropdown-toggle" data-toggle="dropdown">
+                    <i class="fa fa-caret-down text-white"></i>
+                </a>
+                 {{AdvancedSearchForm.media}}
+                <div class="dropdown-menu adv-search-dropdown dropdown-menu-right">
+                    <form class="px-4 py-3">
+                        <div class="form-group mb-3">
+                            {{AdvancedSearchForm.specialite_q}}
+                        </div>
+                        <div class="form-group mb-3">
+                            {{AdvancedSearchForm.city_q}}
+                        </div>
+                        <div class="form-group mb-3">
+                            <input class="btn btn-etabib-white" type="submit" name="go" value="{% trans 'Rechercher' %}" />
+                        </div>
+                    </form>
+                </div>
+                {% endif %}
+                <input autocomplete="OFF" type="text" id="adv-search-dropdown-input" class="form-control search-input" name="q_q" value="{{q_q}}"
+                       placeholder="{% if is_patient %} {% trans 'ابحث عن عيـادة - طبيب - مصحة' %} {% endif %}"
+                />
+            </div>
+        </form>
+    </li>
+</ul>
+<ul class="navbar-nav navbar-right">
+    <li class="navbar-form">
+        {% include 'partial/language-selector.html' %}
+    </li>
+    {% if user|is_doctor or user|is_professionnal %}
+    <li>
+        <a href="{% url 'shopping-cart-show' %}" class=" f-s-14">
+            <img src="{% static 'v2/icons/rounded/39.svg' %}">
+            <span id="cart_count" class="label"></span>
+        </a>
+    </li>
+    <li>
+        <a href="{% url 'epayment-recharge' %}?u={% user_id_hash user %}" class=" f-s-14">
+            <img src="{% static 'v2/icons/rounded/37.svg' %}">
+        </a>
+    </li>
+    {% elif is_patient %}
+    <li>
+        <a href="{% url 'epayment-recharge' %}?u={% user_id_hash user %}" class=" f-s-14">
+            <small>
+                {{ user.patient.solde.amount }} {{ user.patient.solde.currency }}
+            </small>
+            <img src="{% static 'v2/icons/rounded/37.svg' %}">
+        </a>
+    </li>
+    {% endif %}
+
+    {% comment %}
+    <li>
+        <a href="#" class=" f-s-14">
+            <span class="fa-stack fa-2x ">
+                <i class="fas fa-circle fa-stack-2x "></i>
+                <i class="fas fa-camera fa-stack-1x "></i>
+            </span>
+        </a>
+    </li>
+    {% endcomment %}
+    {% include 'partial/navbar-notifications.html' %}
+    <li>
+        <a href="#" class="top-menu-toggle f-s-14" data-click="top-menu-toggled">
+            <span class="fa-stack fa-2x">
+                <i class="fas fa-circle fa-stack-2x "></i>
+                <i class="fas fa-cogs fa-stack-1x "></i>
+            </span>
+        </a>
+    </li>
+    <li>
+        <a href="#" class="sidebar-toggle f-s-14" data-click="sidebar-toggled">
+            <img src="{% static 'v2/icons/rounded/5.svg' %}">
+        </a>
+    </li>
+</ul>
+<!-- end header-nav -->
+<script>
+    {% if is_patient %}
+    // Prevents menu from closing when clicked inside
+    $(".adv-search-dropdown").on('click', function (event) {
+        event.stopPropagation();
+    });
+    $("#adv-search-dropdown-input").on('click', function (event) {
+        $('#adv-search-dropdown-toggle').dropdown('toggle');
+    });
+    $(document).on('submit','form.global_search_form',function(e){
+       e.preventDefault();
+       var input_specialite = $("<input>")
+               .attr("type", "hidden")
+               .attr("name", "specialite_q").val($("#id_specialite_q").val());
+       var input_city = $("<input>")
+               .attr("type", "hidden")
+               .attr("name", "city_q").val($("#id_city_q").val());
+       $('form.global_search_form').append(input_specialite);
+       $('form.global_search_form').append(input_city);
+       e.currentTarget.submit();
+    });
+    {% endif %}
+</script>
+{% endwith %}

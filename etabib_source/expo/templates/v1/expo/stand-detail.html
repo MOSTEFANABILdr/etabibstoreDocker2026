@@ -1,0 +1,414 @@
+{% extends "base.html" %}
+{% load i18n %}
+{% load static %}
+{% load teleconsultation_tags %}
+{% load embed_video_tags %}
+{% block title %} {% trans 'Stand detail' %} {% endblock %}
+{% block style %}
+<!-- Google Fonts
+                    ============================================ -->
+<link
+        href="https://fonts.googleapis.com/css?family=Roboto:100,300,400,700,900"
+        rel="stylesheet">
+<!-- Bootstrap CSS
+                    ============================================ -->
+<link rel="stylesheet" href='{% static "css/bootstrap.min.css" %}'>
+<!-- Bootstrap CSS
+                    ============================================ -->
+<link rel="stylesheet" href='{% static "css/font-awesome.min.css" %}'>
+<!-- owl.carousel CSS ============================================ -->
+<link rel="stylesheet" href='{% static "css/carousel/owl.carousel.min.css" %}'>
+<link rel="stylesheet" href='{% static "css/carousel/owl.theme.default.min.css" %}'>
+<!-- animate CSS ============================================ -->
+<link rel="stylesheet" href='{% static "css/animate.css" %}'>
+<!-- normalize CSS
+                    ============================================ -->
+<link rel="stylesheet" href='{% static "css/normalize.css" %}'>
+<!-- meanmenu icon CSS
+                    ============================================ -->
+<link rel="stylesheet" href='{% static "css/meanmenu.min.css" %}'>
+<!-- main CSS
+                    ============================================ -->
+<link rel="stylesheet" href='{% static "css/main.css" %}'>
+<!-- educate icon CSS
+                    ============================================ -->
+<link rel="stylesheet" href='{% static "css/educate-custon-icon.css" %}'>
+<!-- morrisjs CSS
+                    ============================================ -->
+<link rel="stylesheet" href='{% static "css/morrisjs/morris.css" %}'>
+<!-- mCustomScrollbar CSS
+                    ============================================ -->
+<link rel="stylesheet"
+      href='{% static "css/scrollbar/jquery.mCustomScrollbar.min.css" %}'>
+<!-- metisMenu CSS
+                    ============================================ -->
+<link rel="stylesheet"
+      href='{% static "css/metisMenu/metisMenu.min.css" %}'>
+<link rel="stylesheet"
+      href='{% static "css/metisMenu/metisMenu-vertical.css" %}'>
+<!-- modernizr JS
+                    ============================================ -->
+<script src='{% static "js/vendor/modernizr-2.8.3.min.js" %}'></script>
+<style>
+.owl-prev {
+    width: 15px;
+    height: 100px;
+    position: absolute;
+    top: 40%;
+    margin-left: -20px;
+    display: block !important;
+    border:0px solid black;
+}
+.owl-next {
+    width: 15px;
+    height: 100px;
+    position: absolute;
+    top: 40%;
+    right: -25px;
+    display: block !important;
+    border:0px solid black;
+}
+.stand .stand-title {
+    color: black;
+    font-size:25px;
+}
+.stand .stand-company {
+    background-color: grey;
+    height: 80px;
+    margin-bottom: 10px;
+}
+.stand .stand-video {
+    height: 400px;
+    margin-bottom: 10px;
+}
+.stand .stand-actions button {
+    height: 50px;
+}
+
+.stand-products .owl-carousel a {
+    height: 80px;
+    font-size: 16px;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+}
+@media screen and (max-width: 1199px) {
+    .stand-products .owl-carousel a {
+        margin-bottom: 10px;
+    }
+
+    .stand .stand-actions a {
+        margin-bottom: 10px;
+    }
+}
+</style>
+{% endblock %}
+{% block content %}
+<div class="product-status mg-b-15">
+    <div class="container-fluid">
+        <div class="row">
+            <div class="col-lg-12">
+                {% include 'partial/messages-alerts.html' %}
+            </div>
+        </div>
+        <div class="row">
+            <div class="col-lg-12 col-md-12 col-sm-12 col-xs-12">
+                <div class="product-status-wrap drp-lst">
+                    <div class="row stand text-center">
+                        <h1 class="stand-title">
+                            {{stand.signaletique}}
+                        </h1>
+                        <div class="col-lg-6">
+                            <br>
+                            <br>
+                            <div class="row stand-video">
+                                <div class="col-lg-12">
+                                    {% if stand.link %}
+                                    {% video stand.link '100%x400' is_secure=True %}
+                                    {% else %}
+                                    <iframe width="100%" height="400"
+                                            src=""
+                                            frameborder="0"
+                                            allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture"
+                                            allowfullscreen>
+                                    </iframe>
+                                    {% endif %}
+                                </div>
+                            </div>
+                            <div class="row stand-actions">
+                                <div class="col-lg-12">
+                                    {% has_rdv_with stand.partner.user request.user as has_rdv %}
+                                    <a href="#" class="btn btn-etabib btn-block visio-enter">
+                                        <i class="fa fa-video-camera fa-2x"></i>
+                                        {% trans 'Discuter En Vidéo' %}
+                                        <span id="bubble" class="bubble offline" style="display: inline;margin-left:10px;margin-top:5px;" title="">
+                                            <span class="bubble-outer-dot">
+                                                <span class="bubble-inner-dot"></span>
+                                            </span>
+                                        </span>
+                                    </a>
+                                    <a href="#" class="btn btn-etabib btn-block demand-rdv"
+                                    data-has-rdv="{{has_rdv.0}}"
+                                    data-demand-id="{{has_rdv.1}}">
+                                        <i class="fa fa-2x {% if not has_rdv.0 %} fa-calendar-plus-o {% else %} fa-calendar-minus-o {% endif %} "></i>
+                                        <span>
+                                        {% if not has_rdv.0 %} {% trans 'Prendre RDV Avec Le Reponsable' %} {% else %} {% trans 'Annulez la demande de RV' %} {% endif %}
+                                        </span>
+                                    </a>
+                                    <a href="{% url 'expo-campany-detail' stand.partner.id %}"
+                                       type="button" class="btn btn-etabib btn-block">
+                                        <i class="fa fa-book fa-2x"></i>
+                                        {% trans "À Propos de l'Entreprise" %}
+                                    </a>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="col-lg-6  stand-products">
+                            <div class="col-lg-12 ">
+                                <h1 style="color: black;">{% trans 'Nos produits' %}</h1>
+                                <hr>
+                            </div>
+                            <div class="col-lg-12">
+                                <div class="owl-carousel owl-theme">
+                                    {% for acticle in acticles %}
+                                    {% with object=acticle.articleimage_set.first %}
+                                    <div>
+                                        <img class="img-responsive center-block"
+                                             src="{{object.image.url}}"
+                                             style="width: 350px">
+                                        <br>
+                                        <h1>{{acticle.libelle}}</h1>
+                                        <div class="row mg-t-30">
+                                            <div class="col-lg-4">
+                                                <a href="{% url 'partner-detail-product' acticle.pk acticle.slug %}"
+                                                   class="btn btn-etabib btn-block">
+                                                    {% trans 'Fiche Produit' %}
+                                                </a>
+                                            </div>
+                                            <div class="col-lg-4">
+                                                <a href="{% url 'expo-catalogue-list' stand.partner.id %}" type="button"
+                                                   class="btn btn-etabib btn-block" style="white-space: normal">
+                                                    {% trans 'Voir les catalogues' %}
+                                                </a>
+                                            </div>
+                                            <div class="col-lg-4">
+                                                <a href="{% url 'expo-product-preorder' acticle.pk %}" type="button"
+                                                   class="btn btn-etabib btn-block fm-create" data-fm-callback="reload">
+                                                    {% trans 'Précommander' %}
+                                                </a>
+                                            </div>
+                                        </div>
+                                    </div>
+                                    {% endwith %}
+                                    {% endfor %}
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}
+{% block js %}
+<!-- bootstrap JS
+                    ============================================ -->
+<script src='{% static "js/bootstrap.min.js" %}'></script>
+<!-- wow JS
+                    ============================================ -->
+<script src='{% static "js/wow.min.js" %}'></script>
+<!-- price-slider JS
+                    ============================================ -->
+<script src='{% static "js/jquery-price-slider.js" %}'></script>
+<!-- meanmenu JS
+                    ============================================ -->
+<script src='{% static "js/jquery.meanmenu.js" %}'></script>
+<!-- owl.carousel JS
+                    ============================================ -->
+<script src='{% static "js/carousel/owl.carousel.min.js" %}'></script>
+<!-- sticky JS
+                    ============================================ -->
+<script src='{% static "js/jquery.sticky.js" %}'></script>
+<!-- scrollUp JS
+                    ============================================ -->
+<script src='{% static "js/jquery.scrollUp.min.js" %}'></script>
+<!-- mCustomScrollbar JS
+                    ============================================ -->
+<script
+        src='{% static "js/scrollbar/jquery.mCustomScrollbar.concat.min.js" %}'></script>
+<script src='{% static "js/scrollbar/mCustomScrollbar-active.js" %}'></script>
+<!-- metisMenu JS
+                    ============================================ -->
+<script src='{% static "js/metisMenu/metisMenu.min.js" %}'></script>
+<script src='{% static "js/metisMenu/metisMenu-active.js" %}'></script>
+<!-- plugins JS
+                    ============================================ -->
+<script src='{% static "js/plugins.js" %}'></script>
+<!-- main JS
+                    ============================================ -->
+<script src='{% static "js/main.js" %}'></script>
+<!-- tawk chat JS
+                    ============================================ -->
+{% include 'partial/tawk-script.html' %}
+<script>
+    $(document).ready(function(){
+        $('.owl-carousel').owlCarousel({
+            items:1,
+            loop:true,
+            margin:10,
+            center:true,
+            nav:true,
+            dots: false,
+             navText : ['<i class="fa fa-angle-left fa-4x" aria-hidden="true"></i>','<i class="fa fa-angle-right fa-4x" aria-hidden="true"></i>']
+        });
+
+        $(document).on('click', '.demand-rdv',function(e) {
+            e.preventDefault();
+            //read data attribute from a elemtn
+            var destinataire_id = {{stand.partner.user.id}};
+            var partner_name = "{{stand.partner}}";
+            var has_rdv = $(this).data("has-rdv") == "True" ? true : false;
+            var demand_id = $(this).data("demand-id");
+            var msgAdd = "{% trans 'Je confirme ma demande de rendez-vous' %} ?";
+            var msgCancel = "{% trans "Je confirme ma demande d'annuler le rendez-vous" %} ?";
+            var url = has_rdv ? "{% url 'can_demande-rdv' %}" : "{% url 'add-demande-rdv' %}"
+            var btn = $(this);
+
+            //show confirmation notification
+            var lobibox = Lobibox.confirm({
+                title: "{% trans 'Confirmation' %}",
+                iconClass: false,
+                buttons: {
+                    yes: {
+                        closeOnClick: true,
+                        'class': 'btn btn-etabib',
+                        text: "<i class='fa fa-calendar'></i>"
+                    },
+                    no: {
+                        closeOnClick: true,
+                        'class': 'btn btn-etabib',
+                        text: "<i class='fa fa-remove fa-2x'></i>"
+                    },
+                },
+                closable: false,
+                msg: has_rdv ? msgCancel : msgAdd + '{% render_rdv_description %}',
+                callback: function($this, type, ev) {
+                    if (type === 'yes') {
+                        var data = {
+                            'destinataire_id': destinataire_id,
+                            'demande_id': demand_id,
+                            'description': $("#rdv_description").val(),
+                            'csrfmiddlewaretoken': '{{ csrf_token }}'
+                        };
+                        $.post( url, data)
+                          .fail(function(xhr, status, error) {
+                            var status = xhr.status;
+                            if (status==406) {
+                                Lobibox.notify(
+                                'warning',{
+                                    title: ""
+                                    , msg:"{% trans "Le serveur est occupé maintenant, essayez d'envoyer une demande toutes les 30 secondes" %} "
+                                    , position: 'right top'
+                                });
+                            }
+                            else {
+                                 Lobibox.notify(
+                                'error',{
+                                    title: "Server error"
+                                    , msg:"{% trans "Something went wrong" %} "
+                                    , position: 'right top'
+                                });
+                            }
+                          })
+                          .done(function( data, statusText, xhr ) {
+                            var status = xhr.status;
+                            if (!has_rdv) {
+                                if (status==201) {
+                                    btn.data('demand-id', data.demande_id);
+                                    btn.data('has-rdv', 'True');
+                                    btn.find('i').toggleClass('fa-calendar-plus-o fa-calendar-minus-o');
+                                    btn.find('span').text("{% trans 'Annulez la demande de RV' %}");
+                                    Lobibox.notify(
+                                    'success',{
+                                        title: "{% trans 'Demande envoyée!' %} "
+                                        , msg:"{% trans 'Vous aviez demandé un rendez-vous' %}"
+                                        , position: 'right top'
+                                    });
+                                }
+                            }
+                            else {
+                                if (status==200) {
+                                    btn.data('demand-id', '');
+                                    btn.data('has-rdv', "False");
+                                    btn.find('i').toggleClass('fa-calendar-plus-o fa-calendar-minus-o');
+                                    btn.find('span').text("{% trans 'Prendre RDV Avec Le Reponsable' %}");
+                                    Lobibox.notify(
+                                    'success',{
+                                        title: "{% trans 'Demande annulée!' %} "
+                                        , msg:"{% trans 'Vous aviez annuler le rendez-vous.' %}"
+                                        , position: 'right top'
+                                    });
+                                }
+                            }
+                        });
+                    }
+                }
+            });
+        });
+
+        //stand viso status
+        setInterval(function(){stand_visio_status();}, 10000);
+
+        //
+        $(document).on('click', '.visio-enter',function(e) {
+            e.preventDefault();
+            var d = {
+                "stand_id": {{stand.id}},
+                'csrfmiddlewaretoken': '{{ csrf_token }}'
+            };
+            console.log($(this));
+            var element = $(this);
+            element.find("i").removeClass("fa-video-camera").addClass("fa-spinner fa-spin");
+            $.post( "{% url 'expo-stand-visio-enter' %}", d)
+              .done(function( data ) {
+                window.open(data.url, '_blank');
+                element.find("i").addClass("fa-video-camera").removeClass("fa-spinner fa-spin");
+            }).fail(function() {
+                element.find("i").addClass("fa-video-camera").removeClass("fa-spinner fa-spin");
+                Lobibox.notify('warning', {
+                    size: 'mini',
+                    position: "bottom left",
+                    msg: "{% trans "L'exposant est maintenant hors ligne, veuillez réessayer plus tard." %}"
+                });
+            });
+        });
+    });
+    function stand_visio_status() {
+        var data = {
+            "stand_id": {{stand.id}},
+            'csrfmiddlewaretoken': '{{ csrf_token }}'
+        };
+        $.ajax({
+            type: "POST",
+            url: "{% url 'expo-stand-visio-check' %}",
+            data: data,
+            success: function (response) {
+            },
+            statusCode: {
+                200: function() {
+                   $("#bubble").removeClass("offline").addClass("online");
+                },
+                204: function() {
+                   $("#bubble").removeClass("online").addClass("offline");
+                },
+            },
+            error: function (e) {
+                $("#bubble").removeClass("online").addClass("offline");
+            }
+        });
+    }
+
+</script>
+{% endblock %}

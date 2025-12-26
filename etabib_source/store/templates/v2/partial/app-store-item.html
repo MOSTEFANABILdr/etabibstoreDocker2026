@@ -1,0 +1,26 @@
+{% load static i18n utils_tags %}
+
+<div class="item item-thumbnail ">
+    <a href="{% url 'etabib-store-item' product.id product.slug %}" class="item-image">
+        <img src="{{product.icon.url}}" alt=""/>
+    </a>
+    <div class="item-info">
+        <h4 class="item-title mb-3">
+            <a href="{% url 'etabib-store-item' product.id product.slug %}">
+                {{product.libelle|title}}
+            </a>
+        </h4>
+        <span class="rateYo mx-auto mb-2" data-rateyo-rating="{{product.note_globale}}">
+                                </span>
+        <p class="item-desc mb-2">{{product.description_breve|default_if_none:""}}</p>
+        <p title="{% trans 'Compatible avec'  %}" class="item-desc mb-2">
+            <i class="fa fa-laptop"></i>
+            {{product.compatible_with}}
+        </p>
+        <div class="item-price">
+            {{product.consomation}}
+            <small> {% trans "Points" %} / {{product.get_type_consomation_display}}</small>
+        </div>
+        <div class="item-discount-price"></div>
+    </div>
+</div>

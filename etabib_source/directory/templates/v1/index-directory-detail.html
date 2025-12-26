@@ -1,0 +1,136 @@
+{% load i18n %}
+{% load static %}
+{% load directory_tags %}
+{% load role_tags %}
+{% load el_pagination_tags %}
+{% paginate 3 googlemaps_doctors %}
+<div class="row">
+    <div id="sync1" class="owl-carousel owl-theme text-center">
+        {% for doc in random_doctor %}
+        <div class="panel panel-default panel-contact" title="{{doc.full_name|title}}">
+            <div class="panel-heading">
+                <div class="media">
+                    <div class="col-lg-3 col-md-3 text-center">
+                        <img src="{% static 'img/logo/logo_directory.png' %}"
+                             class="media-object center-block"
+                             style="width:60px">
+                    </div>
+                    <div class="col-lg-9 col-md-9">
+                        <div class="media-body">
+                            <h4 class="media-heading">
+                                {{doc.full_name|title|truncatechars:"70"}}
+                            </h4>
+                            {% if doc.contact.specialite %}
+                            <span class="label label-success label-light">
+                            {{doc.contact.specialite}}
+                            </span>
+                            {% endif %}
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class="panel-footer">
+                <div class="btn-group btn-group-responsive">
+                    {% if doc.contact.maps_url %}
+                    <a target="_blank" href="{{doc.contact.maps_url}}" class="btn btn-etabib">
+                        <i class="fa fa-map-marker"></i>
+                        {% trans '(GPS) خُذني إليه' %}
+                    </a>
+                    {% endif %}
+                    <button type="button" class="btn btn-etabib sub" data-hash="{{doc.contact|rdv_hash}}"
+                            data-toggle="modal" data-doc="{{doc.contact.pk}}" data-target="#rdvModal"
+                            >
+                        <i class="fa fa-calendar"></i>
+                        {% trans 'أُطلب موعدًا' %}
+                    </button>
+                </div>
+            </div>
+        </div>
+        {% endfor %}
+    </div>
+    {% for gdoctor in googlemaps_doctors %}
+    <div class="col-lg-4 col-md-4 col-sm-6">
+        <div class="panel panel-default panel-contact" title="{{gdoctor.full_name|title}}">
+            <div class="panel-heading">
+                <div class="media">
+                    <div class="col-lg-3 col-md-3 text-center">
+                        <img src="{% static 'img/logo/logo_directory.png' %}"
+                             class="media-object center-block"
+                             style="width:60px">
+                    </div>
+                    <div class="col-lg-9 col-md-9">
+                        <div class="media-body">
+                            <h4 class="media-heading">
+                                {{gdoctor.full_name|title|truncatechars:"70"}}
+                            </h4>
+                            {% if gdoctor.specialite %}
+                            <span class="label label-success label-light">
+                            {{gdoctor.specialite}}
+                            </span>
+                            {% endif %}
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class="panel-footer">
+                <div class="btn-group btn-group-responsive">
+                    {% if gdoctor.maps_url %}
+                    <a target="_blank" href="{{gdoctor.maps_url}}" class="btn btn-etabib">
+                        <i class="fa fa-map-marker"></i>
+                        {% trans '(GPS) خُذني إليه' %}
+                    </a>
+                    {% endif %}
+                    {% get_number_valide gdoctor as number_flag %}
+                    {% if gdoctor.email or number_flag %}
+                    <button type="button" class="btn btn-etabib sub" data-hash="{{gdoctor|rdv_hash}}"
+                            data-toggle="modal" data-doc="{{gdoctor.pk}}" data-target="#rdvModal"
+                            >
+                        <i class="fa fa-calendar"></i>
+                        {% trans 'أُطلب موعدًا' %}
+                    </button>
+                    {% else %}
+                    <button disabled class="btn btn-default btn-disabled">
+                        {% trans 'الموعد غير مُتوفر' %}
+                    </button>
+                    {% endif %}
+                </div>
+            </div>
+        </div>
+    </div>
+    {% endfor %}
+</div>
+<div class="row text-center">
+    {% if nc_count %}
+    <small>{{nc_count}} {% trans 'résultat(s)' %}</small>
+    {% endif %}
+</div>
+
+<div class="row text-center">
+    {% get_pages %}
+    {% if pages.paginated %}
+    {% show_current_number as page_number %}
+    {% include 'partial/pagination.html' with pages=pages current_page_number=page_number extra=extra_args %}
+    {% endif %}
+</div>
+
+<script>
+$(function () {
+    var sync1 = $("#sync1");
+    sync1.owlCarousel({
+        items : 3,
+        itemsDesktop : [1199,3],
+        itemsDesktopSmall : [979,2],
+        itemsMobile : [479,1],
+        navigation:true,
+        navigationText : ['<i class="fa fa-chevron-circle-left fa-4x"  style="color: #29D4FF;"></i>',
+        '<i class="fa fa-chevron-circle-right fa-4x" style="color: #29D4FF;"></i>'],
+        pagination:false,
+        autoPlay: true,
+        slideSpeed : 2000,
+        dots: true,
+        loop: true,
+    });
+});
+
+
+</script>

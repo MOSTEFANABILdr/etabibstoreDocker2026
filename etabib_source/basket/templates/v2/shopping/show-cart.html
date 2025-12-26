@@ -1,0 +1,140 @@
+{% extends "base.html" %}
+{% load static carton_tags i18n %}
+
+{% block title %} {% trans 'Mon panier' %} {% endblock %}
+
+{% block style %}
+<link href="{% static 'v2/css/e-commerce/app.min.css' %}" rel="stylesheet"/>
+<link href="{% static 'v2/css/e-commerce/app.custom.min.css' %}?v=1.1" rel="stylesheet"/>
+{% endblock %}
+
+{% block content %}
+<!-- BEGIN #checkout-cart -->
+<div class="section-container" id="checkout-cart">
+    <!-- BEGIN container -->
+    <div class="container">
+        <h1 class="page-header m-b-10">
+            <i class="fas fa-shopping-basket"></i>
+            {% trans 'Mon panier' %}
+        </h1>
+        <!-- BEGIN checkout -->
+        <div class="checkout">
+            <form action="#" method="POST" name="form_checkout">
+                <!-- BEGIN checkout-body -->
+                <div class="checkout-body">
+                    <div class="table-responsive">
+                        {% get_cart as cart %}
+                        <table class="table table-cart">
+                            <thead>
+                            <tr>
+                                <th>{% trans 'Article' %}</th>
+                                <th class="text-center">{% trans 'Prix' %}</th>
+                                <th class="text-center">{% trans 'Quantité' %}</th>
+                                <th class="text-center">{% trans 'Total CART' %}</th>
+                                <th></th>
+                            </tr>
+                            </thead>
+                            <tbody>
+                            {% for item in cart.items %}
+                            <tr>
+                                <td class="cart-product">
+                                    <div class="product-img">
+                                        <img src="{{item.product.icon.url}}" alt=""/>
+                                    </div>
+                                    <div class="product-info">
+                                        <div class="title">
+                                            <a href="{% url 'etabib-store-item' item.product.pk item.product.slug %}">
+                                                {{ item.product }}
+                                            </a>
+                                        </div>
+                                    </div>
+                                </td>
+                                <td class="cart-price text-center">
+                                    {{item.product.consomation}}/
+                                    <small>{{item.product.get_type_consomation_display|lower}}</small>
+                                </td>
+                                <td class="cart-qty text-center">
+                                    {{item.quantity}}
+                                </td>
+                                <td class="cart-total text-center">
+                                    {{item.product.consomation}}/
+                                    <small>{{item.product.get_type_consomation_display|lower}}</small>
+                                </td>
+                                <td>
+                                    <button class="btn btn-danger"
+                                            onclick="deleteItemFromCart({{item.product.pk}}, {{item.poste.pk}}, this); return false;">
+                                        <i class="fa fa-trash"></i>
+                                    </button>
+                                </td>
+                            </tr>
+                            {% endfor %}
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+                <!-- END checkout-body -->
+                <!-- BEGIN checkout-footer -->
+                <div class="checkout-footer bg-light">
+                    <a href="{% url 'etabib-store' %}" class="btn btn-warning pull-left btn-theme">
+                        {% trans 'CONTINUER VOS ACHATS' %}
+                    </a>
+                    <button id="validate" type="submit" class="btn btn-etabib btn-theme">
+                        {% trans 'Valider' %}
+                    </button>
+                </div>
+                <!-- END checkout-footer -->
+            </form>
+        </div>
+        <!-- END checkout -->
+    </div>
+    <!-- END container -->
+</div>
+<!-- END #checkout-cart -->
+{% endblock %}
+
+{% block js %}
+<script>
+function deleteItemFromCart(pk_module, pk_poste,  element) {
+    var data = {
+        'pk_module' : pk_module,
+        'pk_poste' : pk_poste,
+        'csrfmiddlewaretoken': '{{ csrf_token }}'
+    }
+    $.post("{% url 'shopping-cart-remove' %}", data, function( response ) {
+        $(element).parent().parent().remove();
+    });
+}
+$(document).ready(function() {
+    //processing installation
+    $("#validate").click(function(event) {
+        event.preventDefault();
+        var element = $(this);
+        $(element).append(' <i class="fa fa-spinner fa-spin"></i>');
+        var data = {
+                     'csrfmiddlewaretoken': '{{ csrf_token }}'
+                   };
+       $.post( "{% url 'shopping-cart-validate' %}", data, function(response) {
+         $(element).find("i").remove();
+         $('.table').remove();
+         Lobibox.notify('success', {
+             size: 'mini',
+             position: 'top right',
+             sound: false,
+             msg: response.success_message
+         });
+       })
+      .fail(function(response) {
+         //TODO: Change msg text
+         $(element).find("i").remove();
+         Lobibox.notify('error', {
+             size: 'mini',
+             position: 'top right',
+             sound: false,
+             msg: 'Erreur Interne du Serveur'
+         });
+      });
+    });
+});
+
+</script>
+{% endblock %}

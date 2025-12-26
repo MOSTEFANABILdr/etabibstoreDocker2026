@@ -1,0 +1,31 @@
+{% load i18n static utils_tags %}
+{% if not tuple.3 %}
+<h4>{{tuple.0}}
+    <button onclick="location.href='{{tuple.2}}'" class="pull-right btn btn-show-more hidden-xs hidden-sm">
+        {% trans "Show more" %}
+    </button>
+</h4>
+<div class="row">
+    {% random_int 1 tuple.1|length as randint %}
+
+    {% for app in tuple.1 %}
+        {% if tuple.1|length != 1 and forloop.counter == randint and adBetweenApp %}
+            {% include 'partial/app-store-item.html' with app=app ad=True %}
+        {% else %}
+            {% include 'partial/app-store-item.html' with app=app ad=False %}
+        {% endif %}
+    {% endfor %}
+</div>
+{% else %}
+<h4>Ads ...<small> اعلانات</small></h4>
+{% for annonce in tuple.1 %}
+{% include 'partial/banner_ads.html' with annonce=annonce %}
+{% endfor %}
+{% endif %}
+<div class="text-center">
+    <button onclick="location.href='{{tuple.2}}'" class="btn btn-show-more hidden-md hidden-lg">
+        {% trans "Show more" %}
+    </button>
+</div>
+<hr>
+<br>

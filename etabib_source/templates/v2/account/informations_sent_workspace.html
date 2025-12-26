@@ -1,0 +1,91 @@
+{% extends "base2.html" %}
+{% load i18n %}
+{% load static crispy_forms_tags%}
+{% block title %} {% trans 'Veuillez saisir les informations suivantes' %} {% endblock %}
+{% block style %}
+<!-- dropzone CSS ============================================ -->
+<link rel="stylesheet" href='{% static "css/dropzone/dropzone.css" %}'>
+<style>
+#page-container
+{
+    padding-top: 0px !important;
+    background-image: url("/static/img/login-bg.png");
+    background-repeat: no-repeat;
+    min-height:100%;
+    height: auto;
+    background-size:cover;
+    background-blend-mode: multiply;
+}
+.title{
+    color: #61d6f7 !important;
+    font-weight: 500;
+}
+
+
+
+
+
+
+</style>
+{% endblock %}
+{% block content %}
+<!-- begin coming-soon -->
+<div id="page-container" class="page-container fade show">
+
+    <div class="coming-soon">
+        <!-- begin coming-soon-content -->
+        <div class="coming-soon-content">
+            </br>
+            </br>
+            </br>
+            <div class="input-group">
+                <div class="desc">
+                    <img width="96px" class="logo" src='{% static "img/logo/logdo.png" %}' alt=""/>
+                    </br>
+                    </br>
+                    </br>
+                    <h1 class="title">{% trans 'Félicitation !' %}</h1>
+                    </br>
+                    </br>
+                    </br>
+                    <h5>{% trans 'Un e-mail vous sera adressé une fois Votre demande <br> examinée (max 24 h). Veuillez vérifier votre boite'%} <br>
+                        {{email}} {% trans ' pour télécharger votre licence.' %}
+                    </h5>
+                </div>
+                </br>
+                </br>
+                </br>
+                <div class="card text-white border-0 bg-blue text-center m-b-10">
+                    <div class="card-body">
+                        <blockquote class="blockquote mb-0">
+                            <p class="mb-2">{% trans 'Votre Licence sera annulé si vous n\'activez pas votre<br>copie dans les 15 jours suivant la demande.' %}</p>
+                        </blockquote>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- end coming-soon-content -->
+    </div>
+    <!-- end coming-soon -->
+</div>
+
+<a href="javascript:;" class="btn btn-icon btn-circle btn-success btn-scroll-to-top fade show"
+   data-click="scroll-top"><i class="fa fa-angle-up"></i></a>
+<!-- end scroll to top btn -->
+{% endblock %}
+
+{% block js %}
+<script src='{% static "js/dropzone/dropzone.js" %}'></script>
+<script src='{% static "js/dropzonee/jquery.cookie.js" %}'></script>
+<script>
+Dropzone.autoDiscover = false;
+
+
+
+
+
+
+
+</script>
+{% endblock %}

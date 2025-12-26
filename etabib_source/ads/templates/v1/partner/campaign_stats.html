@@ -1,0 +1,505 @@
+{% extends "base.html" %}
+{% load i18n %}
+{% load static utils_tags %}
+{% load partner_tags %}
+{% block title %} {% trans 'Statistiques de la campagne' %} {% endblock %}
+{% block style %}
+<!-- Google Fonts ============================================ -->
+<link href="https://fonts.googleapis.com/css?family=Roboto:100,300,400,700,900"
+      rel="stylesheet">
+<!-- Bootstrap CSS
+                    ============================================ -->
+<link rel="stylesheet" href='{% static "css/bootstrap.min.css" %}'>
+<!-- Bootstrap CSS
+                    ============================================ -->
+<link rel="stylesheet" href='{% static "css/font-awesome.min.css" %}'>
+<!-- owl.carousel CSS
+                    ============================================ -->
+<link rel="stylesheet" href='{% static "css/owl.carousel.css" %}'>
+<link rel="stylesheet" href='{% static "css/owl.theme.css" %}'>
+<link rel="stylesheet" href='{% static "css/owl.transitions.css" %}'>
+<!-- animate CSS
+                    ============================================ -->
+<link rel="stylesheet" href='{% static "css/animate.css" %}'>
+<!-- normalize CSS
+                    ============================================ -->
+<link rel="stylesheet" href='{% static "css/normalize.css" %}'>
+<!-- meanmenu icon CSS
+                    ============================================ -->
+<link rel="stylesheet" href='{% static "css/meanmenu.min.css" %}'>
+<!-- main CSS
+                    ============================================ -->
+<link rel="stylesheet" href='{% static "css/main.css" %}'>
+<!-- educate icon CSS
+                    ============================================ -->
+<link rel="stylesheet" href='{% static "css/educate-custon-icon.css" %}'>
+<!-- morrisjs CSS
+                    ============================================ -->
+<link rel="stylesheet" href='{% static "css/morrisjs/morris.css" %}'>
+<!-- mCustomScrollbar CSS
+                    ============================================ -->
+<link rel="stylesheet"
+      href='{% static "css/scrollbar/jquery.mCustomScrollbar.min.css" %}'>
+<!-- metisMenu CSS
+                    ============================================ -->
+<link rel="stylesheet"
+      href='{% static "css/metisMenu/metisMenu.min.css" %}'>
+<link rel="stylesheet"
+      href='{% static "css/metisMenu/metisMenu-vertical.css" %}'>
+<!-- modernizr JS
+                    ============================================ -->
+<script src='{% static "js/vendor/modernizr-2.8.3.min.js" %}'></script>
+<!-- dropzone CSS ============================================ -->
+<link rel="stylesheet" href='{% static "css/dropzone/dropzone.css" %}'>
+{% endblock %}
+{% block content %}
+<div class="row">
+    {% if messages %}
+    <ul>
+        {% for message in messages %}
+        <div class="alert alert-{{ message.tags }}">
+            <button type="button" class="close" data-dismiss="alert" aria-label="Close">
+                <span aria-hidden="true">&times;</span>
+            </button>
+            <p>{{message}}</p>
+        </div>
+        {% endfor %}
+    </ul>
+    {% endif %}
+</div>
+<div class="analytics-sparkle-area">
+    <div class="container-fluid">
+        <div class="row">
+            <div class="col-lg-4 col-md-6 col-sm-6 col-xs-12">
+                <div class="white-box analytics-info-cs mg-b-10 res-mg-t-30 table-mg-t-pro-n res-mg-b-30">
+                    <h3 class="box-title">{% trans 'Impressions' %}</h3>
+                    <ul class="list-inline two-part-sp">
+                        <li>
+                            <div id="sparklinedashImp"></div>
+                        </li>
+                        <li class="text-right sp-cn-r">
+                            <span class="counter text-success">
+                                <span class="counter">
+                                    {{impressions}}
+                                </span>
+                            </span>
+                        </li>
+                    </ul>
+                </div>
+            </div>
+            <div class="col-lg-4 col-md-6 col-sm-6 col-xs-12">
+                <div class="white-box analytics-info-cs mg-b-10 res-mg-t-30 table-mg-t-pro-n res-mg-b-30">
+                    <h3 class="box-title">{% trans 'Clics' %}</h3>
+                    <ul class="list-inline two-part-sp">
+                        <li>
+                            <div id="sparklinedashClc"></div>
+                        </li>
+                        <li class="text-right sp-cn-r">
+                            <span class="counter text-success">
+                                <span class="counter">
+                                    {{clics}}
+                                </span>
+                            </span>
+                        </li>
+                    </ul>
+                </div>
+            </div>
+            <div class="col-lg-4 col-md-6 col-sm-6 col-xs-12">
+                <div class="white-box analytics-info-cs mg-b-10 res-mg-t-30 table-mg-t-pro-n res-mg-b-30">
+                    <h3 class="box-title">{% trans 'Coût' %}</h3>
+                    <ul class="list-inline two-part-sp">
+                        <li>
+                            <div></div>
+                        </li>
+                        <li class="text-right sp-cn-r">
+                            <span class="counter text-success">
+                                <span class="counter">
+                                    {{cost}}
+                                </span>
+                            </span>
+                            <small>
+                                <img width="20px" src="{% static 'img/coins.svg' %}" alt="">
+                                (points)
+                            </small>
+                        </li>
+                    </ul>
+                </div>
+            </div>
+        </div>
+        <div class="row">
+            <div class="col-lg-12 col-md-12 col-sm-12 col-xs-12">
+                <div class="product-sales-chart">
+                    <ul class="list-inline cus-product-sl-rp">
+                        <li>
+                            <h5><i class="fa fa-circle" style="color: #006DF0;"></i>{% trans "Impressions" %}</h5>
+                        </li>
+                        <li>
+                            <h5><i class="fa fa-circle" style="color: #933EC5;"></i>{% trans "Clics" %}</h5>
+                        </li>
+                    </ul>
+                    <div id="extra-area-chart" style="height: 356px;"></div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+<div class="product-sales-area mg-tb-30">
+    <div class="container-fluid">
+        <div class="row">
+            <div class="col-lg-6 col-md-12 col-sm-12 col-xs-12">
+                <div class="product-sales-chart">
+                    <div class="portlet-title">
+                        <div class="row">
+                            <div class="col-lg-6 col-md-6 col-sm-6 col-xs-12">
+                                <div class="caption pro-sl-hd">
+                                    <span class="caption-subject">
+                                        <b>{% trans 'Statistiques par zones' %}</b>
+                                    </span>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    <ul class="list-inline cus-product-sl-rp">
+                        <li>
+                            <h5><i class="fa fa-circle" style="color: #006DF0;"></i>{% trans "Impressions" %}</h5>
+                        </li>
+                        <li>
+                            <h5><i class="fa fa-circle" style="color: #933EC5;"></i>{% trans "Clics" %}</h5>
+                        </li>
+                    </ul>
+                    <div id="morris-bar-chart-spec" style="height: 356px;"></div>
+                </div>
+            </div>
+            <div class="col-lg-6 col-md-12 col-sm-12 col-xs-12">
+                <div class="product-sales-chart">
+                    <div class="portlet-title">
+                        <div class="row">
+                            <div class="col-lg-6 col-md-6 col-sm-6 col-xs-12">
+                                <div class="caption pro-sl-hd">
+                                    <span class="caption-subject">
+                                        <b>{% trans 'Statistiques par spécialité' %}</b>
+                                    </span>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    <ul class="list-inline cus-product-sl-rp">
+                        <li>
+                            <h5><i class="fa fa-circle" style="color: #006DF0;"></i>{% trans "Impressions" %}</h5>
+                        </li>
+                        <li>
+                            <h5><i class="fa fa-circle" style="color: #933EC5;"></i>{% trans "Clics" %}</h5>
+                        </li>
+                    </ul>
+                    <div id="morris-bar-chart-zne" style="height: 356px;"></div>
+                </div>
+            </div>
+            <div class="col-lg-6 col-md-12 col-sm-12 col-xs-12">
+                <div class="product-sales-chart">
+                    <div class="portlet-title">
+                        <div class="row">
+                            <div class="col-lg-6 col-md-6 col-sm-6 col-xs-12">
+                                <div class="caption pro-sl-hd">
+                                    <span class="caption-subject">
+                                        <b>{% trans 'Statistiques par sexe' %}</b>
+                                    </span>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    <ul class="list-inline cus-product-sl-rp">
+                        <li>
+                            <h5><i class="fa fa-circle" style="color: #006DF0;"></i>{% trans "Impressions" %}</h5>
+                        </li>
+                        <li>
+                            <h5><i class="fa fa-circle" style="color: #933EC5;"></i>{% trans "Clics" %}</h5>
+                        </li>
+                    </ul>
+                    <div id="morris-bar-chart-sxe" style="height: 356px;"></div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+<div class="product-sales-area mg-tb-30">
+    <div class="container-fluid">
+        <div class="row">
+            <div class="col-lg-12 col-md-12 col-sm-12 col-xs-12">
+                <h4> Statistiques par annonce</h4>
+            </div>
+            <div class="col-lg-12 col-md-12 col-sm-12 col-xs-12">
+                <div class="hpanel shadow-inner responsive-mg-b-30">
+                    <div class="panel-body">
+                        <div class="table-responsive wd-tb-cr">
+                            <table class="table table-striped">
+                                <thead>
+                                <tr>
+                                    <th>Annonce</th>
+                                    <th>Impréssion</th>
+                                    <th>Clics</th>
+                                    <th>CTR</th>
+                                </tr>
+                                </thead>
+                                <tbody>
+                                {% for item in data_per_ad %}
+                                <tr>
+                                    <td>
+                                        <span class="text-success font-bold">
+                                            {{item.annonce.libelle}}
+                                        </span>
+                                    </td>
+                                    <td>{{item.count_imp}}</td>
+                                    <td>{{item.count_clk}}</td>
+                                    <td>{% percentage item.count_clk item.count_imp %}%</td>
+                                </tr>
+                                {% endfor %}
+                                </tbody>
+                            </table>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class="col-lg-12 col-md-12 col-sm-12 col-xs-12">
+                <div class="product-sales-chart">
+                    <div class="portlet-title">
+                        <div class="row">
+                            <div class="caption pro-sl-hd">
+                                <form class="form-inline">
+                                    <div class="form-group">
+                                        <label>Séléctionnez une annonce</label>
+                                        <select id="select-annonce" class="form-control">
+                                            <option disabled selected>---</option>
+                                            {% for item in data_per_ad %}
+                                            <option data-ad="{{item.annonce.id}}"
+                                                    data-cm="{{item.campagne.id}}">
+                                                {{item.annonce.libelle}}
+                                            </option>
+                                            {% endfor %}
+                                        </select>
+                                    </div>
+                                    <div class="form-group">
+                                        <label >Séléctionnez un paramètre</label>
+                                        <select id="select-argument" class="form-control">
+                                            <option disabled selected>---</option>
+                                            <option value="1">
+                                                Sexe
+                                            </option>
+                                            <option value="3">
+                                                Spécialité
+                                            </option>
+                                            <option value="2">
+                                                Zone
+                                            </option>
+                                        </select>
+                                    </div>
+                                    <button id="btn-show-graph" class="btn btn-etabib">
+                                        Afficher le graphe
+                                    </button>
+                                </form>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class="col-lg-12 col-md-12 col-sm-12 col-xs-12">
+                <div class="product-sales-chart">
+                    <ul class="list-inline cus-product-sl-rp">
+                        <li>
+                            <h5><i class="fa fa-circle" style="color: #006DF0;"></i>{% trans "Impressions" %}</h5>
+                        </li>
+                        <li>
+                            <h5><i class="fa fa-circle" style="color: #933EC5;"></i>{% trans "Clics" %}</h5>
+                        </li>
+                    </ul>
+                    <div id="morris-bar-chart-annonce" style="height: 356px;"></div>
+                </div>
+            </div>
+
+        </div>
+    </div>
+</div>
+{% endblock %}
+{% block js %}
+<!-- bootstrap JS ============================================ -->
+<script src='{% static "js/bootstrap.min.js" %}'></script>
+<!-- wow JS ============================================ -->
+<script src='{% static "js/wow.min.js" %}'></script>
+<!-- price-slider JS ============================================ -->
+<script src='{% static "js/jquery-price-slider.js" %}'></script>
+<!-- meanmenu JS ============================================ -->
+<script src='{% static "js/jquery.meanmenu.js" %}'></script>
+<!-- owl.carousel JS  ============================================ -->
+<script src='{% static "js/owl.carousel.min.js" %}'></script>
+<!-- sticky JS ============================================ -->
+<script src='{% static "js/jquery.sticky.js" %}'></script>
+<!-- scrollUp JS ============================================ -->
+<script src='{% static "js/jquery.scrollUp.min.js" %}'></script>
+<!-- counterup JS
+                    ============================================ -->
+<script src='{% static "js/counterup/jquery.counterup.min.js" %}'></script>
+<script src='{% static "js/counterup/waypoints.min.js" %}'></script>
+<script src='{% static "js/counterup/counterup-active.js" %}'></script>
+<!-- mCustomScrollbar JS
+                    ============================================ -->
+<script
+        src='{% static "js/scrollbar/jquery.mCustomScrollbar.concat.min.js" %}'></script>
+<script src='{% static "js/scrollbar/mCustomScrollbar-active.js" %}'></script>
+<!-- metisMenu JS ============================================ -->
+<script src='{% static "js/metisMenu/metisMenu.min.js" %}'></script>
+<script src='{% static "js/metisMenu/metisMenu-active.js" %}'></script>
+<!-- plugins JS   ============================================ -->
+<script src='{% static "js/plugins.js" %}'></script>
+<!-- main JS   ============================================ -->
+<script src='{% static "js/main.js" %}'></script>
+<!-- tawk chat JS  ============================================ -->
+{% include 'partial/tawk-script.html' %}
+<!-- morrisjs ============================================ -->
+<script src='{% static "js/morrisjs/raphael-min.js" %}'></script>
+<script src='{% static "js/morrisjs/morris.js" %}'></script>
+<!-- sparkline JS ============================================ -->
+<script src='{% static "js/sparkline/jquery.sparkline.min.js" %}'></script>
+<script src='{% static "js/sparkline/jquery.charts-sparkline.js" %}'></script>
+<script src='{% static "js/sparkline/sparkline-active.js" %}'></script>
+<script>
+    Morris.Area({
+        element: 'extra-area-chart',
+        data: {{data|safe}},
+        xkey: 'period',
+        ykeys: ['impressions', 'clics'],
+        labels: ['{% trans "Impressions" %}', '{% trans "Clics" %}'],
+        pointSize: 3,
+        fillOpacity: 0,
+        pointStrokeColors:['#006DF0', '#933EC5'],
+        behaveLikeLine: true,
+        gridLineColor: '#e0e0e0',
+        lineWidth: 1,
+        hideHover: 'auto',
+        lineColors: ['#006DF0', '#933EC5'],
+        resize: true
+    });
+
+     $('#sparklinedashImp').sparkline({{date_imp|safe}}, {
+        type: 'bar',
+        height: '30',
+        barWidth: '4',
+        resize: true,
+        barSpacing: '5',
+        barColor: '#D80027'
+     });
+
+    $('#sparklinedashClc').sparkline({{date_clk|safe}}, {
+        type: 'bar',
+        height: '30',
+        barWidth: '4',
+        resize: true,
+        barSpacing: '5',
+        barColor: '#933EC5'
+    });
+    Morris.Bar({
+        element: 'morris-bar-chart-spec',
+        data: [
+        {% for d in data_spec_all %}
+        {
+            y: '{{d.specialite}}',
+            Impression: {{d.imp_count}},
+            clicks: {% if d.clk_count %} {{d.clk_count}} {% else %} 0 {% endif %},
+        },
+        {% endfor %}
+        ],
+        xkey: 'y',
+        ykeys: ['Impression', 'clicks'],
+        labels: ['Impression', 'Clics'],
+        barColors:['#006DF0', '#933EC5'],
+        hideHover: 'auto',
+        barSizeRatio:0.45,
+        gridLineColor: '#eef0f2',
+        resize: true
+    });
+
+    Morris.Bar({
+        element: 'morris-bar-chart-zne',
+        data: [
+        {% for d in data_zne_all %}
+        {
+            y: '{{d.ville}}',
+            Impression: {{d.imp_count}},
+            clicks: {% if d.clk_count %} {{d.clk_count}} {% else %} 0 {% endif %},
+        },
+        {% endfor %}
+        ],
+        xkey: 'y',
+        ykeys: ['Impression', 'clicks'],
+        labels: ['Impression', 'Clics'],
+        barColors:['#006DF0', '#933EC5'],
+        hideHover: 'auto',
+        barSizeRatio:0.45,
+        gridLineColor: '#eef0f2',
+        resize: true
+    });
+
+    Morris.Bar({
+        element: 'morris-bar-chart-sxe',
+        data: [
+        {% for d in data_gdre_all %}
+        {
+            y: '{{d.sexe}}',
+            Impression: {{d.imp_count}},
+            clicks: {% if d.clk_count %} {{d.clk_count}} {% else %} 0 {% endif %},
+        },
+        {% endfor %}
+        ],
+        xkey: 'y',
+        ykeys: ['Impression', 'clicks'],
+        labels: ['Impression', 'Clics'],
+        barColors:['#006DF0', '#933EC5'],
+        hideHover: 'auto',
+        barSizeRatio:0.45,
+        gridLineColor: '#eef0f2',
+        resize: true
+    });
+
+
+</script>
+<script>
+$(document).ready(function() {
+    $('#btn-show-graph').on('click', function(e) {
+        e.preventDefault();
+        var data = {
+             'csrfmiddlewaretoken': '{{ csrf_token }}',
+              'ad_pk':$("#select-annonce").find(':selected').data("ad"),
+              'cm_pk': $("#select-annonce").find(':selected').data("cm"),
+              'arg': $("#select-argument option:selected").val(),
+        };
+        $.post( "{% url 'partner-campaign-stats-by-ad' %}", data, function(response) {
+            $("#morris-bar-chart-annonce").empty();
+            var data=[];
+            for(var i = 0; i < response.data.length; i++) {
+                    data.push({
+                        y: '' + response.data[i].arg,
+                        Impression: response.data[i].imp_count,
+                        clicks: response.data[i].clk_count
+                    });
+            };
+            Morris.Bar({
+                element: 'morris-bar-chart-annonce',
+                data: data,
+                xkey: 'y',
+                ykeys: ['Impression', 'clicks'],
+                labels: ['Impression', 'Clics'],
+                barColors:['#006DF0', '#933EC5'],
+                hideHover: 'auto',
+                barSizeRatio:0.45,
+                gridLineColor: '#eef0f2',
+                resize: true
+            });
+        }, "json")
+        .fail(function(response) {
+            console.log(response);
+        });
+    });
+});
+
+
+</script>
+
+{% endblock %}

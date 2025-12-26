@@ -1,0 +1,97 @@
+{% load crispy_forms_tags i18n static %}
+<div id="ticket" class="row">
+    <div class="container m-t-20 m-b-40">
+        <div class="col-lg-12 col-md-12 col-sm-12 col-xs-12">
+            <div class="sparkline8-list">
+                <div class="text-center">
+                    <h1>
+                        <img width="100" src="{% static 'img/logo/ihsm.png' %}">
+                    </h1>
+                    <p>IBN HAMZA</p>
+                    <p>Services & Micro applications ,Sarl</p>
+                </div>
+                <h1 class="text-center">
+                    {% trans "Reçu de paiement" %}
+                </h1>
+                <div class="alert alert-info">
+                    <ul>
+                        <li>
+                            <p>{% trans "Veuillez imprimer et garder ce reçu de paiement" %}</p>
+                        </li>
+                        <li>
+                            <p>{% trans "Il vous sera exigé pour toute réclamation concernant votre paiement." %}</p>
+                        </li>
+                    </ul>
+                </div>
+                <div class="row">
+                    <div class="col-lg-12">
+                        {% include 'partials/messages-alerts.html' with disable_slideup=True %}
+                    </div>
+                </div>
+                <div class="row">
+                    <div class="col-lg-12 col-md-12 col-sm-12 col-xs-12">
+                        <table class="table table-bordered">
+                            <tr>
+                                <th>{% trans "État:" %}</th>
+                                <td>{{opaiment.etat}}</td>
+                            </tr>
+                            <tr>
+                                <th>{% trans "Facturier:" %}</th>
+                                <td>eTabib</td>
+                            </tr>
+                            <tr>
+                                <th>{% trans "Date de l'opération:" %}</th>
+                                <td>{{opaiment.date_creation}}</td>
+                            </tr>
+                            <tr>
+                                <th>{% trans "Moyen de payement:" %}</th>
+                                <td>{{opaiment.get_moyen_paiement_display}}</td>
+                            </tr>
+                            <tr>
+                                <th>{% trans "Identifiant de la transaction:" %}</th>
+                                <td>{{opaiment.ordre_uuid}}</td>
+                            </tr>
+                            <tr>
+                                <th>{% trans "Numéro d'autorisation:" %}</th>
+                                <td>{{opaiment.numero_autorisation}}</td>
+                            </tr>
+                            <tr>
+                                <th>{% trans 'Client:' %}</th>
+                                <td>{{opaiment.user.first_name}} {{opaiment.user.last_name}}</td>
+                            </tr>
+                            <tr>
+                                <th>{% trans "Montant:" %}</th>
+                                <td>{{opaiment.montant}} DA</td>
+                            </tr>
+                        </table>
+                        <div class="btn-group buttons">
+                            <button class="btn btn-etabib" onclick="printTicket(); return false;">
+                                <i class="fa fa-print"></i>
+                                {% trans 'Imprimer le ticket' %}
+                            </button>
+                            <button class="btn btn-default" data-toggle="modal" data-target="#ticketModal">
+                                <i class="fa fa-send"></i>
+                                {% trans 'Envoyer par Email' %}
+                            </button>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+<div id="ticketModal" class="modal fade" role="dialog">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <div class="modal-body">
+                <form method="post">
+                    {% csrf_token %}
+                    {{ form|crispy }}
+                    <button type="submit" class="btn btn-etabib">{% trans 'Envoyer' %}</button>
+                    <button type="button" class="btn btn-default" data-dismiss="modal">{% trans 'Fermer' %}
+                    </button>
+                </form>
+            </div>
+        </div>
+    </div>
+</div>

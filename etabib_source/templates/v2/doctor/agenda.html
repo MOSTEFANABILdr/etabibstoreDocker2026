@@ -1,0 +1,110 @@
+{% extends "base.html" %}
+{% load i18n %}
+{% load static %}
+{% load role_tags %}
+{% block title %} {% trans 'Mon Agenda' %} {% endblock %}
+{% block style %}
+	<link href="{% static 'v2/plugins/@fullcalendar/common/main.min.css' %}" rel="stylesheet" />
+	<link href="{% static 'v2/plugins/@fullcalendar/daygrid/main.min.css' %}" rel="stylesheet" />
+	<link href="{% static 'v2/plugins/@fullcalendar/timegrid/main.min.css' %}" rel="stylesheet" />
+	<link href="{% static 'v2/plugins/@fullcalendar/list/main.min.css' %}" rel="stylesheet" />
+	<link href="{% static 'v2/plugins/@fullcalendar/bootstrap/main.min.css' %}" rel="stylesheet" />
+{% endblock %}
+{% block content %}
+<div class="container">
+    <h1 class="page-header">
+        <i class="fas fa-calendar"></i>
+        {% trans 'Mon agenda' %}
+    </h1>
+    <div id="calendar" class="vertical-box-column calendar"></div>
+</div>
+{% endblock %}
+{% block js %}
+    <script src="{% static 'v2/plugins/moment/min/moment.min.js' %}"></script>
+	<script src="{% static 'v2/plugins/@fullcalendar/core/main.global.js' %}"></script>
+	<script src="{% static 'v2/plugins/@fullcalendar/daygrid/main.global.js' %}"></script>
+	<script src="{% static 'v2/plugins/@fullcalendar/timegrid/main.global.js' %}"></script>
+	<script src="{% static 'v2/plugins/@fullcalendar/interaction/main.global.js' %}"></script>
+	<script src="{% static 'v2/plugins/@fullcalendar/list/main.global.js' %}"></script>
+	<script src="{% static 'v2/plugins/@fullcalendar/bootstrap/main.global.js' %}"></script>
+	<script src="https://unpkg.com/tooltip.js/dist/umd/tooltip.min.js"></script>
+	<script>
+		var handleCalendarDemo = function () {
+			// fullcalendar
+			var d = new Date();
+			var month = d.getMonth() + 1;
+			month = (month < 10) ? '0' + month : month;
+			var year = d.getFullYear();
+			var day = d.getDate();
+			var today = moment().startOf('day');
+			var calendarElm = document.getElementById('calendar');
+			var calendar = new FullCalendar.Calendar(calendarElm, {
+				headerToolbar: {
+					left: 'dayGridMonth,timeGridWeek,timeGridDay',
+					center: 'title',
+					right: 'prev,next today'
+				},
+				buttonText: {
+					today: 'Today',
+					month: 'Month',
+					week: 'Week',
+					day: 'Day'
+				},
+				initialView: 'dayGridMonth',
+				themeSystem: 'bootstrap',
+				views: {
+					timeGrid: {
+						eventLimit: 6 // adjust to 6 only for timeGridWeek/timeGridDay
+					}
+				},
+				events: function(info, successCallback, failureCallback) {
+					$.ajax({
+						url: "{% url 'fetch-appoinments-events' %}",
+						dataType: 'json',
+						data: {
+							start: info.start.getTime() / 1000,
+							end: info.end.getTime() / 1000,
+						},
+						success: function(doc) {
+							var events = [];
+							$(doc).each(function() {
+								events.push({
+									id: $(this).attr('event_id'),
+									title: $(this).attr('title'),
+									description: $(this).attr('description'),
+									start: $(this).attr('start'),
+									end: $(this).attr('end'),
+									color: $(this).attr('color'),
+									icon: $(this).attr('icon'),
+								});
+							});
+							successCallback(events);
+						}
+					});
+				},
+				eventDidMount: function(info) {
+					if(info.event.extendedProps['icon']){
+						console.log("hererer2");
+						$(info.el).find(".fc-event-title").prepend('<i class="fa fa-' + info.event.extendedProps["icon"] + '"></i> ');
+					}
+    			},
+			});
+
+			calendar.render();
+		};
+
+		var Calendar = function () {
+			"use strict";
+			return {
+				//main function
+				init: function () {
+					handleCalendarDemo();
+				}
+			};
+		}();
+
+		$(document).ready(function () {
+			Calendar.init();
+		});
+	</script>
+{% endblock %}

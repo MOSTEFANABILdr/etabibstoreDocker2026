@@ -1,0 +1,155 @@
+{% extends "base2.html" %}
+{% load i18n %}
+{% load static %}
+{% load widget_tweaks %}
+{% load crispy_forms_tags %}
+{% block title %} {% trans "Sign up" %} {%endblock %}
+{% block style %}
+<!-- Google Fonts
+                    ============================================ -->
+<link href="https://fonts.googleapis.com/css?family=Play:400,700"
+      rel="stylesheet">
+<!-- Bootstrap CSS
+                    ============================================ -->
+<link rel="stylesheet" href='{% static "css/bootstrap.min.css" %}'>
+<!-- Bootstrap CSS
+                    ============================================ -->
+<link rel="stylesheet" href='{% static "css/font-awesome.min.css" %}'>
+<!-- owl.carousel CSS
+                    ============================================ -->
+<link rel="stylesheet" href='{% static "css/owl.carousel.css" %}'>
+<link rel="stylesheet" href='{% static "css/owl.theme.css" %}'>
+<link rel="stylesheet" href='{% static "css/owl.transitions.css" %}'>
+<!-- animate CSS
+                    ============================================ -->
+<link rel="stylesheet" href='{% static "css/animate.css" %}'>
+<!-- normalize CSS
+                    ============================================ -->
+<link rel="stylesheet" href='{% static "css/normalize.css" %}'>
+<!-- main CSS
+                    ============================================ -->
+<link rel="stylesheet" href='{% static "css/main.css" %}'>
+<!-- morrisjs CSS
+                    ============================================ -->
+<link rel="stylesheet" href='{% static "css/morrisjs/morris.css" %}'>
+<!-- mCustomScrollbar CSS
+                    ============================================ -->
+<link rel="stylesheet"
+      href='{% static "css/scrollbar/jquery.mCustomScrollbar.min.css" %}'>
+<!-- metisMenu CSS
+                    ============================================ -->
+<link rel="stylesheet" href='{% static "css/metisMenu/metisMenu.min.css" %}'>
+<link rel="stylesheet" href='{% static "css/metisMenu/metisMenu-vertical.css" %}'>
+<!-- forms CSS
+                    ============================================ -->
+<link rel="stylesheet" href='{% static "css/form/all-type-forms.css" %}'>
+<!-- modernizr JS
+                    ============================================ -->
+<script src='{% static "js/vendor/modernizr-2.8.3.min.js" %}'></script>
+<style>
+    .password-help-text {
+        font-size: 13px;
+        text-align: -webkit-auto;
+        margin-bottom: 15px;
+    }
+    .password-help-text ul {
+        list-style: inside;
+    }
+</style>
+{% endblock %} {% block content %}
+<div class="error-pagewrap">
+    <div class="error-page-int wrap-login">
+        <div class="m-b-md custom-login">
+            <img width="96px" class="main-logo" src='{% static "img/logo/logdo.png" %}' alt=""/>
+        </div>
+        <div class="mg-t-15">
+            {% include 'partial/language-selector.html' with show_language_name=True %}
+        </div>
+        <div class="content-error">
+            {% if messages %}
+            <div>
+                <ul>
+                    {% for message in messages %}
+                    <div class="alert alert-{{ message.tags }}">
+                        <button type="button" class="close" data-dismiss="alert" aria-label="Close">
+                            <span aria-hidden="true">&times;</span>
+                        </button>
+                        <p>{{message}}</p>
+                    </div>
+                    {% endfor %}
+                </ul>
+            </div>
+            {% endif %}
+            {% for error in form.non_field_errors %}
+            <div class="alert alert-danger alert-mg-b alert-danger-style4">
+                <p>{{error}}</p>
+            </div>
+            {%endfor %}
+            <div class="hpanel">
+                <div class="panel-body text-center login-body">
+                    {{ form.media }}
+                    {% if form.helper %}
+                    {% crispy form form.helper %}
+                    {% else %}
+                    {% crispy form %}
+                    {% endif %}
+                    {% if redirect_field_value %}
+                    <input type="hidden" name="{{ redirect_field_name }}"
+                           value="{{ redirect_field_value }}"/>
+                    {% endif %}
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %} {% block js %}
+<!-- bootstrap JS
+                    ============================================ -->
+<script src='{% static "js/bootstrap.min.js" %}'></script>
+<!-- wow JS
+                    ============================================ -->
+<script src='{% static "js/wow.min.js" %}'></script>
+<!-- price-slider JS
+                    ============================================ -->
+<script src='{% static "js/jquery-price-slider.js" %}'></script>
+<!-- meanmenu JS
+                    ============================================ -->
+<script src='{% static "js/jquery.meanmenu.js" %}'></script>
+<!-- owl.carousel JS
+                    ============================================ -->
+<script src='{% static "js/owl.carousel.min.js" %}'></script>
+<!-- sticky JS
+                    ============================================ -->
+<script src='{% static "js/jquery.sticky.js" %}'></script>
+<!-- scrollUp JS
+                    ============================================ -->
+<script src='{% static "js/jquery.scrollUp.min.js" %}'></script>
+<!-- mCustomScrollbar JS
+                    ============================================ -->
+<script src='{% static "js/scrollbar/jquery.mCustomScrollbar.concat.min.js" %}'></script>
+<script src='{% static "js/scrollbar/mCustomScrollbar-active.js" %}'></script>
+<!-- metisMenu JS
+                    ============================================ -->
+<script src='{% static "js/metisMenu/metisMenu.min.js" %}'></script>
+<script src='{% static "js/metisMenu/metisMenu-active.js" %}'></script>
+<!-- tab JS
+                    ============================================ -->
+<script src='{% static "js/tab.js" %}'></script>
+<!-- icheck JS
+                    ============================================ -->
+<script src='{% static "js/icheck/icheck.min.js" %}'></script>
+<script src='{% static "js/icheck/icheck-active.js" %}'></script>
+<!-- plugins JS
+                    ============================================ -->
+<script src='{% static "js/plugins.js" %}'></script>
+<!-- main JS
+                    ============================================ -->
+<script src='{% static "js/main.js" %}'></script>
+
+{% block js %}
+<script src='{% static "js/dropzone/dropzone.js" %}'></script>
+<script src='{% static "js/dropzonee/jquery.cookie.js" %}'></script>
+<script>
+    Dropzone.autoDiscover = false;
+</script>
+{% endblock %}

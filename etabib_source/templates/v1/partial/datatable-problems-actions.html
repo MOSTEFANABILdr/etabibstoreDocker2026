@@ -1,0 +1,12 @@
+{% load i18n %}
+{% load role_tags %}
+<a title="{% trans 'Mettre à jour' %}" href="{% url 'technician-update-problem' problem.pk %}"
+   class="btn btn-default fm-update" data-fm-head="{% trans 'Mettre à jour' %}"
+   data-fm-callback="reload">
+    <i class="fa fa-pencil-square-o" aria-hidden="true"></i>
+</a>
+<a title="{% trans 'Supprimer' %}" href="{% url 'technician-delete-problem' problem.pk %}"
+   class="btn btn-default fm-delete" data-fm-head="{% trans 'Supprimer' %}"
+   data-fm-callback="reload">
+    <i class="fa fa-trash" aria-hidden="true"></i>
+</a>

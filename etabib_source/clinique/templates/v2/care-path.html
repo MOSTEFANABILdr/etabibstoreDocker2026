@@ -1,0 +1,132 @@
+{% extends "base.html" %}
+{% load i18n %}
+{% load static avatar_tags role_tags %}
+{% block title %}
+{% trans 'PARCOURS DE SANTÉ' %}
+{% endblock %}
+{% block style %}
+{% endblock %}
+{% block content %}
+
+<div class="container">
+    {% if user|is_doctor %}
+    <div class="row pt-2" style="background-color: #cdeefb;">
+        <div class="media pl-3">
+            {% avatar patient.user class="rounded-circle mr-3 " height="50px" %}
+            <div class="media-body">
+                <div class="row">
+                    <div class="col-lg-4 col-md-6">
+                        <h5 class="mt-0">{{patient.full_name}}</h5>
+                    </div>
+                    <div class="col-lg-8 col-md-6">
+                        <p>
+                            <strong>{% trans 'Age' %}:</strong>
+                            {{patient.age}} Ans
+                        </p>
+                        <p>
+                            <strong>{% trans 'Id' %}:</strong>
+                            {{patient.id}}
+                        </p>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+    {% endif %}
+    <div class="row">
+        <div class="col-lg-12">
+            {% include 'partial/messages-alerts.html' %}
+        </div>
+    </div>
+    <div class="dropdown pull-right mt-3">
+        <button class="btn btn-etabib dropdown-toggle " type="button" data-toggle="dropdown"
+                aria-haspopup="true" aria-expanded="false">
+            {% trans 'Ajouter' %}
+        </button>
+        <div class="dropdown-menu" aria-labelledby="dropdownMenuButton">
+            <a href="{% url 'document-create' patient.pk %}" class="fm-create dropdown-item" data-fm-callback="reload"
+               data-fm-ok="{% trans 'Ajouter' %}" data-fm-cancel="{% trans 'Annuler' %}">
+                {% trans 'Document' %}
+            </a>
+            {% if user|is_doctor %}
+            <a href="{% url 'consultation-create' patient.pk %}" class="fm-create dropdown-item"
+               data-fm-callback="reload"
+               data-fm-ok="{% trans 'Ajouter' %}" data-fm-cancel="{% trans 'Annuler' %}">
+                {% trans 'Consultation' %}
+            </a>
+            {% endif %}
+        </div>
+    </div>
+    <h1 class="page-header mt-3">
+        <i class="fas fa-tasks"></i>
+        {% trans 'PARCOURS DE SANTÉ' %}
+    </h1>
+    <div class="row mt-2 mb-2">
+        <div class="col-lg-12">
+            <form id="history-filter-form" class="form-inline justify-content-md-center" action="/" method="POST">
+                <strong class="m-r-10">{% trans 'Filtre:' %}</strong>
+                <select class="form-control mb-2 mr-md-2 form-control-lg col-lg-3 col-md-3" id="type_ev">
+                    <option value="" disabled selected>{% trans 'Sélectionnez un type ...' %}</option>
+                    <option value="1">{% trans 'Consultation' %}</option>
+                    <option value="2">{% trans 'Document' %}</option>
+                    <option value="3">{% trans 'Tous' %}</option>
+                </select>
+                <input type="text" class="form-control mb-2 mr-md-2 form-control-lg col-lg-3 col-md-3" id="tf_search"
+                       placeholder="{% trans 'Recherchez ...' %}">
+                <button type="button" onclick="return filterHistory(this);return false;"
+                        class="btn btn-sm btn-etabib">
+                    <i class="fa fa-search"></i>
+                    {% trans 'Filtrer' %}
+                </button>
+            </form>
+        </div>
+    </div>
+    <!-- begin timeline -->
+    <ul id="care-timeline" class="timeline">
+        {% include page_template %}
+    </ul>
+    <!-- end timeline -->
+</div>
+{% endblock %}
+{% block js %}
+<script type="text/javascript"
+        src="https://cdnjs.cloudflare.com/ajax/libs/moment.js/2.9.0/moment-with-locales.min.js"></script>
+<script type="text/javascript"
+        src="https://cdnjs.cloudflare.com/ajax/libs/bootstrap-datetimepicker/4.17.47/js/bootstrap-datetimepicker.min.js"></script>
+{% include "fm/modal.html" with lg=True %}
+<!-- /.modal -->
+<script type="text/javascript">
+    $(function() {
+        $.fm({debug: true});
+    });
+
+</script>
+<script src="{% static 'el-pagination/js/el-pagination.js' %}"></script>
+<script>$.endlessPaginate({paginateOnScroll: true});</script>
+<script>
+    function filterHistory(param) {
+        var type_ev = $("#type_ev").val();
+        var q = $("#tf_search").val();
+
+        var url = "{% url 'historique-filter' patient.id %}?q=" + q + "&type_ev=" + type_ev;
+        $(param).find('i').removeClass("fa fa-check").addClass("fa fa-spinner fa-spin");
+        $.get( url, function( data ) {
+            $(param).find('i').removeClass("fa fa-spinner fa-spin").addClass("fa fa-check");
+            $("#care-timeline").html(data);
+        })
+        .fail(function(response) {
+            $(param).find('i').removeClass("fa fa-spinner fa-spin").addClass("fa fa-check");
+            console.log(response);
+        });
+    };
+$(document).ready(function() {
+    $('#history-filter-form').keydown(function (e) {
+        if (e.keyCode == 13) {
+            e.preventDefault();
+            return false;
+        }
+    });
+});
+
+</script>
+{% endblock %}

@@ -1,0 +1,202 @@
+{% extends "base.html" %}
+{% load i18n %}
+{% load static %}
+{% load role_tags %}
+{% block title %} {% trans 'Events' %} {% endblock %}
+{% block style %}
+<!-- Google Fonts
+                    ============================================ -->
+<link
+        href="https://fonts.googleapis.com/css?family=Roboto:100,300,400,700,900"
+        rel="stylesheet">
+<!-- Bootstrap CSS
+                    ============================================ -->
+<link rel="stylesheet" href='{% static "css/bootstrap.min.css" %}'>
+<!-- Bootstrap CSS
+                    ============================================ -->
+<link rel="stylesheet" href='{% static "css/font-awesome.min.css" %}'>
+<!-- owl.carousel CSS
+                    ============================================ -->
+<link rel="stylesheet" href='{% static "css/owl.carousel.css" %}'>
+<link rel="stylesheet" href='{% static "css/owl.theme.css" %}'>
+<link rel="stylesheet" href='{% static "css/owl.transitions.css" %}'>
+<!-- animate CSS
+                    ============================================ -->
+<link rel="stylesheet" href='{% static "css/animate.css" %}'>
+<!-- normalize CSS
+                    ============================================ -->
+<link rel="stylesheet" href='{% static "css/normalize.css" %}'>
+<!-- meanmenu icon CSS
+                    ============================================ -->
+<link rel="stylesheet" href='{% static "css/meanmenu.min.css" %}'>
+<!-- main CSS
+                    ============================================ -->
+<link rel="stylesheet" href='{% static "css/main.css" %}'>
+<!-- educate icon CSS
+                    ============================================ -->
+<link rel="stylesheet" href='{% static "css/educate-custon-icon.css" %}'>
+<!-- mCustomScrollbar CSS
+                    ============================================ -->
+<link rel="stylesheet"
+      href='{% static "css/scrollbar/jquery.mCustomScrollbar.min.css" %}'>
+<!-- metisMenu CSS
+                    ============================================ -->
+<link rel="stylesheet"
+      href='{% static "css/metisMenu/metisMenu.min.css" %}'>
+<link rel="stylesheet"
+      href='{% static "css/metisMenu/metisMenu-vertical.css" %}'>
+<!-- Custom modals css ============================================ -->
+<link rel="stylesheet" href='{% static "css/modals.css" %}'>
+<!-- datapicker css ============================================ -->
+<link rel="stylesheet" href='{% static "css/datapicker/datepicker3.css" %}'>
+<!-- calendar CSS
+                    ============================================ -->
+<link rel="stylesheet" href='{% static "css/calendar/fullcalendar.min.css" %}?v=3.10.21'>
+<!--<link rel="stylesheet" href='{% static "css/calendar/fullcalendar.print.min.css" %}?v=3.10.2'>-->
+<!-- modernizr JS ============================================ -->
+<script src='{% static "js/vendor/modernizr-2.8.3.min.js" %}'></script>
+<style>
+
+</style>
+{% endblock %}
+{% block content %}
+<div class="calender-area mg-b-15">
+    <div class="container-fluid">
+        <div class="row">
+            <div class="col-lg-12">
+                <div class="calender-inner">
+                    {% if request.user|is_partner %}
+                    <div class="row">
+                        <a class="btn btn-etabib floatright" href="{% url 'partner-appointments' %}">
+                            <i class="fa fa-calendar"></i>
+                            {% trans 'Les demandes de rendez-vous' %}
+                        </a>
+                    </div>
+                    <br>
+                    {% endif %}
+                    <div class="row">
+                        <div id='calendar'></div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+<div id="event-modal" class="modal" tabindex="-1">
+    <div class="modal-dialog modal-sm">
+        <div class="modal-content">
+            <div class="modal-body">
+                <p>
+                    {% trans "Déplacer l'événement à une autre date" %}
+                </p>
+                <div id="datepicker" class="input-group date" data-provide="datepicker">
+                    <input type="text" class="form-control">
+                    <div class="input-group-addon">
+                        <span class="glyphicon glyphicon-th"></span>
+                    </div>
+                </div>
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-default" data-dismiss="modal">{% trans "Fermer" %}</button>
+                <button id="btn-update-event" type="button" class="btn btn-etabib">{% trans "Appliquer" %}</button>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}
+{% block js %}
+<script>
+    var events_url = "#";
+    var events_update_url = "#";
+    {% if perms.core.crm_can_view_comn_agenda or perms.core.crm_can_view_comm_agenda or perms.core.crm_can_view_tech_agenda or perms.core.crm_can_view_delg_agenda %}
+	    events_url = "{% url 'operator-fetch-events' %}";
+        events_update_url = "{% url 'operator-update-event' %}";
+	{% endif %}
+
+	{% if user|is_doctor or user|is_partner or user|is_professionnal %}
+	    events_url = "{% url 'fetch-appoinments-events' %}";
+	{% endif %}
+
+</script>
+<!-- bootstrap JS
+                    ============================================ -->
+<script src='{% static "js/bootstrap.min.js" %}'></script>
+<!-- wow JS
+                    ============================================ -->
+<script src='{% static "js/wow.min.js" %}'></script>
+<!-- meanmenu JS
+                    ============================================ -->
+<script src='{% static "js/jquery.meanmenu.js" %}'></script>
+<!-- owl.carousel JS
+                    ============================================ -->
+<script src='{% static "js/owl.carousel.min.js" %}'></script>
+<!-- sticky JS
+                    ============================================ -->
+<script src='{% static "js/jquery.sticky.js" %}'></script>
+<!-- scrollUp JS
+                    ============================================ -->
+<script src='{% static "js/jquery.scrollUp.min.js" %}'></script>
+<!-- counterup JS
+                    ============================================ -->
+<script src='{% static "js/counterup/jquery.counterup.min.js" %}'></script>
+<script src='{% static "js/counterup/waypoints.min.js" %}'></script>
+<script src='{% static "js/counterup/counterup-active.js" %}'></script>
+<!-- mCustomScrollbar JS
+                    ============================================ -->
+<script
+        src='{% static "js/scrollbar/jquery.mCustomScrollbar.concat.min.js" %}'></script>
+<script src='{% static "js/scrollbar/mCustomScrollbar-active.js" %}'></script>
+<!-- metisMenu JS
+                    ============================================ -->
+<script src='{% static "js/metisMenu/metisMenu.min.js" %}'></script>
+<script src='{% static "js/metisMenu/metisMenu-active.js" %}'></script>
+<!-- calendar JS
+                    ============================================ -->
+<script src='{% static "js/calendar/moment.min.js" %}?v=3.10.2'></script>
+<script src='{% static "js/calendar/fullcalendar.min.js" %}?v=3.10.2'></script>
+<script src='{% static "js/calendar/locale-all.js" %}?v=3.10.2'></script>
+<script type="text/javascript" src='{% static "js/calendar/fullcalendar-rightclick.js" %}'></script>
+<script type="text/javascript">
+   var language = '{{LANGUAGE_CODE}}';
+
+</script>
+<script src='{% static "js/calendar/fullcalendar-active.js" %}?v=1.3'></script>
+<!-- plugins JS -->
+<script src='{% static "js/datapicker/bootstrap-datepicker.js" %}'></script>
+
+<!-- plugins JS
+                    ============================================ -->
+<script src='{% static "js/plugins.js" %}'></script>
+<!-- main JS
+                    ============================================ -->
+<script src='{% static "js/main.js" %}'></script>
+<!-- tawk chat JS
+                    ============================================ -->
+{% include 'partial/tawk-script.html' %}
+<script type="text/javascript">
+$(document).ready(function() {
+
+    var selected_event = null;
+    $('#event-modal').on('show.bs.modal', function(e) {
+		// access parsed information through relatedTarget
+		if (e.relatedTarget) {
+		    selected_event = e.relatedTarget.event;
+		    $('#datepicker').datepicker({
+                format: "yyyy-mm-dd",
+                startDate: selected_event.start.toDate(),
+                language: "fr",
+                autoclose: true
+            });
+            $("#datepicker").datepicker("setDate" , selected_event.start.toDate());
+		}
+	});
+	$( "#btn-update-event" ).click(function() {
+        if (selected_event) {
+            selected_event.start = moment($("#datepicker").datepicker("getDate"));
+            updateEvent(selected_event, null);
+            $('#calendar').fullCalendar('updateEvent', selected_event);
+        }
+    });
+});
+</script>
+{% endblock %}

@@ -1,0 +1,314 @@
+{% extends "base.html" %}
+{% load i18n %}
+{% load static role_tags crispy_forms_tags %}
+
+{% block title %} {% trans 'Les demandes de Rendez-vous' %} {% endblock %}
+
+{% block style %}
+<!-- jquery.dataTables CSS ============================================ -->
+<link rel="stylesheet" href='{% static "js/data-table/jquery.dataTables.min.css" %}'>
+<link rel="stylesheet" type="text/css"
+      href="https://cdn.datatables.net/responsive/2.2.3/css/responsive.bootstrap.min.css">
+<link href="https://cdn.jsdelivr.net/npm/smartwizard@5/dist/css/smart_wizard_all.min.css" rel="stylesheet"
+      type="text/css"/>
+<link href='{% static "css/lightbox2/css/lightbox.min.css" %}' rel="stylesheet"/>
+
+{% endblock %}
+
+{% block content %}
+<div class="container">
+    <div class="row">
+        <div class="col-md-6">
+            <h1 class="page-header">
+                <i class="fas fa-calendar"></i>
+                {% trans 'Liste des demandes de Rendez-vous' %}
+            </h1>
+        </div>
+        {% if user|is_doctor %}
+        <div class="col-md-6 float-right">
+            <a title="{% trans 'Créer un rendez-vous' %}" href="{% url 'doctor-create-appointments' %}"
+               class="btn btn-etabib fm-create m-r-5 m-b-5" data-fm-head="{% trans 'Créer un rendez-vous' %}"
+               data-fm-callback="reload">
+                <i class="fa fa-edit" aria-hidden="true"></i>
+                {% trans 'Créer un rendez-vous' %}
+            </a>
+            <a href="#" class="btn btn-etabib m-b-5" data-toggle="modal" data-target="#planModal">
+                <i class="fa fa-edit" aria-hidden="true"></i>
+                {% trans 'Demandez un rendez-vous' %}
+            </a>
+        </div>
+    </div>
+    {% endif %}
+    <div class="mt-4">
+        {{ datatable }}
+    </div>
+</div>
+
+<div class="modal fade" id="planModal" data-current-step="0" data-backdrop="static" data-keyboard="false" role="dialog"
+     aria-labelledby="planModalLabel" aria-hidden="true">
+    <div class="modal-dialog modal-lg" role="document">
+        <div class="modal-content">
+            <div class="modal-header header-color-modal bg-color-1">
+                <h5 class="modal-title"> {% trans 'Demandez un rendez vous' %}</h5>
+            </div>
+            <div class="modal-body" id="smartwizard">
+                <ul class="nav">
+                    <li>
+                        <a class="nav-link" href="#step-1">
+                            {% trans 'Scan Qr' %}
+                        </a>
+                    </li>
+                    <li>
+                        <a class="nav-link" href="#step-2">
+                            {% trans 'Type' %}
+                        </a>
+                    </li>
+                    <li>
+                        <a class="nav-link" href="#step-3">
+                            {% trans " Lettre d'orientation " %}
+                        </a>
+                    </li>
+                </ul>
+                <div class="tab-content">
+                    <div id="step-1" class="tab-pane" role="tabpanel">
+                        <div class="row">
+                            <div class="col-md-6">
+                                <div id="reader"></div>
+                            </div>
+                            <div class="col-md-6">
+                                <div class="card text-center border-0">
+                                    <div class="card-body">
+                                        <h4 class="card-title">{% trans 'Patient'%}</h4>
+                                        <p class="card-text">
+                                        <div class="row">{% trans 'Nom et Prénom'%}:
+                                            <div id="patientname"></div>
+                                        </div>
+                                        <div class="row">{% trans 'Age'%}:
+                                            <div id="age"></div>
+                                        </div>
+                                        <div class="row">{% trans 'Nin'%}:
+                                            <div id="nin"></div>
+                                        </div>
+                                        <div class="row">{% trans 'Chifa'%}:
+                                            <div id="chifa"></div>
+                                        </div>
+                                        </p>
+                                        <div id="eroor"></div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    <div id="step-2" class="tab-pane text-center" role="tabpanel">
+                        <h1>{% trans "Lettre d'orientation" %}</h1>
+                        {% crispy step1 %}
+                    </div>
+                    <div id="step-3" class="tab-pane text-center" role="tabpanel">
+                        <h1>{% trans "Lettre d'orientation" %}</h1>
+                        {% crispy step2 %}
+                    </div>
+                </div>
+            </div>
+            <div id="footer" class="modal-footer">
+                <button id="prev-btn" class="btn btn-default sw-btn-prev">
+                    {% trans 'Retour' %}
+                </button>
+                <button id="next-btn" class="btn btn-info sw-btn-next">
+                    {% trans 'Suivant' %}
+                </button>
+                <button id="submit-btn" class="btn btn-success hide">
+                    {% trans 'Créer la demande de rendez vous' %}
+                </button>
+                <button class="btn btn-danger" data-dismiss="modal" aria-label="Close">
+                    {% trans 'Fermer' %}
+                </button>
+            </div>
+        </div>
+    </div>
+</div>
+
+{% endblock %}
+{% block js %}
+{% include "fm/modal.html" %}
+<!-- /.modal -->
+<script src='{% static "js/html5-qrcode.min.js" %}'></script>
+<script type="text/javascript"
+        src="https://cdnjs.cloudflare.com/ajax/libs/moment.js/2.9.0/moment-with-locales.min.js"></script>
+<script type="text/javascript"
+        src="https://cdnjs.cloudflare.com/ajax/libs/bootstrap-datetimepicker/4.17.47/js/bootstrap-datetimepicker.min.js"></script>
+<script type="text/javascript" charset="utf8" src='{% static "js/data-table/jquery.dataTables.min.js" %}'></script>
+<script type="text/javascript" charset="utf8" src="{% static 'js/data-table/datatableview.js' %}?v=1.0"></script>
+<script type="text/javascript" charset="utf8"
+        src="https://cdn.datatables.net/responsive/2.2.3/js/dataTables.responsive.js"></script>
+
+<!--jquery-smartwizard-->
+<script src="https://cdn.jsdelivr.net/npm/smartwizard@5/dist/js/jquery.smartWizard.min.js"
+        type="text/javascript"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/jquery-validate/1.19.3/jquery.validate.min.js"
+        type="text/javascript"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/jquery-validate/1.19.3/additional-methods.min.js"
+        type="text/javascript"></script>
+<script src="https://cdn.jsdelivr.net/npm/jquery-validation@1.17.0/dist/localization/messages_fr.js"
+        type="text/javascript"></script>
+<!-- lightbox2 JS ============================================ -->
+<script src='{% static "js/lightbox2/js/lightbox.min.js" %}'></script>
+<script>
+var key;
+var type_rdv;
+var has_rdv;
+
+$(document).ready(function() {
+    $.fm({debug: true});
+    var common_options = {
+        "language": {
+            {% if LANGUAGE_CODE == 'ar' %}
+            "url": "https://cdn.datatables.net/plug-ins/1.10.20/i18n/Arabic.json"
+            {% else %}
+            "url": "https://cdn.datatables.net/plug-ins/1.10.20/i18n/French.json"
+            {% endif %}
+        },
+        "processing": "Loading...",
+         "loadingRecords": "&nbsp;",
+    };
+    var datatable = datatableview.initialize('.datatable', common_options);
+    lightbox.option({
+      'alwaysShowNavOnTouchDevices': true,
+    })
+    function onScanSuccess(qrCodeMessage) {
+      var data = {pk : qrCodeMessage,};
+       $.ajax({
+            type: "POST",
+            url: "{% url 'doctor-qrcode-reader' %}",
+            data: data,
+            success: function(patient) {
+                document.querySelector('#footer').scrollIntoView({
+                    behavior: 'smooth'
+                });
+                key = patient.patient.pk;
+                has_rdv = patient.patient.rdv;
+                if (has_rdv != null){
+                    $("#eroor").html("</br><div class='p-3 mb-2 bg-danger text-white'>{% trans 'Le Patient as un Rendez vous' %}</div><button onclick='removeRdv("+has_rdv+");'  class='btn btn-etabib btn-sm'data-toggle='tooltip' data-placement='top' title='{% trans 'Annuler rendez Vous' %}'>{% trans 'Annuler rendez Vous' %}</button>");
+                }else{
+                    $("#eroor").html("");
+                }
+                $("#patientname").html(patient.patient.full_name);
+                if (patient.patient.age){
+                    $("#age").html(patient.patient.age);
+                }
+                if (patient.patient.nin){
+                    $("#nin").html(patient.patient.nin);
+                }
+                if (patient.patient.chifa){
+                    $("#chifa").html(patient.patient.chifa);
+                }
+             },
+            error: function()
+            {
+                document.querySelector('#footer').scrollIntoView({
+                    behavior: 'smooth'
+                });
+                key = null;
+                $("#eroor").html("<div class='p-3 mb-2 bg-danger text-white'>{% trans "Patient n'est pas trouver" %}</div>");
+            }
+       });
+
+    }
+
+    var html5QrcodeScanner = new Html5QrcodeScanner(
+        "reader", { fps: 10, qrbox: 250 });
+    html5QrcodeScanner.render(onScanSuccess);
+
+    $('#smartwizard').smartWizard({
+        selected: 0,
+        theme: "default",
+        enableURLhash: false,
+        autoAdjustHeight: false,
+        toolbarSettings: {
+        showNextButton: false,
+        showPreviousButton: false,},
+    });
+
+    $("#smartwizard").on("showStep", function(e, anchorObject, stepNumber, stepDirection, stepPosition) {
+        $("#prev-btn").removeClass('disabled');
+        $("#next-btn").removeClass('disabled');
+        if(stepPosition === 'first') {
+            $("#prev-btn").addClass('disabled');
+        } else if(stepPosition === 'last') {
+            $("#next-btn").addClass('disabled');
+        } else {
+            $("#prev-btn").removeClass('disabled');
+            $("#next-btn").removeClass('disabled');
+        }});
+
+    $("#next-btn").click(function(e) {
+            $('#smartwizard').smartWizard("loader", "show");
+            var stepIndex = $('#smartwizard').smartWizard("getStepIndex");
+            if (stepIndex == 0 && key != null && has_rdv == null) {
+                $('#smartwizard').smartWizard("next");
+            }
+            else if (stepIndex == 1 && $("#rdvform1").valid()) {
+                $('#smartwizard').smartWizard("next");
+                type_rdv = document.getElementById("id_type").value;
+            }
+            else {
+                $('#smartwizard').smartWizard("loader", "hide");
+            }
+            $('#smartwizard').smartWizard("loader", "hide");
+        });
+
+    $("#prev-btn").click(function(e) {
+        $('#smartwizard').smartWizard("prev");
+    });
+
+    $("#smartwizard").on("leaveStep", function(e, anchorObject, currentStepIndex, nextStepIndex, stepDirection) {
+        if (nextStepIndex == 2) {
+            $("#submit-btn").removeClass("hide");
+        }
+        else {
+            $("#submit-btn").addClass("hide");
+        }
+        return true;
+    });
+
+    $("#submit-btn").click(function(e) {
+        e.preventDefault();
+        var lettre = $('input[type=file]')[0].files[0];
+        var formData = new FormData();
+        $('#smartwizard').smartWizard("loader", "show");
+        formData.append('pk',key);
+        formData.append('type_rdv', type_rdv);
+        if(lettre){
+            formData.append('lettre', lettre);
+        }
+         $.ajax({
+            url: "{% url 'doctor-dmd-rdv' %}",
+            data: formData,
+            type: 'POST',
+            contentType: false, // NEEDED, DON'T OMIT THIS (requires jQuery 1.6+)
+            processData: false, // NEEDED, DON'T OMIT THIS
+            statusCode: {
+                200: function() {
+                     location.href = "{% url 'doctor-appointments' %}";
+                },
+                400: function() {
+                    console.log("400");
+                },
+            },
+        });
+    });
+});
+
+function removeRdv(key) {
+    $("#eroor").html("<div class='text-center'><i class='fa fa-spinner fa-spin fa-2x'></i></div>")
+    var data = {
+        'key' : key,
+        'csrfmiddlewaretoken': '{{ csrf_token }}'
+    };
+    $.post( "{% url 'doctor-dmd-rdv-can' %}", data, function(response) {
+        has_rdv=response.sucuss;
+        $("#eroor").html("");
+    })
+}
+
+</script>
+{% endblock %}

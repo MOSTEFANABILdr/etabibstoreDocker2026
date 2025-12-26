@@ -1,0 +1,419 @@
+{% extends "base.html" %}
+{% load i18n %}
+{% load static %}
+{% load avatar_tags %}
+{% load crispy_forms_tags %}
+{% block title %} {% trans 'My profile' %} {% endblock %}
+{% block style %}
+<!-- Google Fonts
+                    ============================================ -->
+<link
+        href="https://fonts.googleapis.com/css?family=Roboto:100,300,400,700,900"
+        rel="stylesheet">
+<!-- Bootstrap CSS
+                    ============================================ -->
+<link rel="stylesheet" href='{% static "css/bootstrap.min.css" %}'>
+<!-- Bootstrap CSS
+                    ============================================ -->
+<link rel="stylesheet" href='{% static "css/font-awesome.min.css" %}'>
+<!-- owl.carousel CSS
+                    ============================================ -->
+<link rel="stylesheet" href='{% static "css/owl.carousel.css" %}'>
+<link rel="stylesheet" href='{% static "css/owl.theme.css" %}'>
+<link rel="stylesheet" href='{% static "css/owl.transitions.css" %}'>
+<!-- animate CSS
+                    ============================================ -->
+<link rel="stylesheet" href='{% static "css/animate.css" %}'>
+<!-- normalize CSS
+                    ============================================ -->
+<link rel="stylesheet" href='{% static "css/normalize.css" %}'>
+<!-- meanmenu icon CSS
+                    ============================================ -->
+<link rel="stylesheet" href='{% static "css/meanmenu.min.css" %}'>
+<!-- main CSS
+                    ============================================ -->
+<link rel="stylesheet" href='{% static "css/main.css" %}'>
+<!-- educate icon CSS
+                    ============================================ -->
+<link rel="stylesheet" href='{% static "css/educate-custon-icon.css" %}'>
+<!-- morrisjs CSS
+                    ============================================ -->
+<link rel="stylesheet" href='{% static "css/morrisjs/morris.css" %}'>
+<!-- mCustomScrollbar CSS
+                    ============================================ -->
+<link rel="stylesheet"
+      href='{% static "css/scrollbar/jquery.mCustomScrollbar.min.css" %}'>
+<!-- metisMenu CSS
+                    ============================================ -->
+<link rel="stylesheet"
+      href='{% static "css/metisMenu/metisMenu.min.css" %}'>
+<link rel="stylesheet"
+      href='{% static "css/metisMenu/metisMenu-vertical.css" %}'>
+<!-- cropper CSS ============================================ -->
+<link rel="stylesheet" href='https://cdnjs.cloudflare.com/ajax/libs/cropperjs/1.5.6/cropper.min.css'>
+<!-- modernizr JS ============================================ -->
+<script src='{% static "js/vendor/modernizr-2.8.3.min.js" %}'></script>
+<!-- filepond css ============================================ -->
+<link href="https://unpkg.com/filepond/dist/filepond.css" rel="stylesheet">
+<link href="https://cdn.jsdelivr.net/npm/filepond-plugin-get-file@1.0.3/dist/filepond-plugin-get-file.min.css"
+      rel="stylesheet">
+<style>
+.profile-label input[type="file"] {
+    display: none;
+}
+.custom-file-upload {
+    border: 1px solid #ccc;
+    display: inline-block;
+    padding: 6px 12px;
+    cursor: pointer;
+}
+/* USER PROFILE */
+#user-profile h2 {
+    padding-right: 15px;
+}
+#user-profile .profile-status {
+	font-size: 0.75em;
+	padding-left: 12px;
+	margin-top: -10px;
+	padding-bottom: 10px;
+	color: #8dc859;
+}
+#user-profile .profile-status.offline {
+	color: #fe635f;
+}
+#user-profile .profile-img {
+	border: 1px solid #e1e1e1;
+	padding: 4px;
+	margin-top: 10px;
+	margin-bottom: 10px;
+}
+#user-profile .profile-label {
+	text-align: center;
+	padding: 5px 0;
+}
+#user-profile .profile-label .label {
+	padding: 5px 15px;
+	font-size: 1em;
+}
+#user-profile .profile-stars {
+	color: #FABA03;
+	padding: 7px 0;
+	text-align: center;
+}
+#user-profile .profile-stars > i {
+	margin-left: -2px;
+}
+#user-profile .profile-since {
+	text-align: center;
+	margin-top: -5px;
+}
+#user-profile .profile-details {
+	padding: 15px 0;
+	border-top: 1px solid #e1e1e1;
+	border-bottom: 1px solid #e1e1e1;
+	margin: 15px 0;
+}
+#user-profile .profile-details ul {
+	padding: 0;
+	margin-top: 0;
+	margin-bottom: 0;
+	margin-left: 40px;
+}
+#user-profile .profile-details ul > li {
+	margin: 3px 0;
+	line-height: 1.5;
+}
+#user-profile .profile-details ul > li > i {
+	padding-top: 2px;
+}
+#user-profile .profile-details ul > li > span {
+	color: #34d1be;
+}
+#user-profile .profile-header {
+	position: relative;
+}
+#user-profile .profile-header > h3 {
+	margin-top: 10px
+}
+#user-profile .profile-header .edit-profile {
+	margin-top: -6px;
+	position: absolute;
+	right: 0;
+	top: 0;
+}
+#user-profile .profile-tabs {
+	margin-top: 30px;
+}
+#user-profile .profile-user-info {
+	padding-bottom: 20px;
+}
+#user-profile .profile-user-info .profile-user-details {
+	position: relative;
+	padding: 4px 0;
+}
+#user-profile .profile-user-info .profile-user-details .profile-user-details-label {
+	width: 110px;
+	float: left;
+	bottom: 0;
+	font-weight: bold;
+	left: 0;
+	position: absolute;
+	text-align: right;
+	top: 0;
+	width: 110px;
+	padding-top: 4px;
+}
+#user-profile .profile-user-info .profile-user-details .profile-user-details-value {
+	margin-left: 120px;
+}
+#user-profile .profile-social li {
+	padding: 4px 0;
+}
+#user-profile .profile-social li > i {
+	padding-top: 6px;
+}
+@media only screen and (max-width: 767px) {
+	#user-profile .profile-user-info .profile-user-details .profile-user-details-label {
+		float: none;
+		position: relative;
+		text-align: left;
+	}
+	#user-profile .profile-user-info .profile-user-details .profile-user-details-value {
+		margin-left: 0;
+	}
+	#user-profile .profile-social {
+		margin-top: 20px;
+	}
+}
+@media only screen and (max-width: 420px) {
+	#user-profile .profile-header .edit-profile {
+		display: block;
+		position: relative;
+		margin-bottom: 15px;
+	}
+	#user-profile .profile-message-btn .btn {
+		display: block;
+	}
+}
+
+
+.main-box {
+    background: #FFFFFF;
+    -webkit-box-shadow: 1px 1px 2px 0 #CCCCCC;
+    -moz-box-shadow: 1px 1px 2px 0 #CCCCCC;
+    -o-box-shadow: 1px 1px 2px 0 #CCCCCC;
+    -ms-box-shadow: 1px 1px 2px 0 #CCCCCC;
+    box-shadow: 1px 1px 2px 0 #CCCCCC;
+    margin-bottom: 16px;
+    padding: 20px;
+}
+.main-box h2 {
+    margin: 0 0 15px -20px;
+    padding: 5px 0 5px 20px;
+    border-left: 10px solid #c2c2c2; /*7e8c8d*/
+}
+
+</style>
+{% endblock %}
+{% block content %}
+<div class="single-pro-review-area mt-t-30 mg-b-15">
+    <div class="container-fluid">
+        <div class="row">
+            <div class="col-lg-12">
+                {% include 'partial/messages-alerts.html' %}
+            </div>
+            <div class="row" id="user-profile">
+                <div class="col-lg-12">
+                    <div class="col-lg-3 col-md-4  col-sm-12 col-xs-12">
+                        <div class="main-box clearfix">
+                            <h2>{{organisateur.full_name}} </h2>
+                            {% comment %}
+                            <div class="profile-status">
+                                <i class="fa fa-check-circle"></i> {% trans 'En ligne' %}
+                            </div>
+                            {% endcomment %}
+                            {% avatar user class="profile-img img-responsive center-block" %}
+                            <div class="profile-label">
+                                <label for="id_image" class="label label-danger custom-file-upload">
+                                    {% trans "Changer" %} <i class="fa fa-cloud-upload"></i>
+                                </label>
+                                {% crispy avatarForm %}
+                            </div>
+                        </div>
+                    </div>
+                    <div class="col-lg-9 col-md-9  col-sm-12 col-xs-12">
+                        <div class="main-box clearfix">
+                            <div class="profile-header">
+                                <h3><span></span></h3>
+                            </div>
+                            {{ form.media }}
+                            {% if form.helper %}
+                            {% crispy form form.helper %}
+                            {% else %}
+                            {% crispy form %}
+                            {% endif %}
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+<!-- MODAL TO CROP THE IMAGE -->
+<div class="modal fade" id="modalCrop">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <div class="modal-header">
+                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                    <span aria-hidden="true">&times;</span>
+                </button>
+                <h4 class="modal-title">Recadrer la photo.</h4>
+            </div>
+            <div class="modal-body" style="padding:0px;">
+                <img src="" id="image" style="max-width: 100%;">
+            </div>
+            <div class="modal-footer">
+                <div class="btn-group pull-left" role="group">
+                    <button type="button" class="btn btn-default js-zoom-in">
+                        <span class="glyphicon glyphicon-zoom-in"></span>
+                    </button>
+                    <button type="button" class="btn btn-default js-zoom-out">
+                        <span class="glyphicon glyphicon-zoom-out"></span>
+                    </button>
+                </div>
+                <button type="button" class="btn btn-default" data-dismiss="modal">{% trans 'Annuler' %}</button>
+                <button type="button" class="btn btn-etabib js-crop-and-upload">
+                    <i id="spinner" class='fa fa-2x fa-spinner fa-spin hide'></i>
+                    {% trans 'Recadrer et télécharger' %}
+                </button>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}
+{% block js %}
+<!-- bootstrap JS
+                    ============================================ -->
+<script src='{% static "js/bootstrap.min.js" %}'></script>
+<!-- wow JS
+                    ============================================ -->
+<script src='{% static "js/wow.min.js" %}'></script>
+<!-- price-slider JS
+                    ============================================ -->
+<script src='{% static "js/jquery-price-slider.js" %}'></script>
+<!-- meanmenu JS
+                    ============================================ -->
+<script src='{% static "js/jquery.meanmenu.js" %}'></script>
+<!-- owl.carousel JS
+                    ============================================ -->
+<script src='{% static "js/owl.carousel.min.js" %}'></script>
+<!-- sticky JS  ============================================ -->
+<script src='{% static "js/jquery.sticky.js" %}'></script>
+<!-- scrollUp JS ============================================ -->
+<script src='{% static "js/jquery.scrollUp.min.js" %}'></script>
+<!-- Cropper JS ============================================ -->
+<script src='https://cdnjs.cloudflare.com/ajax/libs/cropperjs/1.5.6/cropper.min.js'></script>
+<script src='{% static "js/cropper/jquery-cropper.min.js" %}'></script>
+<!-- mCustomScrollbar JS ============================================ -->
+<script src='{% static "js/scrollbar/jquery.mCustomScrollbar.concat.min.js" %}'></script>
+<script src='{% static "js/scrollbar/mCustomScrollbar-active.js" %}'></script>
+<!-- metisMenu JS ============================================ -->
+<script src='{% static "js/metisMenu/metisMenu.min.js" %}'></script>
+<script src='{% static "js/metisMenu/metisMenu-active.js" %}'></script>
+<!-- plugins JS
+                    ============================================ -->
+<script src='{% static "js/plugins.js" %}'></script>
+<!-- main JS  ============================================ -->
+<script src='{% static "js/main.js" %}'></script>
+<!-- filepond JS ============================================ -->
+<script src="https://unpkg.com/filepond/dist/filepond.js"></script>
+<!-- include FilePond plugins -->
+<script src="https://unpkg.com/filepond-plugin-file-validate-size/dist/filepond-plugin-file-validate-size.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/filepond-plugin-get-file@1.0.3/dist/filepond-plugin-get-file.min.js"></script>
+<!-- include FilePond jQuery adapter -->
+<script src="https://unpkg.com/jquery-filepond/filepond.jquery.js"></script>
+<!-- tawk chat JS
+                    ============================================ -->
+{% include 'partial/tawk-script.html' %}
+<script>
+    $(function () {
+      /* SCRIPT TO OPEN THE MODAL WITH THE PREVIEW */
+      $("#id_image").change(function () {
+          if (this.files && this.files[0]) {
+            var reader = new FileReader();
+            reader.onload = function (e) {
+              $("#image").attr("src", e.target.result);
+              $("#modalCrop").modal("show");
+            }
+            reader.readAsDataURL(this.files[0]);
+          }
+        });
+
+      /* SCRIPTS TO HANDLE THE CROPPER BOX */
+        var $image = $("#image");
+        var cropBoxData;
+        var canvasData;
+        $("#modalCrop").on("shown.bs.modal", function () {
+          $image.cropper({
+            viewMode: 1,
+            aspectRatio: 1/1,
+            minCropBoxWidth: 200,
+            minCropBoxHeight: 200,
+            ready: function () {
+              $image.cropper("setCanvasData", canvasData);
+              $image.cropper("setCropBoxData", cropBoxData);
+            }
+          });
+        }).on("hidden.bs.modal", function () {
+          cropBoxData = $image.cropper("getCropBoxData");
+          canvasData = $image.cropper("getCanvasData");
+          $image.cropper("destroy");
+        });
+        // Enable zoom in button
+        $(".js-zoom-in").click(function () {
+          $image.cropper("zoom", 0.1);
+        });
+
+        // Enable zoom out button
+        $(".js-zoom-out").click(function () {
+          $image.cropper("zoom", -0.1);
+        });
+
+        /* SCRIPT TO COLLECT THE DATA AND POST TO THE SERVER */
+        $(".js-crop-and-upload").click(function () {
+          console.log("click");
+          var cropData = $image.cropper("getData");
+          $("#id_x").val(cropData["x"]);
+          $("#id_y").val(cropData["y"]);
+          $("#id_height").val(cropData["height"]);
+          $("#id_width").val(cropData["width"]);
+           $("#avatar-form").submit();
+        });
+        $('#avatar-form').submit(function(evt) {
+            evt.preventDefault();
+            var formData = new FormData(this);
+            $("#spinner").removeClass('hide');
+            $.ajax({
+            type: 'POST',
+            url: "{% url 'avatar-upload' %}",
+            data:formData,
+            cache:false,
+            contentType: false,
+            processData: false,
+            success: function(data) {
+                location.reload();
+            },
+            error: function(data) {
+                $("#spinner").addClass('hide');
+                console.log("error");
+                console.log(data);
+            }
+            });
+        });
+    });
+
+
+
+
+</script>
+{% endblock %}

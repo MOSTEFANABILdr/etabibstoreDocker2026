@@ -1,0 +1,41 @@
+{% load i18n %}
+{% load avatar_tags %}
+{% load teleconsultation_tags %}
+<div class="col-lg-3 col-md-4 col-sm-6">
+    <div class="card card-contact mb-2">
+        {% render_status patient as PATIENT_STATUS %}
+        <div class="bubble {{PATIENT_STATUS}}"
+             title="{% ifequal PATIENT_STATUS 'online' %} {% trans 'En Ligne' %}
+         {% else %} {% trans 'hors ligne' %} {% endifequal %}">
+            <span class="bubble-outer-dot">
+                <span class="bubble-inner-dot"></span>
+            </span>
+        </div>
+        {% avatar patient.user class="card-img-top rounded-circle mx-auto mt-2" %}
+
+        <div class="card-body text-center">
+            <div class="doctor-profile-telec">
+                <h5 title="{{patient.full_name|upper}}" class="card-title">
+                    {{patient.full_name|upper}}
+                </h5>
+                <p class="card-text">{{patient.age }} Ans</p>
+                <p class="card-text">id: {{patient.id }}</p>
+            </div>
+        </div>
+        <div class="card-footer text-center">
+            {% if patient|is_online %}
+            <a  href="#" data-patient-id="{{patient.id}}" class="btn teleconsultation-call"
+                title="  {% trans 'Appeler' %}" data-patient-name="{{patient.full_name}}">
+              <i class="fa fa-video white fa-2x"></i>
+            </a>
+            {% endif %}
+            <a href="{% url 'doctor-care-path' patient.id %}" class="btn">
+              <i class="fa fa-folder-open white fa-2x"></i>
+            </a>
+            <a href="#" class="btn">
+              <i class="fa fa-envelope white fa-2x"></i>
+            </a>
+        </div>
+    </div>
+</div>
+

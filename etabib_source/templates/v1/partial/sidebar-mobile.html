@@ -1,0 +1,21 @@
+{% load static i18n %}
+{% load role_tags utils_tags %}
+<!-- To test the user Agent -->
+{% is_mobile_app request as mobile_app %}
+<!-- Mobile Menu start -->
+<div class="mobile-menu-area" id="mobile-menu-item">
+    <div class="container">
+        <div class="row">
+            <div class="col-lg-12 col-md-12 col-sm-12 col-xs-12">
+
+                <div class="mobile-menu">
+                    <nav id="dropdown">
+                        <ul class="mobile-menu-nav">
+                            {% include 'partial/sidebar-items.html' with mobile_app=mobile_app sidebar_sm=True %}
+                        </ul>
+                    </nav>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>

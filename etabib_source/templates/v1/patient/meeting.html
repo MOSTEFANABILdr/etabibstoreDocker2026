@@ -1,0 +1,256 @@
+{% load i18n %}
+{% load static utils_tags role_tags %}
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <title>{% trans 'Téléconsultation' %}|eTabib</title>
+    <!-- Bootstrap CSS ============================================ -->
+    <link rel="stylesheet" href='{% static "css/bootstrap.min.css" %}'>
+    <!-- Bootstrap CSS ============================================ -->
+    <link rel="stylesheet" href='{% static "css/font-awesome.min.css" %}'>
+    <!-- notifications CSS ============================================ -->
+    <link rel="stylesheet" href='{% static "css/notifications/Lobibox.min.css" %}'>
+    <link rel="stylesheet" href='{% static "css/notifications/notifications.css" %}'>
+    <link rel="stylesheet" href='{% static "style.css" %}?v=1.28'>
+    <!-- jquery ============================================ -->
+    <script src='{% static "js/vendor/jquery-1.12.4.min.js" %}'></script>
+    <!-- notification JS ============================================ -->
+    <script src='{% static "js/notifications/Lobibox.js" %}'></script>
+    <style>
+        html,
+        body {
+            height: 100%;
+            background-color: white;
+        }
+
+        #meet {
+            height: 100%;
+        }
+    </style>
+</head>
+
+<body>
+    <img class="loading img-responsive" src="{% static 'img/loading.gif' %}">
+    <div id="meet">
+    </div>
+    <!-- bootstrap JS ============================================ -->
+    <script src='{% static "js/bootstrap.min.js" %}'></script>
+    <script src='https://{% settings_value "ECONSULTATION_JITSI_DOMAIN_NAME" %}/external_api.js'></script>
+    <script>
+        var api = null;
+        const domain = "{% settings_value "ECONSULTATION_JITSI_DOMAIN_NAME" %}";
+        const options = {
+            roomName: '{{demand.salle_discussion}}'{% if jwtToken %} + '?jwt={{jwtToken}}' {% endif %} ,
+        interfaceConfigOverwrite: {
+            filmStripOnly: false,
+                TOOLBAR_BUTTONS: [
+                    'microphone', 'camera', 'closedcaptions', 'fullscreen',
+                    'fodeviceselection', 'hangup', 'profile', 'chat', 'recording',
+                    'etherpad', 'settings',
+                    'videoquality', 'filmstrip', 'stats', 'download',
+                ]
+        },
+        configOverwrite: {
+            enableWelcomePage: false,
+    },
+        width: '100%',
+            height: '100%',
+                onload: function() {
+                    $(".loading").hide();
+                },
+        userInfo: {
+            name: '{{request.user.get_full_name}}'
+        },
+        parentNode: document.querySelector('#meet')
+};
+        function openJitsiRoom() {
+            $("#meet").addClass("holds-the-iframe");
+            {% is_mobile_app request as mobile_app %}
+            {% if mobile_app %}
+            Android.openJitsiActivity(domain, '{{ demand.salle_discussion }}', {% if jwtToken %} '{{ jwtToken }}'{% endif %});
+        {% else %}
+        api = new JitsiMeetExternalAPI(domain, options);
+        // when local user has joined the video conference
+        api.addEventListener('videoConferenceJoined', (response) => {
+            api.executeCommand('displayName', '{{request.user.get_full_name}}');
+        });
+        // when local user has left the video conference
+        api.addEventListener('readyToClose', () => {
+            {% if request.user|is_doctor and patient_has_enough_money and not demand.rendez_vous.gratuit %}
+            readyToCloseFeedback();
+            {% else %}
+            readyToCloseFeedback();
+            {% endif %}
+        });
+        {% endif %}
+}
+
+        function readyToCloseFeedback() {
+            {% if request.user|is_patient %}
+            Lobibox.confirm({
+                title: "Feedback",
+                msg: "{% trans 'Le son de la conversation était-il bon?' %}",
+                iconClass: false,
+                buttons: {
+                    custom1: {
+                        closeOnClick: true,
+                        'class': 'btn btn-etabib',
+                        text: "{% trans 'Acceptable' %} <i class='fa fa-check fa-2x'></i>"
+                    },
+                    custom2: {
+                        closeOnClick: true,
+                        'class': 'btn btn-etabib font-weight-bold',
+                        text: "{% trans 'Bon' %}  <i class='fa fa-thumbs-o-up fa-2x'></i>"
+                    },
+                    custom3: {
+                        closeOnClick: true,
+                        'class': 'btn btn-etabib font-weight-bold',
+                        text: "{% trans 'Mauvais' %}  <i class='fa fa-thumbs-o-down fa-2x'></i>"
+                    }
+                },
+                callback: function ($this, type, ev) {
+                    if (type === 'custom1'||type === 'custom2'||type === 'custom3') {
+                        var feedback = (type === 'custom1') ? "1" : (type === 'custom2') ? "2" : "3";
+                        //send AJAX requet to the server
+                        var data = {
+                            "feedback": feedback,
+                            "room": '{{demand.salle_discussion}}',
+                            'csrfmiddlewaretoken': "{{csrf_token}}"
+                        };
+                        $.ajax({
+                            type: "POST",
+                            url: "{% url 'teleconsultation-feedback' %}",
+                            data: data,
+                            success: function () {
+                                window.close();
+                                window.location.href = "{% url 'patient-teleconsultation-journal' %}";
+
+                            },
+                            error: function () {
+                                window.close();
+                                window.location.href = "{% url 'patient-teleconsultation-journal' %}";
+
+                            }
+                        });
+                    }
+                }
+            });
+            {% elif request.user|is_doctor and patient_has_enough_money and not demand.is_free %}
+            Lobibox.confirm({
+                title: "{% trans 'Confirmation' %}",
+                msg: "{% trans 'La téléconsultation s\'est déroulée dans de bonnes conditions?' %}",
+                iconClass: false,
+                buttons: {
+                    yes: {
+                        closeOnClick: true,
+                        'class': 'btn btn-etabib',
+                        text: "{% trans 'Oui FACTURER' %} <i class='fa fa-check fa-2x'></i>"
+                    },
+                    no: {
+                        closeOnClick: true,
+                        'class': 'btn btn-etabib font-weight-bold',
+                        text: "{% trans 'Non' %} <i class='fa fa-remove fa-2x'></i>"
+                    },
+                },
+                callback: function ($this, type, ev) {
+                    if (type === 'yes') {
+                        //send AJAX requet to the server
+                        var data = {
+                            "room": '{{demand.salle_discussion}}',
+                            'csrfmiddlewaretoken': "{{csrf_token}}"
+                        };
+                        $.ajax({
+                            type: "POST",
+                            url: "{% url 'doctor-teleconsultation-bill' %}",
+                            data: data,
+                            success: function () {
+                                //redirecting
+                                window.location.href = "{% url 'doctor-teleconsultation-journal' %}";
+                            },
+                            error: function () {
+                                alert("Error, please try again");
+                                readyToCloseFeedback();
+                            }
+                        });
+                    } else {
+                        window.location.href = "{% url 'doctor-teleconsultation-journal' %}";
+                    }
+                }
+            });
+            {% endif %}
+        }
+
+        $(document).ready(function () {
+            //loading Gif
+            $(window).resize(function () {
+                $('.loading').css({
+                    position: 'absolute',
+                    left: ($(window).width() - $('.loading').outerWidth()) / 2,
+                    top: ($(window).height() - $('.loading').outerHeight()) / 2
+                });
+            });
+            $(window).resize();
+
+            {% if request.user|is_doctor and not patient_has_enough_money and not demand.is_free %}
+            Lobibox.confirm({
+                title: "{% trans 'Confirmation' %}",
+                msg: "{% trans "le patient n'a pas suffisamment de crédit pour faire la téléconsultation, continuez quand même.?" %}",
+        iconClass: false,
+                buttons: {
+                    yes: {
+                        closeOnClick: true,
+                        'class': 'btn btn-etabib',
+                        text: "{% trans 'Oui' %} <i class='fa fa-check fa-2x'></i>"
+                    },
+                    no: {
+                        closeOnClick: true,
+                        'class': 'btn btn-etabib font-weight-bold',
+                        text: "{% trans 'Non' %} <i class='fa fa-remove fa-2x'></i>"
+                    },
+                },
+                callback: function ($this, type, ev) {
+                    if (type === 'yes') {
+                        openJitsiRoom();
+                    }
+                    else if (type === 'no') {
+                        window.close();
+                    }
+                }
+            });
+            {% elif request.user|is_patient and not patient_has_enough_money and not demand.is_free %}
+            Lobibox.alert('info',
+                {
+                    msg: "{% trans 'Vous n\'avez pas assez d\'argent pour faire la téléconsultation' %}",
+                    buttons: {
+                        custom: {
+                            closeOnClick: true,
+                            'class': 'btn btn-etabib font-weight-bold',
+                            text: "{% trans 'Recharger' %}"
+                        },
+                        no: {
+                            closeOnClick: true,
+                            'class': 'btn btn-etabib',
+                            text: "{% trans 'Continuer' %}"
+                        }
+                    },
+                    callback: function ($this, type, ev) {
+                        if (type === 'custom') {
+                            window.location.href = "{% url 'epayment-recharge' %}?u={% user_id_hash user %}";
+                        }
+                        else if (type === 'no') {
+                            openJitsiRoom();
+                        }
+                    }
+                });
+            {% else %}
+            openJitsiRoom();
+            {% endif %}
+        });
+
+
+    </script>
+</body>
+
+</html>

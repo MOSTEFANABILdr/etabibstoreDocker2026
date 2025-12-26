@@ -1,0 +1,122 @@
+{% extends "base.html" %}
+{% load i18n %}
+{% load static %}
+
+{% block title %} {% trans 'Cliniques' %} {% endblock %}
+
+{% block style %}
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/slick-carousel/1.8.1/slick.min.css"
+      integrity="sha512-yHknP1/AwR+yx26cB1y0cjvQUMvEa2PFzt1c9LlS4pRQ5NOTZFWbhBig+X9G9eYW/8m0/4OXNx8pxJ6z57x0dw=="
+      crossorigin="anonymous" referrerpolicy="no-referrer"/>
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/slick-carousel/1.8.1/slick-theme.css"
+      integrity="sha512-6lLUdeQ5uheMFbWm3CP271l14RsX1xtx+J5x2yeIDkkiBpeVTNhTqijME7GgRKKi6hCqovwCoBTlRBEC20M8Mg=="
+      crossorigin="anonymous" referrerpolicy="no-referrer"/>
+{% endblock %}
+{% block content %}
+<div class="container">
+    <h1 class="page-header">
+        <img height="40px" src="{% static 'v2/icons/clinique.svg' %}">
+        {% trans "دليل العيادات" %}
+    </h1>
+    <!-- begin #carousel -->
+    <div dir="ltr">
+        <div id="carousel-cabinet">
+            {% for cliniquevirtuelle in cliniquevirtuelles %}
+            <div class="card text-white">
+                <img class="card-img" src="{{cliniquevirtuelle.image.image.url}}" alt="Card image">
+<!--                <div class="card-img-overlay">-->
+<!--                    <h5 class="card-title text-center">{{cliniquevirtuelle.titre}}</h5>-->
+<!--                </div>-->
+                <div class="card-footer bg-transparent text-black text-center" style="border: none;">
+                    <p>
+                        {% if cliniquevirtuelle.description %}
+                        {{cliniquevirtuelle.description|truncatewords:15}}
+                        {% else %}
+                        {{cliniquevirtuelle.description|default_if_none:""}}
+                        {% endif %}
+                    </p>
+                    <a href="{% url 'virtual-office-detail' cliniquevirtuelle.id %}"
+                       class="btn btn-default card-footer-btn rounded">
+                        {% trans "Entrez" %}
+                    </a>
+                </div>
+            </div>
+            {% empty %}
+            <p>{% trans 'Désolé, aucun résultat trouvé :(.' %}</p>
+            {% endfor %}
+        </div>
+        <!-- end #carousel -->
+    </div>
+    <h1 class="page-header mt-4">
+        <i class="fa fa-user-md"></i>
+        {% trans "دليل الأطباء" %}
+    </h1>
+    <div class="endless_page_template">
+        {% include page_template %}
+    </div>
+</div>
+<div class="modal fade" tabindex="-1" role="dialog" id="spinnerModal">
+    <div class="modal-dialog modal-dialog-centered text-center" role="document">
+        <span class="fa fa-spinner fa-spin fa-4x w-100 text-white"></span>
+    </div>
+</div>
+{% endblock %}
+{% block js %}
+<script src='{% static "el-pagination/js/el-pagination.js" %}'></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/slick-carousel/1.8.1/slick.min.js"
+        integrity="sha512-XtmMtDEcNz2j7ekrtHvOVR4iwwaD6o/FUJe6+Zq+HgcCsk3kj4uSQQR8weQ2QVj1o0Pk6PwYLohm206ZzNfubg=="
+        crossorigin="anonymous" referrerpolicy="no-referrer"></script>
+<script type="text/javascript">
+	$(document).ready(function () {
+	     //Endlesss pagination
+        $.endlessPaginate({
+            onClick: function() {
+                $('#spinnerModal').modal('show');
+            },
+            onCompleted: function() {
+                $('#spinnerModal').modal('hide');
+            },
+        });
+        //Carousel
+		$('#carousel-cabinet').slick({
+		    lazyLoad: 'ondemand',
+			arrows: true,
+			infinite: true,
+			speed: 300,
+			slidesToShow: 1,
+			slidesToScroll: 1,
+			centerMode: true,
+			prevArrow: "<button type='button' class='slick-prev pull-left slick-arrow'><i class='fa fa-angle-left' aria-hidden='true'></i></button>",
+			nextArrow: "<button type='button' class='slick-next pull-right slick-arrow'><i class='fa fa-angle-right' aria-hidden='true'></i></button>",
+			rtl: false,
+			responsive: [
+				{
+					breakpoint: 1024,
+					settings: {
+						centerMode: true,
+					}
+				},
+				{
+					breakpoint: 600,
+					settings: {
+						centerMode: false,
+					}
+				},
+				{
+					breakpoint: 480,
+					settings: {
+						centerMode: false,
+					}
+				}
+				// You can unslick at a given breakpoint now by adding:
+				// settings: "unslick"
+				// instead of a settings object
+			]
+		});
+	});
+
+
+
+</script>
+
+{% endblock %}

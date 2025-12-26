@@ -1,0 +1,232 @@
+{% load i18n %}
+{% load static %}
+{% load utils_tags %}
+{% load event_tags %}
+<div class="income-order-visit-user-area">
+    <div class="container-fluid">
+        <div class="program-widget-bc mg-b-15 mg-tb-30">
+            <div class="container-fluid">
+                <div class="row">
+                    <div class="col-lg-3 col-md-6 col-sm-6 col-xs-12">
+                        <div class="analytics-rounded reso-mg-b-30">
+                            <div class="analytics-rounded-content">
+                                <h5>OBJECTIF</h5>
+                                <div class="text-center">
+                                    <div id="sparklinesg"></div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="col-lg-3 col-md-6 col-sm-6 col-xs-12">
+                        <div class="analytics-rounded reso-mg-b-30">
+                            <div class="analytics-rounded-content">
+                                <h5>{% trans 'OBJECTIF PERSONNEL' %}</h5>
+                                <div class="text-center">
+                                    <div id="sparklinepg"></div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div class="row">
+            <div class="col-lg-4 col-md-6 col-sm-6 col-xs-12">
+                <div class="income-dashone-total reso-mg-b-30">
+                    <div class="income-dashone-pro">
+                        <div class="income-rate-total">
+                            <div class="price-edu-rate">
+                                <h3><span>Da</span><span class="counter">{{titm}}</span></h3>
+                            </div>
+                            <div class="price-graph">
+                                <span id="sparklineti5lm"></span>
+                            </div>
+                        </div>
+                        <div class="income-range">
+                            <p>{% trans 'Revenu total' %}</p>
+                            {{ipi|increase_pourecentage|safe}}
+                        </div>
+                        <div class="clear"></div>
+                    </div>
+                </div>
+            </div>
+            <div class="col-lg-4 col-md-6 col-sm-6 col-xs-12">
+                <div class="income-dashone-total">
+                    <div class="income-dashone-pro">
+                        <div class="income-rate-total">
+                            <div class="price-edu-rate">
+                                <h3><span class="counter">{{cctm}}</span></h3>
+                            </div>
+                            <div class="price-graph">
+                                <span id="sparklinecc5lm"></span>
+                            </div>
+                        </div>
+                        <div class="income-range order-cl">
+                            <p>{% trans 'Contacts créés' %}</p>
+                            {{ipc|increase_pourecentage|safe}}
+                        </div>
+                        <div class="clear"></div>
+                    </div>
+                </div>
+            </div>
+            <div class="col-lg-4 col-md-6 col-sm-6 col-xs-12">
+                <div class="income-dashone-total res-mg-t-30 res-tablet-mg-t-30 dk-res-t-pro-30">
+                    <div class="income-dashone-pro">
+                        <div class="income-rate-total">
+                            <div class="price-edu-rate">
+                                <h3><span class="counter">{{ectm}}</span></h3>
+                            </div>
+                            <div class="price-graph">
+                                <span id="sparklineec5lm"></span>
+                            </div>
+                        </div>
+                        <div class="income-range visitor-cl">
+                            <p>{% trans 'Évènements créés' %}</p>
+                            {{ipe|increase_pourecentage|safe}}
+                        </div>
+                        <div class="clear"></div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+<div class="program-widget-bc mg-b-15 mg-tb-30">
+    <div class="container-fluid">
+        <div class="row">
+            <div class="col-lg-6 col-md-6 col-sm-6 col-xs-12">
+                <div class="hpanel shadow-inner responsive-mg-b-30">
+                    <div class="panel-body">
+                        <h2>{% trans 'Pistes arrivent à la la date de fin' %}</h2>
+                        <div class="table-responsive wd-tb-cr">
+                            <table id="table-piste" class="table table-striped">
+                                <thead>
+                                <tr>
+                                    <th>{% trans 'Contact' %}</th>
+                                    <th>{% trans 'Date de fin' %}</th>
+                                    <th></th>
+                                </tr>
+                                </thead>
+                                <tbody>
+                                {% for piste in pistes %}
+                                <tr>
+                                    <td>
+                                        {% if piste.contact %}
+                                        <a class="blue" href="{% url 'operator-detail-contact' piste.contact.pk %}">
+                                            {{piste.contact}}
+                                        </a>
+                                        {% endif %}
+                                    </td>
+                                    <td class="{% pisteEndDateCssClass piste %}">{{piste.date_fin|date:'Y-m-d'}}</td>
+                                    <td>
+                                        {% include 'partial/dashboard-ending-piste-actions.html' with action=piste %}
+                                    </td>
+                                </tr>
+                                {% empty %}
+                                <tr>
+                                    <td colspan="3">
+                                        <p>{% trans 'Pas de Pistes à clôturer' %}</p>
+                                    </td>
+                                </tr>
+                                {% endfor %}
+                                </tbody>
+                            </table>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class="col-lg-6 col-md-6 col-sm-6 col-xs-12">
+                <div class="hpanel shadow-inner responsive-mg-b-30">
+                    <div class="panel-body">
+                        <h2>{% trans 'Mes Taches' %}</h2>
+                        <div class="table-responsive wd-tb-cr">
+                            <table class="table table-striped">
+                                <thead>
+                                <tr>
+                                    <th>{% trans 'Tache' %}</th>
+                                    <th>{% trans 'Contact' %}</th>
+                                    <th>{% trans 'Date de création' %}</th>
+                                    <th>{% trans 'Terminée' %}</th>
+                                </tr>
+                                </thead>
+                                <tbody>
+                                {% for task in tasks %}
+                                <tr>
+                                    <td>
+                                        <span class="text-success font-bold">{{task.message}}</span>
+                                    </td>
+                                    <td>
+                                        {% if task.contact %}
+                                        <a hre href="{% url 'operator-detail-contact' task.contact.pk %}">
+                                            {{task.contact}}
+                                        </a>
+                                        {% endif %}
+                                    </td>
+                                    <td>{{task.date_creation|date:'Y-m-d H:i'}}</td>
+                                    <td><input class="checkbox task-list" type="checkbox" value="{{task.id}}"></td>
+                                </tr>
+                                {% empty %}
+                                <tr>
+                                    <td colspan="4">
+                                        <p>{% trans 'Pas de tâches pour vous' %}</p>
+                                    </td>
+                                </tr>
+                                {% endfor %}
+                                </tbody>
+                            </table>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+<script>
+$(document).ready(function() {
+	$("#sparklineti5lm").sparkline({{ti5lm}}, {
+         type: 'bar',
+        barColor: '#006DF0',
+        negBarColor: '#933EC5'
+    });
+    $("#sparklinecc5lm").sparkline({{cc5lm}}, {
+         type: 'bar',
+        barColor: '#006DF0',
+        negBarColor: '#933EC5'
+    });
+    $("#sparklineec5lm").sparkline({{ec5lm}}, {
+         type: 'bar',
+        barColor: '#006DF0',
+        negBarColor: '#933EC5'
+    });
+     $("#sparklinepg").sparkline({{pg}}, {
+         type: 'pie',
+         height: '140',
+         sliceColors: ['#006DF0', '#ebebeb']
+     });
+
+     $("#sparklinesg").sparkline({{sg}}, {
+         type: 'pie',
+         height: '140',
+         sliceColors: ['#933EC5', '#ebebeb']
+     });
+
+     $(".task-list").click(function () {
+      var task_id = $(this).val();
+      if($(this).is(':checked')){
+          var elm = $(this);
+          $.ajax({
+            method: "POST",
+            url: "{% url 'operator-task-done' %}",
+            data: {
+              'task_id': task_id,
+               'csrfmiddlewaretoken': '{{ csrf_token }}'
+            },
+            dataType: 'json',
+            success: function (data) {
+                $(elm).closest('tr').remove();
+            }
+          });
+      }
+    });
+});
+</script>

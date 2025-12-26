@@ -1,0 +1,490 @@
+{% extends "base.html" %}
+{% load i18n static crispy_forms_tags utils_tags teleconsultation_tags %}
+
+{% block title %} {% trans 'Téléconsultation' %} {% endblock %}
+
+{% block style %}
+<style>
+    .panel-default {
+        border-color: #ddd;
+    }
+    .panel {
+            margin-bottom: 20px;
+            background-color: #fff;
+            border: 1px solid transparent;
+            border-radius: 4px;
+            -webkit-box-shadow: 0 1px 1px rgba(0,0,0,.05);
+            box-shadow: 0 1px 1px rgba(0,0,0,.05);
+    }
+    .profile-panel .panel-body.text-center {
+        margin-bottom: 0px!important;
+    }
+    .panel-body {
+        padding: 15px;
+        background: #fff;
+    }
+    .doctor-profile-telec {
+        width: 100%;
+        clear: both;
+    }
+    .doctor-profile-telec .userpic {
+        height: 100px;
+        width: 100px;
+        clear: both;
+        margin: 0 auto;
+        display: block;
+        border-radius: 100%;
+        box-shadow: 0px 3px 10px 0 rgba(0, 0, 0, 0.15);
+        -moz-box-shadow: 0px 3px 10px 0 rgba(0, 0, 0, 0.15);
+        -webkit-box-shadow: 0px 3px 10px 0 rgba(0, 0, 0, 0.15);
+        -ms-box-shadow: 0px 3px 10px 0 rgba(0, 0, 0, 0.15);
+        position: relative;
+    }
+    .username {
+        font-weight: 900;
+        font-size: 20px;
+        line-height: 20px;
+        color: rgb(22, 77, 140);
+        margin-top: 20px;
+        white-space: nowrap;
+        overflow: hidden;
+        text-overflow: ellipsis;
+    }
+    .speciality {
+        font-size: 16px!important;
+        color: #3ed5ff;
+        font-weight: 600;
+        min-height: 30px;
+        max-height: 30px;
+        white-space: nowrap;
+        overflow: hidden;
+        text-overflow: ellipsis;
+    }
+    .profile-panel .panel-body .price {
+        height: 30px;
+        font-size: 20px;
+        font-weight: 600;
+    }
+    .profile-panel .panel-footer {
+        padding: 10px 15px;
+        background-color: #ffffff;
+        border-top: 1px solid #eef2f4;
+        border-bottom-right-radius: 0;
+        border-bottom-left-radius: 0;
+        color: #607d8b;
+        min-height: 140px;
+    }
+    .doctor-profile-telec .userpic .userpicimg {
+        height: auto;
+        width: 100%;
+        border-radius: 100%;
+    }
+    /* dal bootstrap css fix */
+.select2-container {
+    width: 100% !important;
+    min-width: 10em !important;
+}
+/* django-addanother bootstrap css fix */
+.related-widget-wrapper{
+    padding-right: 16px;
+    position: relative;
+}
+.related-widget-wrapper-link{
+    position: absolute;
+    top: 3px;
+    right: 0px;
+}
+.select2-container--default .select2-selection--single .select2-selection__rendered {
+  line-height: 100% !important;
+}
+
+.select2-container .select2-selection--single {
+  height: 40px !important;
+}
+
+.select2-container .select2-selection--multiple {
+
+  min-height: 45px !important;
+}
+
+.select2-container--default .select2-selection--multiple .select2-selection__rendered {
+
+  height: 100% !important;
+}
+.select2-container .select2-selection--multiple .select2-selection__rendered {
+  overflow: auto !important;
+
+}
+</style>
+{% endblock %}
+
+{% block content %}
+<div class="container-fluid p-4">
+    <h1 class="page-header">
+        <i class="fas fa-users"></i>
+        {% trans 'Liste des médecins' %}
+    </h1>
+    <div class="row">
+        <div class="col-lg-2 mt-4 mb-4">
+            {% crispy form %}
+        </div>
+        <div class="col-lg-10">
+            <div class="widget-list widget-list-rounded m-b-30 ">
+                <div class="widget-list-item text-center bg-light pt-2 pb-2">
+                    {% trans 'Vous avez un code promo?' %}
+                    <a title="{% trans 'utilisez un code promo' %}"
+                       href="{% url 'patient-teleconsultation-coupon' %}"
+                       class="btn btn-etabib fm-create"
+                       data-fm-head="{% trans 'utilisez un code promo' %}"
+                       data-fm-callback="reload">
+                        <i class="fa fa-gift" aria-hidden="true"></i>
+                        {% trans 'utilisez le' %}
+                    </a>
+                </div>
+            </div>
+            <div class="endless_page_template">
+                {% include page_template %}
+            </div>
+        </div>
+    </div>
+
+</div>
+{% endblock %}
+
+{% block js %}
+{% include "fm/modal.html" %}
+<!-- icheck JS ============================================ -->
+<script src='{% static "js/icheck/icheck.min.js" %}'></script>
+<script src='{% static "js/icheck/icheck-active.js" %}'></script>
+<!-- endless pagination JS ============================================ -->
+<script src='{% static "el-pagination/js/el-pagination.js" %}'></script>
+<script>
+$(function() {
+    $.fm({debug: true});
+
+    const WS_CMD_DMND_REQUEST = "TELECONSULTATION_DEMAND";
+    const WS_CMD_DMND_ACCEPTED = "TELECONSULTATION_DEMAND_ACCEPTED";
+    const WS_CMD_DMND_CANCELED = "TELECONSULTATION_DEMAND_CANCELED";
+    const WS_CMD_DMND_REJECTED = "TELECONSULTATION_DEMAND_REJECTED";
+    const WS_CMD_ONLINE_DOC_COUNT =  "TELECONSULTATION_GET_ONLINE_DOCTORS_COUNT";
+    var progress_is_shown = false;
+    var medecin_id;
+
+    //Endlesss pagination
+	$.endlessPaginate({
+	});
+
+    notifSocket.addEventListener("message", function(e) {
+        var data = JSON.parse(e.data);
+        var command = data['command'];
+        switch (command) {
+            case WS_CMD_ONLINE_DOC_COUNT:
+                var count = data['count'];
+                $("#count").html(count);
+                break;
+            case WS_CMD_DMND_REJECTED:
+                var code = data['code'];
+                var msg="";
+                if (code=="BUSY") {
+                    msg = '{% trans "Désolé, le médecin est actuellement occupé." %}';
+                } else if (code == "OFFLINE") {
+                    msg = '{% trans "Désolé, le médecin est actuellement hors ligne." %}';
+                } else if (code == "NOT_ENOUGH_MONEY") {
+                    window.location.href = "{% url 'epayment-recharge' %}?u={% user_id_hash user %}&r=NOT_ENOUGH_MONEY";
+                    return;
+                }
+                else {
+                    msg = '{% trans "Désolé, le service est actuellement indisponible. réessayez après 1 minute" %}';
+                }
+                Lobibox.alert('warning',
+                    {
+                        title: ".",
+                        buttons: {
+                            ok: {
+                                closeOnClick: true,
+                                'class': 'btn btn-etabib',
+                                text: "<i class='fa fa-check fa-2x'></i>"
+                            }
+                        },
+                        msg: msg
+                    }
+                );
+                break;
+        }
+    });
+
+    $(document).on('click', '.demand-rdv',function() {
+
+        //read data attribute from li element
+        medecin_id = $(this).data("medecin-id");
+        var medecin_name = $(this).data("medecin-name");
+        var has_rdv = $(this).data("has-rdv") == "True" ? true : false;
+        var demand_id = $(this).data("demand-id");
+        var msgAdd = "{% trans 'Je confirme ma demande de rendez-vous avec Dr. ' %} " + medecin_name + "?";
+        var msgCancel = "{% trans "Je confirme ma demande d'annuler le rendez-vous avec Dr. " %} " + medecin_name + "?";
+        var url = has_rdv ? "{% url 'can_demande-rdv' %}" : "{% url 'add-demande-rdv' %}"
+        var btn = $(this);
+
+        //show confirmation notification
+        var lobibox = Lobibox.confirm({
+            title: "{% trans 'Confirmation' %}",
+            iconClass: false,
+            buttons: {
+                yes: {
+                    closeOnClick: true,
+                    'class': 'btn btn-etabib',
+                    text: "<i class='fa fa-calendar fa-2x'></i>"
+                },
+                no: {
+                    closeOnClick: true,
+                    'class': 'btn btn-etabib',
+                    text: "<i class='fa fa-times fa-2x'></i>"
+                },
+            },
+            closable: false,
+            msg: has_rdv ? msgCancel : (msgAdd + '{% render_rdv_types %}'),
+            callback: function($this, type, ev) {
+                if (type === 'yes') {
+                    var rdv_choice = $('#rdv_choices').val();
+                    var rdv_choice_text = $( "#rdv_choices option:selected" ).text();
+                    var data = {
+                        'doctor_id': medecin_id,
+                        'demande_id': demand_id,
+                        'rdv_choice': rdv_choice,
+                        'csrfmiddlewaretoken': '{{ csrf_token }}'
+                    };
+                    $.post( url, data)
+                      .fail(function(xhr, status, error) {
+                        var status = xhr.status;
+                        if (status==406) {
+                            Lobibox.notify(
+                            'warning',{
+                                title: ""
+                                , msg:"{% trans "Le serveur est occupé maintenant, essayez d'envoyer une demande toutes les 30 secondes" %} "
+                                , position: 'right top'
+                            });
+                        }
+                        else if (status==402) {
+                            window.location.href = "{% url 'epayment-recharge' %}?u={% user_id_hash user %}&r=NOT_ENOUGH_MONEY";
+                            return;
+                        }
+                        else {
+                             Lobibox.notify(
+                            'error',{
+                                title: "Server error"
+                                , msg:"{% trans "Something went wrong" %} "
+                                , position: 'right top'
+                            });
+                        }
+                      })
+                      .done(function( data, statusText, xhr ) {
+                        var status = xhr.status;
+                        if (!has_rdv) {
+                            if (status==201) {
+                                btn.data('demand-id', data.demande_id);
+                                btn.data('has-rdv', 'True');
+                                btn.find('i').toggleClass('fa-calendar-plus-o fa-calendar-minus-o');
+                                btn.find('span').text("{% trans 'Annulez la demande de RV' %}");
+                                Lobibox.notify(
+                                'success',{
+                                    title: "{% trans 'Demande envoyée!' %} "
+                                    , msg:"{% trans 'Vous aviez demandé un rendez-vous' %} " + rdv_choice_text + " {% trans 'avec Dr. ' %} " + medecin_name
+                                    , position: 'right top'
+                                });
+                            }
+                        }
+                        else {
+                            if (status==200) {
+                                btn.data('demand-id', '');
+                                btn.data('has-rdv', "False");
+                                btn.find('i').toggleClass('fa-calendar-plus-o fa-calendar-minus-o');
+                                btn.find('span').text("{% trans 'Prenez un rendez-vous' %}");
+                                Lobibox.notify(
+                                'success',{
+                                    title: "{% trans 'Demande annulée!' %} "
+                                    , msg:"{% trans 'Vous aviez annuler le rendez-vous avec Dr. ' %} " + medecin_name
+                                    , position: 'right top'
+                                });
+                            }
+                        }
+                    });
+                }
+            }
+        });
+    });
+
+    $(document).on('click', '.demand-teleconsultation', function() {
+        var bool = CheckBrowserCompatibility();
+        if (!bool) return;
+
+        //read data attribute from li element
+        medecin_id = $(this).data("medecin-id");
+        var medecin_name = $(this).data("medecin-name");
+
+        //Checking if socket is opened
+        if (notifSocket.readyState === WebSocket.OPEN) {
+
+            //show confirmation notification
+            var lobibox = Lobibox.confirm({
+                title: "{% trans 'Confirmation' %}",
+                iconClass: false,
+                buttons: {
+                    yes: {
+                        closeOnClick: true,
+                        'class': 'btn btn-etabib',
+                        text: "<i class='fa fa-phone fa-2x'></i>"
+                    },
+                    no: {
+                        closeOnClick: true,
+                        'class': 'btn btn-etabib',
+                        text: "<i class='fa fa-times fa-2x'></i>"
+                    },
+                },
+                closable: false,
+                msg: "{% trans 'Vous confirmez la consultation avec DR' %} " + medecin_name + "?",
+                callback: function($this, type, ev) {
+                    if (type === 'yes') {
+                        //if yes: send through the Websocket the teleconsultation demand
+                        var progress_notif = Lobibox.progress({
+                            closeButton: false,
+                            progressTpl: '<div class="progress lobibox-progress-outer" style="height:5px;">\n\
+                            <div class="progress-bar progress-bar-warning progress-bar-striped lobibox-progress-element" data-role="progress-text" style="height:5px;" role="progressbar"></div>\n\
+                            </div>',
+                            title: "{% trans 'En attente de connexion avec DR' %} " + medecin_name,
+                            progressCompleted: function(lbx) {
+                                progress_is_shown = false;
+                                //send request to cancel demand
+                                notifSocket.send(JSON.stringify({
+                                    'command': WS_CMD_DMND_CANCELED,
+                                    'medecin_id': medecin_id
+                                }));
+                                //TODO: Message NO RESPONSE
+                                lbx.hide();
+                            },
+                            onShow: function(lbx) {
+                                progress_is_shown = true;
+                                if (notifSocket.readyState === WebSocket.OPEN) {
+                                    var inter;
+                                    notifSocket.send(JSON.stringify({
+                                        'command': WS_CMD_DMND_REQUEST,
+                                        'medecin_id': medecin_id
+                                    }));
+                                    //add listener to check on message event
+                                    notifSocket.addEventListener("message", function(e) {
+                                        var data = JSON.parse(e.data);
+                                        var command = data['command'];
+                                        switch (command) {
+                                            case WS_CMD_DMND_ACCEPTED:
+                                            case WS_CMD_DMND_REJECTED:
+                                                inter = clearInterval(inter);
+                                                //hide progress
+                                                lbx.destroy();
+                                                progress_is_shown = false;
+                                                break;
+                                        }
+                                    });
+                                    var i = 0;
+                                    var step = 10;
+                                    inter = setInterval(function() {
+                                        if (i > 100) {
+                                            inter = clearInterval(inter);
+                                        }
+                                        i = i + 0.025;
+                                        lbx.setProgress(i);
+                                    }, step);
+                                }
+                            }
+                        });
+                    }
+                }
+            });
+        }
+        else {
+            //socket is not opened notify the user
+            //TODO:
+        }
+    });
+
+    $(document).on('click', '.add-doc-team', function() {
+       var medecin_id = $(this).data("medecin-id");
+       var data = {
+          "medecin_id": medecin_id,
+          'csrfmiddlewaretoken': '{{ csrf_token }}'
+       };
+       $.post("{% url 'patient-care-team-add' %}", data)
+          .fail(function(xhr, status, error) {
+            var status = xhr.status;
+          })
+          .done(function( data, statusText, xhr ) {
+            var status = xhr.status;
+            if (status==200) {
+                Lobibox.notify(
+                'success',{
+                    title: "{% trans 'Demande envoyé!' %} "
+                    , msg:""
+                    , position: 'right top'
+                });
+            }
+        });
+    });
+
+    $(document).on('click', '.view-profil', function(e) {
+        e.preventDefault();
+        var medecin_name = $(this).data("medecin-name");
+        var medecin_id = $(this).data("medecin-id");
+
+        Lobibox.window({
+            title : medecin_name,
+            width : 650,
+            url : "profile/" + medecin_id + "/",
+            buttons: {
+                close: {
+                    text: "{% trans 'Fermer' %}" ,
+                    closeOnClick: true
+                }
+            },
+        });
+    });
+
+    //submit form asynchronously
+     $('.form-inline').submit(function(e) {
+        console.log("submit form-inline");
+       e.preventDefault();
+       //clearing detail
+        $('.endless_page_template').html("");
+        //showing spinner
+        $(".endless_page_template").html("<div class='text-center'><i class='fa fa-spinner fa-spin fa-2x dark-blue'></i></div>")
+       $.ajax({
+            url: '',
+            type: "POST",
+            data: $('.form-inline').serialize(),
+            success: function(data)
+            {
+              //callback methods go right here
+              $(".endless_page_template").html(data);
+              $([document.documentElement, document.body]).animate({
+                    scrollTop: $(".endless_page_template").offset().top
+               }, 2000);
+            }
+          });
+    });
+
+    //detect browser close event
+    $(window).on("beforeunload", function() {
+        if (progress_is_shown == true) {
+            //send request to cancel demand
+            notifSocket.send(JSON.stringify({
+                'command': WS_CMD_DMND_CANCELED,
+                'medecin_id': medecin_id
+            }));
+            //close socket
+            notifSocket.close();
+        }
+    });
+});
+
+
+
+
+</script>
+{% endblock %}

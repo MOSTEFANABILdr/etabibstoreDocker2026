@@ -1,0 +1,46 @@
+{% load i18n documents_tags %}
+{% load thumbnail %}
+<div class="timeline-content">
+    <h4 class="template-title">
+        {{document.titre}}
+    </h4>
+    <p>
+        {{document.description|linebreaks}}
+    </p>
+    <p class="m-t-20">
+        <a target="_blank" href="{{document.fichier.url}}">
+            {% if document|is_image %}
+                {% if document.fichier|is_portrait %}
+                    {% thumbnail document.fichier "100" as im %}
+                        <img  class="img-responsive" src="{{ im.url }}" width="{{ im.width }}" height="{{ im.height }}">
+                    {% endthumbnail %}
+                {% else %}
+                    {% thumbnail document.fichier "200" as im %}
+                        <img src="{{ im.url }}" width="{{ im.width }}" height="{{ im.height }}">
+                    {% endthumbnail %}
+                {% endif %}
+            {% elif document|is_audio %}
+            <i class="fa fa-music fa-8x text-success"></i>
+            {% elif document|is_video %}
+            <i class="fa fa-film fa-8x text-success"></i>
+            {% else %}
+            <i class="fa fa-file fa-8x text-success"></i>
+            {% endif %}
+        </a>
+    </p>
+</div>
+<div class="timeline-footer">
+    <a href="{% url 'document-update' document.id %}"
+       data-fm-ok="{% trans 'Modifier' %}" data-fm-cancel="{% trans 'Annuler' %}"
+       class="m-r-15 btn btn-default fm-update" data-fm-callback="reload">
+        <i class="fa fa-edit"></i>
+        {% trans "Modifier" %}
+    </a>
+    <a href="{% url 'document-delete' document.id %}"
+       data-fm-ok="{% trans 'Supprimer' %}" data-fm-cancel="{% trans 'Annuler' %}"
+       data-fm-head="{% trans 'Voulez-vous supprimer cet élément ?' %}"
+       class="m-r-15  btn btn-default fm-delete" data-fm-callback="reload">
+        <i class="fa fa-trash"></i>
+        {% trans 'Supprimer' %}
+    </a>
+</div>

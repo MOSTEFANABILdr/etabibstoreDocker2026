@@ -1,0 +1,673 @@
+{% extends "base.html" %}
+{% load i18n %}
+{% load static %}
+{% load avatar_tags %}
+{% load utils_tags %}
+{% load role_tags %}
+{% block title %} {% trans 'Détail du contact' %} {% endblock %}
+{% block style %}
+<!-- Google Fonts
+                    ============================================ -->
+<link
+        href="https://fonts.googleapis.com/css?family=Roboto:100,300,400,700,900"
+        rel="stylesheet">
+<!-- Bootstrap CSS
+                    ============================================ -->
+<link rel="stylesheet" href='{% static "css/bootstrap.min.css" %}'>
+<!-- Bootstrap CSS
+                    ============================================ -->
+<link rel="stylesheet" href='{% static "css/font-awesome.min.css" %}'>
+<!-- owl.carousel CSS
+                    ============================================ -->
+<link rel="stylesheet" href='{% static "css/owl.carousel.css" %}'>
+<link rel="stylesheet" href='{% static "css/owl.theme.css" %}'>
+<link rel="stylesheet" href='{% static "css/owl.transitions.css" %}'>
+<!-- animate CSS
+                    ============================================ -->
+<link rel="stylesheet" href='{% static "css/animate.css" %}'>
+<!-- normalize CSS
+                    ============================================ -->
+<link rel="stylesheet" href='{% static "css/normalize.css" %}'>
+<!-- meanmenu icon CSS
+                    ============================================ -->
+<link rel="stylesheet" href='{% static "css/meanmenu.min.css" %}'>
+<!-- main CSS
+                    ============================================ -->
+<link rel="stylesheet" href='{% static "css/main.css" %}'>
+<!-- educate icon CSS
+                    ============================================ -->
+<link rel="stylesheet" href='{% static "css/educate-custon-icon.css" %}'>
+<!-- morrisjs CSS
+                    ============================================ -->
+<link rel="stylesheet" href='{% static "css/morrisjs/morris.css" %}'>
+<!-- mCustomScrollbar CSS
+                    ============================================ -->
+<link rel="stylesheet"
+      href='{% static "css/scrollbar/jquery.mCustomScrollbar.min.css" %}'>
+<!-- metisMenu CSS
+                    ============================================ -->
+<link rel="stylesheet"
+      href='{% static "css/metisMenu/metisMenu.min.css" %}'>
+<link rel="stylesheet"
+      href='{% static "css/metisMenu/metisMenu-vertical.css" %}'>
+<!-- modernizr JS
+                    ============================================ -->
+<script src='{% static "js/vendor/modernizr-2.8.3.min.js" %}'></script>
+<!-- jquery.dataTables CSS ============================================ -->
+<link rel="stylesheet" href='{% static "js/data-table/jquery.dataTables.min.css" %}'>
+<link rel="stylesheet" type="text/css"
+      href="https://cdn.datatables.net/responsive/2.2.3/css/responsive.bootstrap.min.css">
+{% endblock %}
+{% block content %}
+<div class="single-pro-review-area mt-t-30 mg-b-15">
+    <div class="container-fluid">
+        <div class="row">
+            <div class="col-lg-12 col-md-12 col-sm-12 col-xs-12">
+                <div class="product-payment-inner-st">
+                    {% if perms.core.crm_can_view_contact_list or perms.core.crm_can_view_simplified_contact_list %}
+                    <a title="{% trans 'Modifier le contact' %}" class="btn btn-etabib floatright"
+                       href="{% url 'operator-edit-contact' contact.id %}">
+                        <i class="fa fa-pencil-square-o" aria-hidden="true"></i>
+                        {% trans 'Modifier' %}
+                    </a>
+                    {% endif %}
+                    <h3>{{contact.full_name}}</h3>
+                    <div class="row">
+                        <div class="col-lg-6">
+                            <dl class="row mb-0">
+                                <div class="col-sm-4 text-sm-right">
+                                    <dt>Etat:</dt>
+                                </div>
+                                <div class="col-sm-8 text-sm-left">
+                                    <dd class="mb-1">{% role contact %}</dd>
+                                </div>
+                            </dl>
+                            <dl class="row mb-0">
+                                <div class="col-sm-4 text-sm-right">
+                                    <dt>{% trans 'ID' %}:</dt>
+                                </div>
+                                <div class="col-sm-8 text-sm-left">
+                                    <dd class="mb-1">{{contact.id}}</dd>
+                                </div>
+                            </dl>
+                            <dl class="row mb-0">
+                                <div class="col-sm-4 text-sm-right">
+                                    <dt>{% trans 'Nom' %}:</dt>
+                                </div>
+                                <div class="col-sm-8 text-sm-left">
+                                    <dd class="mb-1">{{contact.full_name}}</dd>
+                                </div>
+                            </dl>
+                            {% if contact.medecin %}
+                            <dl class="row mb-0">
+                                <div class="col-sm-4 text-sm-right">
+                                    <dt>{% trans 'Compte' %}:</dt>
+                                </div>
+                                <div class="col-sm-8 text-sm-left">
+                                    <dd class="mb-1">{{contact.medecin.user.username}}</dd>
+                                </div>
+                            </dl>
+                            {% endif %}
+                            {% if contact.cree_par %}
+                            <dl class="row mb-0">
+                                <div class="col-sm-4 text-sm-right">
+                                    <dt>{% trans 'Crée par' %}:</dt>
+                                </div>
+                                <div class="col-sm-8 text-sm-left">
+                                    <dd class="mb-1">{{contact.cree_par}}</dd>
+                                </div>
+                            </dl>
+                            {% endif %}
+                            {% if contact.date_naissance %}
+                            <dl class="row mb-0">
+                                <div class="col-sm-4 text-sm-right">
+                                    <dt>{% trans 'Date de naissance' %}:</dt>
+                                </div>
+                                <div class="col-sm-8 text-sm-left">
+                                    <dd class="mb-1">{{contact.date_naissance}}</dd>
+                                </div>
+                            </dl>
+                            {% endif %}
+                            {% if contact.sexe %}
+                            <dl class="row mb-0">
+                                <div class="col-sm-4 text-sm-right">
+                                    <dt>{% trans 'Sexe' %}:</dt>
+                                </div>
+                                <div class="col-sm-8 text-sm-left">
+                                    <dd class="mb-1">{{contact.sexe}}</dd>
+                                </div>
+                            </dl>
+                            {% endif %}
+                            {% if contact.specialite %}
+                            <dl class="row mb-0">
+                                <div class="col-sm-4 text-sm-right">
+                                    <dt>{% trans 'Spécialité' %}:</dt>
+                                </div>
+                                <div class="col-sm-8 text-sm-left">
+                                    <dd class="mb-1 tag-list">
+                                        <span class="trigger blue lighten">
+                                            {{contact.specialite}}
+                                        </span>
+                                    </dd>
+                                </div>
+                            </dl>
+                            {% endif %}
+                            {% if contact.pays %}
+                            <dl class="row mb-0">
+                                <div class="col-sm-4 text-sm-right">
+                                    <dt>{% trans 'Pays' %}:</dt>
+                                </div>
+                                <div class="col-sm-8 text-sm-left">
+                                    <dd class="mb-1">{{contact.pays}}</dd>
+                                </div>
+                            </dl>
+                            {% endif %}
+                            {% if contact.ville %}
+                            <dl class="row mb-0">
+                                <div class="col-sm-4 text-sm-right">
+                                    <dt>{% trans 'Ville' %}:</dt>
+                                </div>
+                                <div class="col-sm-8 text-sm-left">
+                                    <dd class="mb-1">{{contact.ville}}</dd>
+                                </div>
+                            </dl>
+                            {% endif %}
+                            {% if contact.adresse %}
+                            <dl class="row mb-0">
+                                <div class="col-sm-4 text-sm-right">
+                                    <dt>{% trans 'Addresse' %}:</dt>
+                                </div>
+                                <div class="col-sm-8 text-sm-left">
+                                    <dd class="mb-1">{{contact.adresse}}</dd>
+                                </div>
+                            </dl>
+                            {% endif %}
+                            {% if contact.source %}
+                            <dl class="row mb-0">
+                                <div class="col-sm-4 text-sm-right">
+                                    <dt>{% trans 'Source' %}:</dt>
+                                </div>
+                                <div class="col-sm-8 text-sm-left">
+                                    <dd class="mb-1">{{contact.get_source_display}}</dd>
+                                </div>
+                            </dl>
+                            {% endif %}
+                            {% if contact.maps_url %}
+                            <dl class="row mb-0">
+                                <div class="col-sm-4 text-sm-right">
+                                    <dt>{% trans 'Google Maps URL' %}:</dt>
+                                </div>
+                                <div class="col-sm-8 text-sm-left">
+                                    <dd class="mb-1">
+                                        <a href="{{contact.maps_url}}" target="_blank">
+                                            {{contact.maps_url}}
+                                        </a>
+                                    </dd>
+                                </div>
+                            </dl>
+                            {% endif %}
+                            {% if contact.motif %}
+                            <dl class="row mb-0">
+                                <div class="col-sm-4 text-sm-right">
+                                    <dt>{% trans 'Motif du contact' %}:</dt>
+                                </div>
+                                <div class="col-sm-8 text-sm-left">
+                                    <dd class="mb-1">{{contact.motif}}</dd>
+                                </div>
+                            </dl>
+                            {% endif %}
+                            {% if contact.codepostal %}
+                            <dl class="row mb-0">
+                                <div class="col-sm-4 text-sm-right">
+                                    <dt>{% trans 'Code postal' %}:</dt>
+                                </div>
+                                <div class="col-sm-8 text-sm-left">
+                                    <dd class="mb-1">{{contact.codepostal}}</dd>
+                                </div>
+                            </dl>
+                            {% endif %}
+                            {% if contact.fixe %}
+                            <dl class="row mb-0">
+                                <div class="col-sm-4 text-sm-right">
+                                    <dt>{% trans 'Téléphone fixe' %}:</dt>
+                                </div>
+                                <div class="col-sm-8 text-sm-left">
+                                    <dd class="mb-1">{{contact.fixe}}</dd>
+                                </div>
+                            </dl>
+                            {% endif %}
+                            {% if contact.mobile %}
+                            <dl class="row mb-0">
+                                <div class="col-sm-4 text-sm-right">
+                                    <dt>{% trans 'Téléphone mobile' %}:</dt>
+                                </div>
+                                <div class="col-sm-8 text-sm-left">
+                                    <dd class="mb-1">{{contact.mobile}}</dd>
+                                </div>
+                            </dl>
+                            {% endif %}
+                            {% if contact.get_emails %}
+                            <dl class="row mb-0">
+                                <div class="col-sm-4 text-sm-right">
+                                    <dt>{% trans 'Email' %}:</dt>
+                                </div>
+                                <div class="col-sm-8 text-sm-left">
+                                    {% for email in contact.get_emails %}
+                                    <dd class="mb-1">{{email}}</dd>
+                                    {% endfor %}
+                                </div>
+                            </dl>
+                            {% endif %}
+                            {% if contact.fonction %}
+                            <dl class="row mb-0">
+                                <div class="col-sm-4 text-sm-right">
+                                    <dt>{% trans 'Fonction' %}:</dt>
+                                </div>
+                                <div class="col-sm-8 text-sm-left">
+                                    <dd class="mb-1">{{contact.fonction}}</dd>
+                                </div>
+                            </dl>
+                            {% endif %}
+                            {% if contact.organisme %}
+                            <dl class="row mb-0">
+                                <div class="col-sm-4 text-sm-right">
+                                    <dt>{% trans 'Organisme' %}:</dt>
+                                </div>
+                                <div class="col-sm-8 text-sm-left">
+                                    <dd class="mb-1">{{contact.organisme}}</dd>
+                                </div>
+                            </dl>
+                            {% endif %}
+                            {% if contact.type_structure %}
+                            <dl class="row mb-0">
+                                <div class="col-sm-4 text-sm-right">
+                                    <dt>{% trans 'Type Structure' %}:</dt>
+                                </div>
+                                <div class="col-sm-8 text-sm-left">
+                                    <dd class="mb-1">{{contact.type_structure}}</dd>
+                                </div>
+                            </dl>
+                            {% endif %}
+                            {% if contact.date_ouverture %}
+                            <dl class="row mb-0">
+                                <div class="col-sm-4 text-sm-right">
+                                    <dt>{% trans 'Date d\'ouverture' %}:</dt>
+                                </div>
+                                <div class="col-sm-8 text-sm-left">
+                                    <dd class="mb-1">{{contact.date_ouverture}}</dd>
+                                </div>
+                            </dl>
+                            {% endif %}
+                            {% if contact.date_debut_exercice %}
+                            <dl class="row mb-0">
+                                <div class="col-sm-4 text-sm-right">
+                                    <dt>{% trans 'Date de début d\'exercice' %}:</dt>
+                                </div>
+                                <div class="col-sm-8 text-sm-left">
+                                    <dd class="mb-1">{{contact.date_debut_exercice}}</dd>
+                                </div>
+                            </dl>
+                            {% endif %}
+                            {% if contact.type_exercice %}
+                            <dl class="row mb-0">
+                                <div class="col-sm-4 text-sm-right">
+                                    <dt>{% trans 'Type Exercice' %}:</dt>
+                                </div>
+                                <div class="col-sm-8 text-sm-left">
+                                    <dd class="mb-1">{{contact.get_type_exercice_display}}</dd>
+                                </div>
+                            </dl>
+                            {% endif %}
+                            {% if contact.carte_pessionnelle %}
+                            <dl class="row mb-0">
+                                <div class="col-sm-4 text-sm-right">
+                                    <dt>{% trans 'Carte professionnelle' %}:</dt>
+                                </div>
+                                <div class="col-sm-8 text-sm-left">
+                                    <dd class="mb-1">
+                                        <div class="file-box">
+                                            <div class="file">
+                                                <a href="{{contact.carte_pessionnelle.url}}">
+                                                    <span class="corner"></span>
+                                                    <div class="image">
+                                                        <img src="{{contact.carte_pessionnelle.url}}">
+                                                    </div>
+                                                    <div class="file-name">
+                                                        {{contact.carte_pessionnelle.name|truncatechars:20}}
+                                                    </div>
+                                                </a>
+                                            </div>
+                                        </div>
+                                    </dd>
+                                </div>
+                            </dl>
+                            {% endif %}
+                            {% if contact.pageweb %}
+                            <dl class="row mb-0">
+                                <div class="col-sm-4 text-sm-right">
+                                    <dt>{% trans 'Page Web/Site Web' %}:</dt>
+                                </div>
+                                <div class="col-sm-8 text-sm-left">
+                                    <dd class="mb-1">
+                                        <a target="_blank" href="{{contact.pageweb}}">
+                                            {{contact.pageweb}}
+                                        </a>
+                                    </dd>
+                                </div>
+                            </dl>
+                            {% endif %}
+                            {% if contact.facebook %}
+                            <dl class="row mb-0">
+                                <div class="col-sm-4 text-sm-right">
+                                    <dt>{% trans 'Facebook' %}:</dt>
+                                </div>
+                                <div class="col-sm-8 text-sm-left">
+                                    <dd class="mb-1">
+                                        <a target="_blank" href="{{contact.facebook}}">
+                                            {{contact.facebook}}
+                                        </a>
+                                    </dd>
+                                </div>
+                            </dl>
+                            {% endif %}
+                            {% if contact.linkedin %}
+                            <dl class="row mb-0">
+                                <div class="col-sm-4 text-sm-right">
+                                    <dt>{% trans 'LinkedIn' %}:</dt>
+                                </div>
+                                <div class="col-sm-8 text-sm-left">
+                                    <dd class="mb-1">
+                                        <a target="_blank" href="{{contact.linkedin}}">
+                                            {{contact.linkedin}}
+                                        </a>
+                                    </dd>
+                                </div>
+                            </dl>
+                            {% endif %}
+                            {% if contact.instagram %}
+                            <dl class="row mb-0">
+                                <div class="col-sm-4 text-sm-right">
+                                    <dt>{% trans 'Instagram' %}:</dt>
+                                </div>
+                                <div class="col-sm-8 text-sm-left">
+                                    <dd class="mb-1">
+                                        <a target="_blank" href="{{contact.instagram}}">
+                                            {{contact.instagram}}
+                                        </a>
+                                    </dd>
+                                </div>
+                            </dl>
+                            {% endif %}
+                            {% if contact.commentaire %}
+                            <dl class="row mb-0">
+                                <div class="col-sm-4 text-sm-right">
+                                    <dt>{% trans 'Instagram' %}:</dt>
+                                </div>
+                                <div class="col-sm-8 text-sm-left">
+                                    <dd class="mb-1">{{contact.Commentaire}}</dd>
+                                </div>
+                            </dl>
+                            {% endif %}
+                        </div>
+                        <div class="col-lg-6" id="cluster_info">
+                            {% if contact.date_creation %}
+                            <dl class="row mb-0">
+                                <div class="col-sm-4 text-sm-right">
+                                    <dt>{% trans 'Date de création' %}:</dt>
+                                </div>
+                                <div class="col-sm-8 text-sm-left">
+                                    <dd class="mb-1">{{contact.date_creation}}</dd>
+                                </div>
+                            </dl>
+                            {% endif %}
+                        </div>
+                    </div>
+                    <div class="product-payment-inner-st res-mg-t-30 analysis-progrebar-ctn">
+                        <ul id="myTabedu1" class="tab-review-design">
+                            <li class="active"><a href="#infos"> {% trans 'Activités' %}</a></li>
+                            {% if perms.core.crm_can_view_command_list %}
+                            <li class=""><a href="#comnds"> {% trans 'Commandes' %}</a></li>
+                            {% endif %}
+                            {% if perms.core.crm_can_view_sms_email %}
+                            <li class=""><a href="#histsms"> {% trans 'Historique des SMS' %}</a></li>
+                            <li class=""><a href="#histemail"> {% trans 'Historique des Email' %}</a></li>
+                            {% endif %}
+                        </ul>
+                        <div id="myTabContent" class="tab-content custom-product-edit">
+                            <div class="product-tab-list tab-pane fade active in" id="infos">
+                                <div class="row">
+                                    <div class="col-lg-12 col-md-12 col-sm-12 col-xs-12">
+                                        <div class="activity-stream">
+                                            {% if contact.cree_par %}
+                                            <div class="stream">
+                                                <div class="stream-badge">
+                                                    <i class="fa fa-pencil"></i>
+                                                </div>
+                                                <div class="stream-panel">
+                                                    <div class="stream-info">
+                                                        <a href="#">
+                                                            {% avatar contact.cree_par.user %}
+                                                            <span>{{contact.cree_par}}</span>
+                                                            <span class="date">{{contact.date_creation|date:'Y-m-d H:i'}}</span>
+                                                        </a>
+                                                    </div>
+                                                    A créé le contact
+                                                </div>
+                                            </div>
+                                            {% elif contact.medecin %}
+                                            <div class="stream">
+                                                <div class="stream-badge">
+                                                    <i class="fa fa-pencil"></i>
+                                                </div>
+                                                <div class="stream-panel">
+                                                    <div class="stream-info">
+                                                        <a href="#">
+                                                            {% avatar contact.medecin.user %}
+                                                            <span>{{contact.full_name}}</span>
+                                                            <span class="date">{{contact.date_creation|date:'Y-m-d H:i'}}</span>
+                                                        </a>
+                                                    </div>
+                                                    {% blocktrans with name=contact.full_name %}
+                                                    <strong>{{name}}</strong> est inscrit sur le site en tant que
+                                                    <strong>Médecin</strong>
+                                                    {% endblocktrans %}
+                                                </div>
+                                            </div>
+                                            {% elif contact.partenaire %}
+                                            <div class="stream">
+                                                <div class="stream-badge">
+                                                    <i class="fa fa-pencil"></i>
+                                                </div>
+                                                <div class="stream-panel">
+                                                    <div class="stream-info">
+                                                        <a href="#">
+                                                            {% avatar contact.partenaire.user %}
+                                                            <span>{{contact.full_name}}</span>
+                                                            <span class="date">{{contact.date_creation|date:'Y-m-d H:i'}}</span>
+                                                        </a>
+                                                    </div>
+                                                    {% blocktrans with name=contact.full_name %}
+                                                    <strong>{{name}}</strong> est inscrit sur le site en tant que
+                                                    <strong>Partenaire</strong>
+                                                    {% endblocktrans %}
+                                                </div>
+                                            </div>
+                                            {% elif contact.professionnelsante %}
+                                            <div class="stream">
+                                                <div class="stream-badge">
+                                                    <i class="fa fa-pencil"></i>
+                                                </div>
+                                                <div class="stream-panel">
+                                                    <div class="stream-info">
+                                                        <a href="#">
+                                                            {% avatar contact.professionnelsante.user %}
+                                                            <span>{{contact.full_name}}</span>
+                                                            <span class="date">{{contact.date_creation|date:'Y-m-d H:i'}}</span>
+                                                        </a>
+                                                    </div>
+                                                    {% blocktrans with name=contact.full_name %}
+                                                    <strong>{{name}}</strong> est inscrit sur le site en tant que
+                                                    <strong>Professionnel de santé</strong>
+                                                    {% endblocktrans %}
+                                                </div>
+                                            </div>
+                                            {% endif %}
+                                            {% for action in contact.action_set.all %}
+                                            <div class="stream">
+                                                <div class="stream-badge">
+                                                    {{action|geticon|safe}}
+                                                </div>
+                                                <div class="stream-panel">
+                                                    <div class="stream-info">
+                                                        <a href="{% url 'action-detail' action.pk %}">
+                                                            {% avatar action.cree_par.user %}
+                                                            <span>{{action.cree_par}}</span>
+                                                            <span class="date">{{action.date_creation|date:'Y-m-d H:i'}}</span>
+                                                        </a>
+                                                    </div>
+                                                    {% blocktrans with type=action.get_type_display %}
+                                                    A céée une action de type <strong>{{type}}</strong>
+                                                    {% endblocktrans %}
+                                                    <br>
+                                                    {% if action.detail_set.all %}
+                                                    <div class="stream-info">
+                                                        <strong>{% trans 'Participants:' %} </strong>
+                                                        {% for detail in action.detail_set.all %}
+                                                        {% avatar detail.cree_par.user %}
+                                                        {% endfor %}
+                                                    </div>
+                                                    {% endif %}
+                                                </div>
+                                            </div>
+                                            {% endfor %}
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                            {% if perms.core.crm_can_view_command_list %}
+                            <div class="product-tab-list tab-pane fade" id="comnds">
+                                <div class="row">
+                                    <div class="col-lg-12 col-md-12 col-sm-12 col-xs-12">
+                                        <table class="table  table-responsive">
+                                            <tbody>
+                                            <tr>
+                                                <th>Commande</th>
+                                                <th>Type</th>
+                                                <th>Date de création</th>
+                                            </tr>
+                                            {% for order in orders %}
+                                            <tr>
+                                                <td>
+                                                    <a href="{% url 'detail-order' order.pk %}">
+                                                        {{order.id}}
+                                                    </a>
+                                                </td>
+                                                <td>
+                                                    {% if order.offre_perso %}
+                                                    {% trans 'Offre Personnalisé' %}
+                                                    {% else %}
+                                                    {% trans 'Offre Prépayé' %}
+                                                    {% endif %}
+                                                </td>
+                                                <td>{{order.date_creation|date:'Y-m-d H:i'}}</td>
+                                            </tr>
+                                            {% endfor %}
+                                            </tbody>
+                                        </table>
+                                    </div>
+                                </div>
+                            </div>
+                            {% endif %}
+                            {% if perms.core.crm_can_view_sms_email %}
+                            <div class="product-tab-list tab-pane fade" id="histsms">
+                                <div class="row">
+                                    <div class="col-lg-12 col-md-12 col-sm-12 col-xs-12">
+                                        <div class="table-responsive">
+                                            {{ datatable_sms }}
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="product-tab-list tab-pane fade" id="histemail">
+                                <div class="row">
+                                    <div class="col-lg-12 col-md-12 col-sm-12 col-xs-12">
+                                        <div class="table-responsive">
+                                            {{ datatable_email }}
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                            {% endif %}
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}
+{% block js %}
+<!-- dataTables ============================================ -->
+<script type="text/javascript" charset="utf8" src='{% static "js/data-table/jquery.dataTables.min.js" %}'></script>
+<script type="text/javascript" charset="utf8" src="{% static 'js/data-table/datatableview.js' %}?v=1.0"></script>
+<script type="text/javascript" charset="utf8"
+        src="https://cdn.datatables.net/responsive/2.2.3/js/dataTables.responsive.js"></script>
+<!-- bootstrap JS
+                    ============================================ -->
+<script src='{% static "js/bootstrap.min.js" %}'></script>
+<!-- wow JS
+                    ============================================ -->
+<script src='{% static "js/wow.min.js" %}'></script>
+<!-- price-slider JS
+                    ============================================ -->
+<script src='{% static "js/jquery-price-slider.js" %}'></script>
+<!-- meanmenu JS
+                    ============================================ -->
+<script src='{% static "js/jquery.meanmenu.js" %}'></script>
+<!-- owl.carousel JS
+                    ============================================ -->
+<script src='{% static "js/owl.carousel.min.js" %}'></script>
+<!-- sticky JS
+                    ============================================ -->
+<script src='{% static "js/jquery.sticky.js" %}'></script>
+<!-- scrollUp JS
+                    ============================================ -->
+<script src='{% static "js/jquery.scrollUp.min.js" %}'></script>
+<!-- mCustomScrollbar JS
+                    ============================================ -->
+<script
+        src='{% static "js/scrollbar/jquery.mCustomScrollbar.concat.min.js" %}'></script>
+<script src='{% static "js/scrollbar/mCustomScrollbar-active.js" %}'></script>
+<!-- metisMenu JS
+                    ============================================ -->
+<script src='{% static "js/metisMenu/metisMenu.min.js" %}'></script>
+<script src='{% static "js/metisMenu/metisMenu-active.js" %}'></script>
+<!-- plugins JS
+                    ============================================ -->
+<script src='{% static "js/plugins.js" %}'></script>
+<!-- main JS
+                    ============================================ -->
+<script src='{% static "js/main.js" %}'></script>
+<!-- tawk chat JS
+                    ============================================ -->
+{% include 'partial/tawk-script.html' %}
+<script>
+	$(function () {
+		var common_options = {
+		    "language": {
+                {% if LANGUAGE_CODE == 'ar' %}
+                "url": "https://cdn.datatables.net/plug-ins/1.10.20/i18n/Arabic.json"
+                {% else %}
+                "url": "https://cdn.datatables.net/plug-ins/1.10.20/i18n/French.json"
+                {% endif %}
+            },
+            "processing": "Loading...",
+             "loadingRecords": "&nbsp;",
+		};
+        datatableview.initialize('.datatable', common_options);
+	});
+
+
+
+</script>
+{% endblock %}

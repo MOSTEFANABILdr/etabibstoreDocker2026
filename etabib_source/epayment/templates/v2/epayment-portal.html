@@ -1,0 +1,101 @@
+{% extends "base.html" %}
+{% load i18n %}
+{% load static role_tags utils_tags %}
+
+{% block title %} {% trans 'Portail de paiement' %} {% endblock %}
+
+{% block style %}
+<link href='{% static "js/square/green.css" %}' rel="stylesheet">
+<link rel="stylesheet" href='{% static "css/notifications/Lobibox.min.css" %}'>
+<link rel="stylesheet" href='{% static "css/notifications/notifications.css" %}'>
+<style>
+    ul {
+        list-style: none;
+    }
+
+</style>
+{% endblock %}
+
+{% block content %}
+{% include 'epayment-portal-partial.html' %}
+{% endblock %}
+
+{% block js %}
+<script src='{% static "js/icheck.min.js" %}'></script>
+<script src='{% static "js/notifications/Lobibox.js" %}'></script>
+<script>
+$(document).ready(function(){
+    $('input').iCheck({
+        checkboxClass: 'icheckbox_square-green',
+        radioClass: 'iradio_square-green',
+        increaseArea: '20%' // optional
+    });
+
+    $("input[name='montant_select']").on('ifChecked',function(e){
+        $('#id_montant').prop("value", "");
+        $('#id_montant').prop("required", false);
+        $(this).prop("required",true);
+    });
+
+    $("#id_montant").keypress(function(){
+        $("input[name='montant_select']").iCheck('uncheck');
+        $("input[name='montant_select']").prop("required", false);
+        $(this).prop("required",true);
+    });
+
+    $("#id_montant").click(function(){
+        $("input[name='montant_select']").iCheck('uncheck');
+    });
+
+    $('#submit-btn').on('click', function(e){
+        e.preventDefault();
+        //show confirmation notification
+        var lobibox = Lobibox.confirm({
+            title: "{% trans 'تأكيد' %}",
+            iconClass: false,
+            buttons: {
+                yes: {
+                    closeOnClick: true,
+                    'class': 'btn btn-etabib',
+                    text: "{% trans 'تأكيد العملية' %}"
+                },
+                no: {
+                    closeOnClick: true,
+                    'class': 'btn btn-etabib font-weight-bold',
+                    text: "{% trans 'تعديل المعلومات' %}"
+                },
+            },
+            closable: false,
+            msg: "{% trans 'سنقوم بتحويلك إلى فضاء التعبئة' %}",
+            callback: function($this, type, ev) {
+                if (type === 'yes') {
+                     $('.post-form').find('[type="submit"]').trigger('click');
+                }
+            }
+        });
+     });
+
+    $('#read-la').on('click', function(e){
+        {% if user|is_patient %}
+        var content = "{% settings_value 'TOS_PATIENT' %}";
+        {% else %}
+        var content = "{% settings_value 'TOS_DOCTOR' %}";
+        {% endif %}
+        Lobibox.window({
+            title: "Les conditions d'utilisation",
+            width: $(window).width(),
+            content: '<iframe width="100%" height="500px" src=' + content + '></iframe>'
+            });
+    })
+
+    //Prevent users from submitting a form by hitting Enter
+    $(window).keydown(function(event){
+        if(event.keyCode == 13) {
+          event.preventDefault();
+          return false;
+        }
+    });
+});
+
+</script>
+{% endblock %}

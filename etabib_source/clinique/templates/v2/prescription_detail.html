@@ -1,0 +1,32 @@
+{% load i18n %}
+{% load static %}
+{% load prescription_tags %}
+{% load el_pagination_tags %}
+{% paginate 10 nom_commerciaux %}
+
+{% for nomcommercial in nom_commerciaux %}
+<div class="row">
+    <div class="col-md-5">
+         {{ nomcommercial }}
+    </div>
+    <div class="col-md-7">
+        {% renderMedicMenu nomcommercial.nomcommercial_formes %}
+    </div>
+</div>
+
+<div class="row">
+    <hr>
+</div>
+{% endfor %}
+
+<div class="row text-center">
+    <small>{{nc_count}} {% trans 'résultat(s)' %}</small>
+</div>
+
+<div class="row text-center">
+    {% get_pages %}
+    {% if pages.paginated %}
+    {% show_current_number as page_number %}
+    {% include 'partial/pagination.html' with pages=pages current_page_number=page_number extra=extra_args %}
+    {% endif %}
+</div>

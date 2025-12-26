@@ -1,0 +1,84 @@
+{% load i18n %}
+{% load avatar_tags %}
+{% load teleconsultation_tags %}
+{% is_from_care_team request.user.patient medecin.user as IS_FROM_CARE_TEAM %}
+<div class="col-lg-3 col-md-4 col-sm-6">
+    <div class="panel panel-default profile-panel shadow p-3 mb-5 bg-white rounded">
+        <div class="panel-body text-center">
+            <div class="doctor-profile-telec">
+                <div class="userpic">
+                    {% render_status medecin as DOCTOR_STATUS %}
+                    <div class="bubble {{DOCTOR_STATUS}}" title="{% ifequal DOCTOR_STATUS 'online' %} {% trans 'En Ligne' %}
+                     {% else %} {% trans 'hors ligne' %} {% endifequal %}">
+                        <span class="bubble-outer-dot">
+                            <span class="bubble-inner-dot"></span>
+                        </span>
+                    </div>
+                    {% avatar medecin.user class="userpicimg" %}
+                </div>
+                <h3 title="DR {{medecin.full_name|upper}}" class="username">
+                    {{medecin.full_name|upper}}
+                </h3>
+                <h3 title="{{medecin.contact.specialite}}" class="speciality">
+                    {{medecin.contact.specialite}}
+                </h3>
+                <p>
+                <a href="#" data-medecin-id="{{medecin.id}}"
+                   data-medecin-name="{{medecin.full_name}}"
+                   title="{% trans 'Profile: gps,' %}"
+                   class="view-profil blue">
+                    <i class="fa fa-profile"></i>
+                    {% trans 'VOIR SON PROFILE' %}
+                </a>
+                </p>
+            </div>
+            <p>
+                <strong> {% trans "Tarif" %} </strong>
+            </p>
+            <p class="price text-success">
+                {% if discount.has_discount %}
+                <del class="text-danger">{{medecin.tarif_consultation|default_if_none:""}}</del>
+                <br>
+                {% apply_discount medecin.tarif_consultation discount.coupon %}
+                {% else %}
+                {{medecin.tarif_consultation|default_if_none:""}}
+                {% endif %}
+            </p>
+        </div>
+        <div class="panel-footer text-center">
+            <div class="btn-group-vertical">
+                {% if medecin.is_online %}
+                <a data-medecin-id="{{medecin.id}}"
+                   title="{% trans 'Consultez Un Médecin par Appel Video' %}"
+                   data-medecin-name="{{medecin.full_name}}"
+                   class="btn btn-etabib demand-teleconsultation">
+                    <i class="fa fa-phone"></i>
+                    {% trans 'APPELER' %}
+                </a>
+                {% endif %}
+                {% has_rdv_with medecin.user request.user as has_rdv %}
+                <a data-medecin-id="{{medecin.id}}"
+                   data-has-rdv="{{has_rdv.0}}"
+                   data-demand-id="{{has_rdv.1}}"
+                   title="{% if not has_rdv.0 %} {% trans 'Prenez un rendez-vous' %} {% else %} {% trans 'Annulez la demande de RV' %} {% endif %}"
+                   data-medecin-name="{{medecin.full_name}}"
+                   class="btn btn-etabib demand-rdv mt-2">
+                    <i class="fa {% if not has_rdv.0 %} fa-calendar-plus {% else %} fa-calendar-minus {% endif %} "></i>
+                    <span>
+                        {% if not has_rdv.0 %} {% trans 'DEMANDER RDV' %} {% else %} {% trans 'ANNULER LA DEMANDE RDV' %} {% endif %}
+                    </span>
+                </a>
+                {% if not IS_FROM_CARE_TEAM %}
+                <a data-medecin-id="{{medecin.id}}"
+                   title="{% trans 'AJOUTER À MON ÉQUIPE' %}"
+                   data-medecin-name="{{medecin.full_name}}"
+                   class="btn btn-etabib btn-block add-doc-team mt-2">
+                    <i class="fa fa-users"></i>
+                    {% trans 'AJOUTER À MON ÉQUIPE' %}
+                </a>
+                {% endif %}
+            </div>
+        </div>
+    </div>
+</div>
+

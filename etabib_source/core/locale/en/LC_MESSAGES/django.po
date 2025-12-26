@@ -1,0 +1,2117 @@
+# SOME DESCRIPTIVE TITLE.
+# Copyright (C) YEAR THE PACKAGE'S COPYRIGHT HOLDER
+# This file is distributed under the same license as the PACKAGE package.
+# FIRST AUTHOR <EMAIL@ADDRESS>, YEAR.
+#
+#: core/forms/directory_forms.py:12 core/forms/directory_forms.py:29
+#, fuzzy
+msgid ""
+msgstr ""
+"Project-Id-Version: PACKAGE VERSION\n"
+"Report-Msgid-Bugs-To: \n"
+"POT-Creation-Date: 2022-08-25 11:30+0100\n"
+"PO-Revision-Date: 2021-03-22 17:44+0012\n"
+"Last-Translator: b'Moderator etabib store <contact@ibnhamza.com>'\n"
+"Language-Team: LANGUAGE <LL@li.org>\n"
+"Language: \n"
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=UTF-8\n"
+"Content-Transfer-Encoding: 8bit\n"
+"Plural-Forms: nplurals=2; plural=(n != 1);\n"
+"X-Translated-Using: django-rosetta 0.9.5\n"
+
+#: core/admin.py:122
+msgid "Zones"
+msgstr "Locations"
+
+#: core/admin.py:158 core/forms/doctor_forms.py:288
+#: core/forms/professionnal_forms.py:32 core/models.py:985 core/models.py:1288
+msgid "Pays"
+msgstr "Country"
+
+#: core/admin.py:163 core/forms/doctor_forms.py:293
+#: core/forms/doctor_forms.py:620 core/forms/doctor_forms.py:699
+#: core/forms/patient_forms.py:77 core/forms/professionnal_forms.py:37
+msgid "Choisir un pays ..."
+msgstr "Chose a Country..."
+
+#: core/admin.py:168 core/admin.py:1196 core/forms/doctor_forms.py:300
+#: core/forms/patient_forms.py:134 core/forms/professionnal_forms.py:44
+#: core/models.py:981 core/models.py:1290
+msgid "Ville"
+msgstr "City ..."
+
+#: core/admin.py:174 core/forms/doctor_forms.py:306
+#: core/forms/doctor_forms.py:629 core/forms/doctor_forms.py:708
+#: core/forms/patient_forms.py:84 core/forms/patient_forms.py:141
+#: core/forms/professionnal_forms.py:50
+msgid "Choisir une ville ..."
+msgstr "Choose a city ..."
+
+#: core/admin.py:212
+msgid "Ce contact existe dèja"
+msgstr ""
+
+#: core/admin.py:230 core/forms/doctor_forms.py:75 core/forms/forms.py:140
+#: core/forms/forms.py:390
+msgid "Carte professionnelle"
+msgstr "Professional card / justification"
+
+#: core/admin.py:313
+msgid "group"
+msgstr "group"
+
+#: core/admin.py:314
+msgid "first name"
+msgstr "first name"
+
+#: core/admin.py:315
+msgid "last name"
+msgstr "last name"
+
+#: core/admin.py:499 core/models.py:2267
+msgid "Mots clés"
+msgstr "Keywords"
+
+#: core/admin.py:579 core/admin.py:1147 core/forms/staff_forms.py:14
+#: core/forms/staff_forms.py:79 core/models.py:64
+msgid "Médecin"
+msgstr "Doctor"
+
+#: core/admin.py:638
+msgid "Nom & Prénom"
+msgstr "First-Last Name"
+
+#: core/admin.py:639
+msgid "Mobile/Fixe"
+msgstr "Mobile/Phone"
+
+#: core/admin.py:640
+msgid "Image"
+msgstr "Image"
+
+#: core/admin.py:842
+msgid "Ouvrir une demande commerciale"
+msgstr ""
+
+#: core/admin.py:843
+msgid "Ouvrir un compte et envoyer un sms et un mail"
+msgstr ""
+
+#: core/admin.py:896 core/admin.py:966
+#, fuzzy
+#| msgid "My Profile"
+msgid "Profile"
+msgstr "My Profile"
+
+#: core/admin.py:967 core/models.py:1292
+msgid "Téléphone"
+msgstr ""
+
+#: core/admin.py:1014
+msgid "License status"
+msgstr "License status"
+
+#: core/admin.py:1019
+msgid "Used"
+msgstr "Used"
+
+#: core/admin.py:1020
+msgid "Unused"
+msgstr "Unused"
+
+#: core/admin.py:1050 core/models.py:1985
+msgid "Contact"
+msgstr "Contact"
+
+#: core/admin.py:1056 core/admin.py:1083 core/forms/staff_forms.py:29
+msgid "Offre"
+msgstr "offer"
+
+#: core/admin.py:1063 core/admin.py:1090
+msgid "Facture"
+msgstr "Bill"
+
+#: core/admin.py:1077 core/models.py:1447
+msgid "Partenaire"
+msgstr "Partner"
+
+#: core/admin.py:1104
+msgid "Avantages"
+msgstr "Advantages"
+
+#: core/admin.py:1111
+msgid "Services"
+msgstr ""
+
+#: core/admin.py:1157
+msgid "Licence"
+msgstr ""
+
+#: core/admin.py:1238
+msgid "Annonces"
+msgstr ""
+
+#: core/admin.py:1262 core/forms/forms.py:52 core/forms/forms.py:384
+#: core/forms/patient_forms.py:18 core/forms/professionnal_forms.py:29
+#: core/models.py:949
+msgid "Nom"
+msgstr ""
+
+#: core/admin.py:1265 core/forms/forms.py:55 core/forms/forms.py:385
+#: core/forms/patient_forms.py:19 core/forms/professionnal_forms.py:30
+#: core/models.py:950
+msgid "Prénom"
+msgstr ""
+
+#: core/admin.py:1378 core/models.py:1366 core/models.py:1425
+msgid "Professionnel(le) de santé"
+msgstr ""
+
+#: core/admin.py:1428
+msgid "Opérator"
+msgstr ""
+
+#: core/admin.py:1429
+msgid "User"
+msgstr ""
+
+#: core/admin.py:1526
+msgid "Available?"
+msgstr ""
+
+#: core/decorators.py:143
+msgid "Veuillez remplir votre profile."
+msgstr ""
+
+#: core/decorators.py:204
+msgid "Désolé, votre abonnement ne contient pas ce service"
+msgstr ""
+
+#: core/enums.py:69 core/enums.py:87 core/templatetags/partner_tags.py:123
+msgid "En attente"
+msgstr "Pending"
+
+#: core/enums.py:70
+msgid "Attribué"
+msgstr "Assigned"
+
+#: core/enums.py:71 core/enums.py:89
+msgid "Traitée"
+msgstr "Processed"
+
+#: core/enums.py:72 core/enums.py:90
+msgid "Résolue"
+msgstr "Resolved"
+
+#: core/enums.py:73
+msgid "Non Résolue"
+msgstr "Unresolved"
+
+#: core/enums.py:74 core/enums.py:92
+msgid "Annulée"
+msgstr "Canceled"
+
+#: core/enums.py:88 core/templatetags/partner_tags.py:120
+msgid "Active"
+msgstr "Active"
+
+#: core/enums.py:91
+msgid "dépassée"
+msgstr "outdated"
+
+#: core/enums.py:96
+msgid "active"
+msgstr "active"
+
+#: core/enums.py:97
+msgid "expiré"
+msgstr "out of date"
+
+#: core/enums.py:98
+msgid "inactive"
+msgstr "inactive"
+
+#: core/enums.py:117
+msgid "Médicament/Parapharmacie"
+msgstr "Drug / Parapharmacy product"
+
+#: core/enums.py:118
+msgid "Dispositif médical"
+msgstr "Medical device/equipment"
+
+#: core/enums.py:119 core/models.py:894
+msgid "Autre"
+msgstr "Other"
+
+#: core/enums.py:123
+msgid "Feed"
+msgstr "Feed Ad"
+
+#: core/enums.py:124
+msgid "Display"
+msgstr "Display Ad"
+
+#: core/enums.py:125
+msgid "Video"
+msgstr "Video Ad"
+
+#: core/enums.py:140
+msgid "Campagne publicitaire"
+msgstr "Campaign"
+
+#: core/enums.py:141
+msgid "Campagne classement"
+msgstr "Campaign List"
+
+#: core/forms/directory_forms.py:19
+msgid "في أي تخصص ؟"
+msgstr ""
+
+#: core/forms/directory_forms.py:36
+msgid "في أي مدينة ؟"
+msgstr ""
+
+#: core/forms/doctor_forms.py:43 core/forms/forms.py:111
+#: core/forms/forms.py:195 core/forms/forms.py:420
+msgid "Envoyer"
+msgstr "Send"
+
+#: core/forms/doctor_forms.py:80 core/forms/doctor_forms.py:541
+#, python-format
+msgid "Please keep filesize under %s. Current filesize %s"
+msgstr "Please keep filesize under %s. Current filesize %s"
+
+#: core/forms/doctor_forms.py:193
+msgid "Rechercher une application"
+msgstr "Search for an application"
+
+#: core/forms/doctor_forms.py:196
+msgid "Tag"
+msgstr "Tag"
+
+#: core/forms/doctor_forms.py:205 core/forms/doctor_forms.py:206
+msgid "Facebook URL"
+msgstr "Facebook URL"
+
+#: core/forms/doctor_forms.py:207 core/forms/doctor_forms.py:208
+msgid "Twitter URL"
+msgstr "Twitter URL"
+
+#: core/forms/doctor_forms.py:209 core/forms/doctor_forms.py:210
+msgid "Site Web URL"
+msgstr "Website URL"
+
+#: core/forms/doctor_forms.py:211
+msgid "infos"
+msgstr "Infos"
+
+#: core/forms/doctor_forms.py:212
+msgid "Infos"
+msgstr "Infos"
+
+#: core/forms/doctor_forms.py:214 core/forms/patient_forms.py:120
+#: core/models.py:964 core/models.py:2141
+msgid "Spécialité"
+msgstr "Specialty"
+
+#: core/forms/doctor_forms.py:219 core/forms/doctor_forms.py:612
+#: core/forms/doctor_forms.py:761 core/forms/forms.py:178
+#: core/forms/patient_forms.py:126
+msgid "Choisir une spécialité ..."
+msgstr "Choose a specialty ..."
+
+#: core/forms/doctor_forms.py:226 core/forms/doctor_forms.py:263
+msgid "Certificat ou un document <= 2MB"
+msgstr "Certificate or a document (less than 2MB)"
+
+#: core/forms/doctor_forms.py:238 core/models.py:971
+msgid "Qualifications"
+msgstr "Qualifications"
+
+#: core/forms/doctor_forms.py:243 core/forms/doctor_forms.py:770
+msgid "Choisir une qualification ..."
+msgstr "Choose a Qualification..."
+
+#: core/forms/doctor_forms.py:250
+msgid "Agrément ou certificat de travail <= 2MB"
+msgstr ""
+
+#: core/forms/doctor_forms.py:276 core/models.py:991
+msgid "Grade"
+msgstr ""
+
+#: core/forms/doctor_forms.py:286 core/models.py:992
+msgid "Années d'expériences"
+msgstr ""
+
+#: core/forms/doctor_forms.py:312
+msgid "Tarif d'une consultation"
+msgstr ""
+
+#: core/forms/doctor_forms.py:313 core/models.py:180
+msgid "Numéro CCP"
+msgstr ""
+
+#: core/forms/doctor_forms.py:314 core/models.py:181
+msgid "Clé"
+msgstr ""
+
+#: core/forms/doctor_forms.py:316
+msgid "Banque"
+msgstr ""
+
+#: core/forms/doctor_forms.py:327 core/models.py:183
+msgid "Agence"
+msgstr ""
+
+#: core/forms/doctor_forms.py:328 core/models.py:184
+msgid "Numéro du Compte"
+msgstr ""
+
+#: core/forms/doctor_forms.py:329 core/models.py:185
+msgid "Clé RIB"
+msgstr ""
+
+#: core/forms/doctor_forms.py:333
+msgid "Les reçus de votre téléconsultation seront transférés vers:"
+msgstr ""
+
+#: core/forms/doctor_forms.py:385 core/forms/patient_forms.py:99
+#: core/forms/professionnal_forms.py:73
+msgid "Mettre à jour"
+msgstr ""
+
+#: core/forms/doctor_forms.py:499
+msgid "5 minutes"
+msgstr ""
+
+#: core/forms/doctor_forms.py:500
+msgid "10 minutes"
+msgstr ""
+
+#: core/forms/doctor_forms.py:501
+msgid "30 minutes"
+msgstr ""
+
+#: core/forms/doctor_forms.py:502
+msgid "1 heure"
+msgstr ""
+
+#: core/forms/doctor_forms.py:534
+msgid "Delete the old file before updating another one."
+msgstr ""
+
+#: core/forms/doctor_forms.py:559
+msgid "It's not relevant to me"
+msgstr ""
+
+#: core/forms/doctor_forms.py:560
+msgid "I keep seeing this"
+msgstr ""
+
+#: core/forms/doctor_forms.py:576
+msgid "Coupon"
+msgstr ""
+
+#: core/forms/doctor_forms.py:584 core/forms/doctor_forms.py:586
+msgid "Coupon invalide!"
+msgstr ""
+
+#: core/forms/doctor_forms.py:601
+msgid "Pour quelle finalité souhaitez-vous tester notre solution ?"
+msgstr ""
+
+#: core/forms/doctor_forms.py:638
+#, fuzzy
+#| msgid "Choisir un pays ..."
+msgid "Choisir un grade ..."
+msgstr "Chose a Country..."
+
+#: core/forms/doctor_forms.py:652
+msgid ""
+"Pour pouvoir tester la plateforme et le logiciel eTabib Workspace, Veuillez "
+"Remplir Correctement Cette Demande. Vous receverez un e-mail de confirmation "
+"avec des explications sur la procédure. NB: La demande sera rejeté en cas "
+"d'informations erronées"
+msgstr ""
+
+#: core/forms/doctor_forms.py:728 core/forms/doctor_forms.py:785
+#: core/forms/doctor_forms.py:823
+msgid "معلومات عامة"
+msgstr ""
+
+#: core/forms/doctor_forms.py:729
+msgid "Ces informations seront partagées avec le grand public dans l'annuaire"
+msgstr ""
+
+#: core/forms/doctor_forms.py:787 core/forms/doctor_forms.py:825
+msgid "Ces informations seront partagées dans l'annuaire avec le grand public"
+msgstr ""
+
+#: core/forms/doctor_forms.py:830
+msgid "معلومات خاصة"
+msgstr ""
+
+#: core/forms/doctor_forms.py:832
+msgid ""
+"Ces informations seront utiliseés pour la relation clientèle eTabib et ne "
+"seront pas publiques"
+msgstr ""
+
+#: core/forms/forms.py:53
+msgid "Tapez votre nom"
+msgstr "Enter Your firstname"
+
+#: core/forms/forms.py:56
+msgid "Tapez votre prénom"
+msgstr "Enter Your lastname"
+
+#: core/forms/forms.py:71
+msgid "Sign Up"
+msgstr "Sign Up"
+
+#: core/forms/forms.py:73
+msgid ""
+"bienvenue dans eTabib. Ce formulaire vous aidera à vous inscrire sur la "
+"plateforme. Vous receverez un email de validation dans les 24 heures, si ce "
+"n'est pas le cas contactez nous via le Livechat (pastille blue)"
+msgstr ""
+"welcome to eTabib. This form will help you register on the platform. You'll "
+"receive a validation email within 24 hours, if this is not the case contact "
+"us via the Live chat "
+
+#: core/forms/forms.py:90
+msgid "Tapez votre addresse e-mail"
+msgstr "Enter your e-mail address"
+
+#: core/forms/forms.py:97 core/forms/forms.py:157
+msgid ""
+"Vous vous êtes déjà inscrit avec cet e-mail, Veuillez plutôt vous connecter"
+msgstr ""
+
+#: core/forms/forms.py:101 core/forms/forms.py:161
+#, fuzzy
+#| msgid "Le coupon utilisé n'est plus valide!"
+msgid "L'adresse mail n'est pas valide!"
+msgstr "This coupon is no longer valid!"
+
+#: core/forms/forms.py:145 core/forms/forms.py:395
+msgid "cliquer pour uploader une image"
+msgstr "click to upload an image"
+
+#: core/forms/forms.py:149
+#, fuzzy
+#| msgid ""
+#| "Un document attestant votre affiliation au corps médical (Carte "
+#| "professionnelle,                                    ou tout autre document"
+msgid ""
+"Un document attestant votre affiliation au corps médical (Carte "
+"professionnelle,                                        ou tout autre "
+"document"
+msgstr ""
+"A document certifying your affiliation with the medical profession "
+"(Professional card, or any other document)"
+
+#: core/forms/forms.py:169 core/forms/forms.py:407
+msgid "Veuillez ajouter une carte professionnelle"
+msgstr "Please provide a Professional Card/justification"
+
+#: core/forms/forms.py:272
+msgid "Commander Votre e-Badge"
+msgstr ""
+
+#: core/forms/forms.py:299
+msgid "The two password fields didn't match."
+msgstr ""
+
+#: core/forms/forms.py:302
+msgid "Old password"
+msgstr ""
+
+#: core/forms/forms.py:307
+msgid "New password"
+msgstr ""
+
+#: core/forms/forms.py:313
+msgid "New password confirmation"
+msgstr ""
+
+#: core/forms/forms.py:326
+msgid "Ancien mot de passe incorrect."
+msgstr ""
+
+#: core/forms/forms.py:386
+#, fuzzy
+#| msgid "Numéro Téléphone"
+msgid "Numéro Téléphone (Non Publique)"
+msgstr "Phone number"
+
+#: core/forms/forms.py:387 core/models.py:979
+msgid "Fonction"
+msgstr ""
+
+#: core/forms/forms.py:388 core/models.py:980
+msgid "Organisme"
+msgstr ""
+
+#: core/forms/forms.py:399
+msgid ""
+"Un document attestant votre affiliation au corps médical (Carte "
+"professionnelle,                                    ou tout autre document"
+msgstr ""
+"A document certifying your affiliation with the medical profession "
+"(Professional card, or any other document)"
+
+#: core/forms/patient_forms.py:48
+msgid "S'inscrire"
+msgstr "Register"
+
+#: core/forms/patient_forms.py:112
+msgid "Tapez une allergie..."
+msgstr ""
+
+#: core/forms/professionnal_forms.py:14
+msgid "Recherche"
+msgstr "Serach"
+
+#: core/forms/professionnal_forms.py:18
+msgid "Tapez Une DCI ou un Nom Comercial"
+msgstr ""
+
+#: core/forms/professionnal_forms.py:56 core/models.py:953
+msgid "Adresse"
+msgstr "Adress"
+
+#: core/forms/professionnal_forms.py:57
+msgid "GPS"
+msgstr ""
+
+#: core/forms/staff_forms.py:19 core/forms/staff_forms.py:84
+msgid "Séléctionnez un Médecin ..."
+msgstr "Choose Your HCP"
+
+#: core/forms/staff_forms.py:35
+msgid "Séléctionnez une offre ..."
+msgstr "Select An offer"
+
+#: core/forms/staff_forms.py:95
+msgid "Points à ajoutés"
+msgstr ""
+
+#: core/forms/staff_forms.py:96
+msgid "Vous pouvez saisir des valeurs négatives ou positives"
+msgstr ""
+
+#: core/forms/staff_forms.py:100 core/models.py:639 core/models.py:653
+#: core/models.py:687 core/models.py:1174 core/models.py:1564
+#: core/models.py:1637 core/models.py:1959 core/models.py:2199
+#: core/models.py:2235 core/models.py:2257 core/models.py:2456
+msgid "Description"
+msgstr ""
+
+#: core/forms/staff_forms.py:102
+msgid "Le médecin peut lire ce texte depuis son espace"
+msgstr ""
+
+#: core/models.py:48 core/models.py:74 core/models.py:655 core/models.py:1544
+#: core/models.py:1957
+msgid "Date de création"
+msgstr ""
+
+#: core/models.py:63 core/models.py:321 core/models.py:651 core/models.py:685
+#: core/models.py:1172 core/models.py:1273 core/models.py:1395
+#: core/models.py:1542 core/models.py:1689 core/models.py:1781
+#: core/models.py:1955 core/models.py:2254
+msgid "Libellé"
+msgstr "Title"
+
+#: core/models.py:65
+msgid "Identifiant unique"
+msgstr "unique ID"
+
+#: core/models.py:66
+msgid "Ancien Identifiant unique"
+msgstr ""
+
+#: core/models.py:67
+msgid "Identifiant de sécurité"
+msgstr ""
+
+#: core/models.py:72
+msgid "Date de la dernière connexion"
+msgstr ""
+
+#: core/models.py:78
+msgid "True => poste will be blocked from all updates"
+msgstr ""
+
+#: core/models.py:165
+msgid "Numéro d'ordre"
+msgstr ""
+
+#: core/models.py:166
+msgid "Numéro d'agrément"
+msgstr ""
+
+#: core/models.py:167
+msgid "Date de la dernière connexion web"
+msgstr ""
+
+#: core/models.py:171
+#, fuzzy
+#| msgid "Une demande de téléconsultation par %s"
+msgid "Tarif de TéléConsultation"
+msgstr "A teleconsultation request by %s"
+
+#: core/models.py:173
+msgid "Tarif de Consultation Au Cabinet"
+msgstr ""
+
+#: core/models.py:175
+#, fuzzy
+#| msgid "Une demande de téléconsultation par %s"
+msgid "Tarif de Consultation à domicile"
+msgstr "A teleconsultation request by %s"
+
+#: core/models.py:179
+msgid "Conventionné Chifa"
+msgstr ""
+
+#: core/models.py:187 core/models.py:1293
+msgid "Solde"
+msgstr ""
+
+#: core/models.py:330 core/models.py:1468
+msgid "vérifié"
+msgstr ""
+
+#: core/models.py:331
+msgid "rejetée"
+msgstr ""
+
+#: core/models.py:332
+msgid "raison du rejet"
+msgstr ""
+
+#: core/models.py:360 core/models.py:1300
+msgid "Carte d'Identité"
+msgstr ""
+
+#: core/models.py:361 core/models.py:1302
+msgid "Carte Chifa"
+msgstr ""
+
+#: core/models.py:402
+msgid "Total sans TVA"
+msgstr ""
+
+#: core/models.py:403
+msgid "Total avec TVA"
+msgstr ""
+
+#: core/models.py:406
+msgid "Réduction"
+msgstr ""
+
+#: core/models.py:407
+msgid "Négocié en TTC"
+msgstr ""
+
+#: core/models.py:412
+msgid "Bon de commande"
+msgstr ""
+
+#: core/models.py:413
+msgid "Bons des commandes"
+msgstr ""
+
+#: core/models.py:503
+msgid "REMISES ET RABAIS"
+msgstr ""
+
+#: core/models.py:504
+msgid "FRAIS DE LIVRAISON"
+msgstr ""
+
+#: core/models.py:505
+msgid "TIMBRE"
+msgstr ""
+
+#: core/models.py:537
+msgid "QTY"
+msgstr ""
+
+#: core/models.py:538
+msgid "PRIX HT"
+msgstr ""
+
+#: core/models.py:539
+msgid "Pourcentage TVA"
+msgstr ""
+
+#: core/models.py:567
+msgid "Commande(Offres prépayée Médecin)"
+msgstr ""
+
+#: core/models.py:568
+msgid "Commandes(Offres prépayée Médecin)"
+msgstr ""
+
+#: core/models.py:590
+msgid "ESPECE"
+msgstr ""
+
+#: core/models.py:591
+msgid "TPE"
+msgstr ""
+
+#: core/models.py:592
+msgid "VIRMENT CCP SOCIETE"
+msgstr ""
+
+#: core/models.py:593
+msgid "VIRMENT CCP RESPONSABLE"
+msgstr ""
+
+#: core/models.py:594
+msgid "VIRMENT BANCAIRE"
+msgstr ""
+
+#: core/models.py:595
+msgid "EPAIEMENT"
+msgstr ""
+
+#: core/models.py:596
+msgid "Chèque"
+msgstr ""
+
+#: core/models.py:600 core/models.py:2266
+msgid "Date d'ajout"
+msgstr ""
+
+#: core/models.py:601
+#, fuzzy
+#| msgid "Profil mis à jour"
+msgid "Date de mise à jour"
+msgstr "Profile Updated!"
+
+#: core/models.py:605 core/models.py:1633
+msgid "Référence"
+msgstr ""
+
+#: core/models.py:620
+msgid "Points de catégorisation"
+msgstr ""
+
+#: core/models.py:638
+msgid "Désignation"
+msgstr ""
+
+#: core/models.py:640
+msgid "Tarif"
+msgstr ""
+
+#: core/models.py:641 core/models.py:2086
+msgid "Nombre de jours"
+msgstr ""
+
+#: core/models.py:642
+msgid "Nécessité d'une licence"
+msgstr ""
+
+#: core/models.py:643
+msgid "Besion d'une licence"
+msgstr ""
+
+#: core/models.py:652
+msgid "Code"
+msgstr ""
+
+#: core/models.py:654
+msgid "Nombre de points"
+msgstr ""
+
+#: core/models.py:689 core/models.py:1176
+msgid "Date d'expiration"
+msgstr ""
+
+#: core/models.py:690 core/models.py:1177 core/models.py:1785
+#: core/models.py:1974
+msgid "Date de début"
+msgstr ""
+
+#: core/models.py:691
+msgid "Quantité de points"
+msgstr ""
+
+#: core/models.py:692
+msgid "Prix unitaire d'un point"
+msgstr ""
+
+#: core/models.py:694
+msgid "Pourcentage de réduction pour les interventions"
+msgstr ""
+
+#: core/models.py:696
+msgid "Pourcentage de réduction pour l'achat des points"
+msgstr ""
+
+#: core/models.py:698
+msgid "Pourcentage de réduction pour l'utilisations des modules"
+msgstr ""
+
+#: core/models.py:699
+msgid "Nombre de jours de la licence"
+msgstr ""
+
+#: core/models.py:700
+msgid "Pour l'illimité vous mettez 0"
+msgstr ""
+
+#: core/models.py:702
+msgid "Durée d'abonnement (text)"
+msgstr ""
+
+#: core/models.py:703
+msgid "Utilisé dans la page des offres"
+msgstr ""
+
+#: core/models.py:704
+msgid "Prix de l'offre"
+msgstr ""
+
+#: core/models.py:704 core/models.py:705
+msgid "en dinar algérien"
+msgstr ""
+
+#: core/models.py:705
+msgid "Prix de l'offre(Réduit)"
+msgstr ""
+
+#: core/models.py:707
+msgid "Critère de réduction"
+msgstr ""
+
+#: core/models.py:709
+msgid "Services de fidélité"
+msgstr ""
+
+#: core/models.py:711
+msgid "Support/SAV"
+msgstr ""
+
+#: core/models.py:773
+msgid "Offre prépayée pour les médecins"
+msgstr ""
+
+#: core/models.py:774
+msgid "Offres prépayées pour les médecins"
+msgstr ""
+
+#: core/models.py:785
+msgid "Commande(Offres personnalisée)"
+msgstr ""
+
+#: core/models.py:786
+msgid "Commandes(Offres personnalisée)"
+msgstr ""
+
+#: core/models.py:869 core/models.py:1282 core/models.py:1898
+msgid "HOMME"
+msgstr "Man"
+
+#: core/models.py:870 core/models.py:1283 core/models.py:1899
+msgid "FEMME"
+msgstr "Women"
+
+#: core/models.py:873
+msgid "Le client se déplace chez nous"
+msgstr ""
+
+#: core/models.py:874
+msgid "Le client nous envoi un SMS"
+msgstr ""
+
+#: core/models.py:875
+msgid "Le client nous appelle par tel"
+msgstr ""
+
+#: core/models.py:876
+msgid "Le client nous envoi un mail"
+msgstr ""
+
+#: core/models.py:877
+msgid "Le client nous envoi un message réseau sociaux"
+msgstr ""
+
+#: core/models.py:878
+msgid "Le client nous laisse un message sur le site"
+msgstr ""
+
+#: core/models.py:879
+msgid "cest un prospect issue de notre recherche"
+msgstr ""
+
+#: core/models.py:880
+msgid "Le client inscrit sur notre site"
+msgstr ""
+
+#: core/models.py:881
+msgid "Société savante"
+msgstr ""
+
+#: core/models.py:882 core/models.py:994
+msgid "Facebook"
+msgstr ""
+
+#: core/models.py:883 core/models.py:996
+msgid "LinkedIn"
+msgstr ""
+
+#: core/models.py:884
+msgid "Bouche à oreille"
+msgstr ""
+
+#: core/models.py:885
+msgid "Par laboratoire"
+msgstr ""
+
+#: core/models.py:886
+msgid "SIMEM21"
+msgstr ""
+
+#: core/models.py:887
+msgid "LISTE FOSC"
+msgstr ""
+
+#: core/models.py:888
+msgid "Maps"
+msgstr ""
+
+#: core/models.py:891
+msgid "Demande achat"
+msgstr ""
+
+#: core/models.py:892
+msgid "Demande devis"
+msgstr ""
+
+#: core/models.py:893
+msgid "Demande essai"
+msgstr ""
+
+#: core/models.py:897
+msgid "projet installation PRIVE"
+msgstr ""
+
+#: core/models.py:898
+msgid "PRIVE installation < 6mois"
+msgstr ""
+
+#: core/models.py:899
+msgid "PRIVE installation 6mois <1 ans"
+msgstr ""
+
+#: core/models.py:900
+msgid "PRIVE installation 1- 5 ans"
+msgstr ""
+
+#: core/models.py:901
+msgid "PRIVE instatllation > 5 ans"
+msgstr ""
+
+#: core/models.py:902
+msgid "PRIVE"
+msgstr ""
+
+#: core/models.py:903
+msgid "Public"
+msgstr ""
+
+#: core/models.py:904
+msgid "Non connu"
+msgstr ""
+
+#: core/models.py:946 core/models.py:2138 core/models.py:2165
+#: core/models.py:2176 core/models.py:2185 core/models.py:2237
+msgid "Crée par"
+msgstr ""
+
+#: core/models.py:948
+msgid "Place id"
+msgstr ""
+
+#: core/models.py:951 core/models.py:1286
+msgid "Date de naissance"
+msgstr ""
+
+#: core/models.py:952 core/models.py:1287
+msgid "Sexe"
+msgstr ""
+
+#: core/models.py:957
+#, fuzzy
+#| msgid "Téléphone fixe"
+msgid "Téléphone Fixe"
+msgstr "Phone Number"
+
+#: core/models.py:958
+#, fuzzy
+#| msgid "Téléphone mobile"
+msgid "Téléphone Mobile (prive)"
+msgstr "Mobile Number"
+
+#: core/models.py:959
+#, fuzzy
+#| msgid "Téléphone mobile"
+msgid "Téléphone Mobile 1 (public)"
+msgstr "Mobile Number"
+
+#: core/models.py:960
+#, fuzzy
+#| msgid "Téléphone mobile"
+msgid "Téléphone Mobile 2 (public)"
+msgstr "Mobile Number"
+
+#: core/models.py:962
+msgid "Email"
+msgstr ""
+
+#: core/models.py:963
+msgid "Commentaire"
+msgstr ""
+
+#: core/models.py:968
+msgid "Spécialité certificat"
+msgstr ""
+
+#: core/models.py:972
+msgid "Qualifications Certificats"
+msgstr ""
+
+#: core/models.py:976
+msgid "Autorisation de travail (agrément ou certificat de travail)"
+msgstr ""
+
+#: core/models.py:982
+msgid "Département"
+msgstr ""
+
+#: core/models.py:983 core/models.py:2140
+msgid "Commune"
+msgstr ""
+
+#: core/models.py:984
+msgid "Code postal"
+msgstr ""
+
+#: core/models.py:986
+msgid "Type Structure"
+msgstr ""
+
+#: core/models.py:987
+msgid "Date d'ouverture"
+msgstr ""
+
+#: core/models.py:988
+msgid "Date de début d'exercice"
+msgstr ""
+
+#: core/models.py:989
+msgid "Type Exercice"
+msgstr ""
+
+#: core/models.py:993
+msgid "Page Web/Site Web"
+msgstr ""
+
+#: core/models.py:995
+msgid "Twitter"
+msgstr ""
+
+#: core/models.py:997
+msgid "Instagram"
+msgstr ""
+
+#: core/models.py:998
+msgid "Lien Maps"
+msgstr ""
+
+#: core/models.py:1000
+msgid "Source"
+msgstr ""
+
+#: core/models.py:1001
+msgid "Motif du contact"
+msgstr ""
+
+#: core/models.py:1005
+msgid "Mot de pass généré"
+msgstr ""
+
+#: core/models.py:1006
+msgid "Archivé"
+msgstr ""
+
+#: core/models.py:1007
+msgid "Compte de test"
+msgstr ""
+
+#: core/models.py:1178
+msgid "Consomation par affichage en point"
+msgstr ""
+
+#: core/models.py:1179
+msgid "Consomation par clic en point"
+msgstr ""
+
+#: core/models.py:1180
+msgid "Nb des point pack base"
+msgstr ""
+
+#: core/models.py:1181
+msgid "valeur pack"
+msgstr ""
+
+#: core/models.py:1182
+msgid "Prix du point"
+msgstr ""
+
+#: core/models.py:1208
+msgid "Offre pour les partenaires"
+msgstr ""
+
+#: core/models.py:1209
+msgid "Offres pour les partenaire"
+msgstr ""
+
+#: core/models.py:1218
+msgid "Commande(Offres prépayée Partenaire)"
+msgstr ""
+
+#: core/models.py:1219
+msgid "Commandes(Offres prépayée Partenaire)"
+msgstr ""
+
+#: core/models.py:1249
+msgid "Signalétique"
+msgstr ""
+
+#: core/models.py:1250
+msgid "Slogan"
+msgstr ""
+
+#: core/models.py:1253 core/models.py:1883
+#, fuzzy, python-format
+#| msgid "L'image doit avoir une largeur = %s et un hauteur = %s"
+msgid ""
+"L'image doit avoir une largeur de %s et une hauteur de %s, avec une taille < "
+"%s"
+msgstr "Image must have width = %s and height = %s"
+
+#: core/models.py:1255
+msgid "Lien vidéo"
+msgstr ""
+
+#: core/models.py:1256
+msgid "Publié"
+msgstr ""
+
+#: core/models.py:1260
+msgid "Nom de la salle de discussion"
+msgstr ""
+
+#: core/models.py:1261
+#, fuzzy
+#| msgid "mot de passe changé!"
+msgid "Mot de passe"
+msgstr "the Password is changed! "
+
+#: core/models.py:1289
+msgid "Wilaya"
+msgstr ""
+
+#: core/models.py:1296
+msgid "N° carte Nationale"
+msgstr ""
+
+#: core/models.py:1297
+msgid "N° national"
+msgstr ""
+
+#: core/models.py:1298
+msgid "N° carte chifa"
+msgstr ""
+
+#: core/models.py:1299
+msgid "Donnée Médicales"
+msgstr ""
+
+#: core/models.py:1364
+msgid "Patient"
+msgstr ""
+
+#: core/models.py:1367
+msgid "Confirmé"
+msgstr "Confirmed"
+
+#: core/models.py:1373 core/models.py:1374
+msgid "Équipe de Soins"
+msgstr "Care Team"
+
+#: core/models.py:1426
+msgid "Professionnel(le)s de santé"
+msgstr "Health Care Professional"
+
+#: core/models.py:1556
+#, fuzzy
+#| msgid "Titre"
+msgid "titre"
+msgstr "Title"
+
+#: core/models.py:1563 core/models.py:1654
+msgid "N° d'enregistrement"
+msgstr ""
+
+#: core/models.py:1566 core/models.py:1635
+msgid "Marque"
+msgstr ""
+
+#: core/models.py:1567 core/models.py:1636
+msgid "Origine"
+msgstr "Origin Country"
+
+#: core/models.py:1568 core/models.py:1638
+msgid "Prix"
+msgstr ""
+
+#: core/models.py:1571
+msgid "Document pour l'homologation"
+msgstr ""
+
+#: core/models.py:1574
+msgid "Document pour l'autorisation"
+msgstr ""
+
+#: core/models.py:1576
+msgid "Promotion"
+msgstr ""
+
+#: core/models.py:1578
+msgid "Fin de promotion"
+msgstr ""
+
+#: core/models.py:1634
+msgid "Catégorie"
+msgstr ""
+
+#: core/models.py:1655
+msgid "DCI"
+msgstr ""
+
+#: core/models.py:1656
+msgid "le DCI selon La nomenclature ATC"
+msgstr ""
+
+#: core/models.py:1657 core/models.py:1978 core/models.py:2608
+msgid "Type"
+msgstr "Type"
+
+#: core/models.py:1658
+msgid "Indications"
+msgstr ""
+
+#: core/models.py:1660
+msgid ""
+"les indications AMM de manière unitaire si possible selon le Standard en "
+"vigueur dans la langue du marché "
+msgstr ""
+"insert  Drug indications individually according to the Standard and in the "
+"language of the market"
+
+#: core/models.py:1661
+msgid "Remboursable"
+msgstr "reimbursable"
+
+#: core/models.py:1662
+msgid "l'etat de remboursement "
+msgstr "reimbursable state"
+
+#: core/models.py:1663
+msgid "Prix public"
+msgstr "Public price"
+
+#: core/models.py:1667
+msgid "Intéractions"
+msgstr "interaction"
+
+#: core/models.py:1671
+msgid ""
+"Un Document attestant l'autorisation AMM du marché concerné si le Médicament "
+"ne figure pas sur la liste du Régulateur "
+msgstr ""
+"A Document certifying the Authority's approval if the Drug is not on the "
+"Regulator's list"
+
+#: core/models.py:1672
+msgid "Document attestant l'autorisation AMM"
+msgstr "A Document certifying the Authority's approval "
+
+#: core/models.py:1675
+msgid "RCP"
+msgstr "Drug SPC"
+
+#: core/models.py:1677
+msgid "Étude de référence"
+msgstr "Baseline - Clinical study"
+
+#: core/models.py:1678
+msgid "Lien de l'étude de référence"
+msgstr "Link to Baseline study"
+
+#: core/models.py:1695
+msgid "Lien externe"
+msgstr ""
+
+#: core/models.py:1775 core/models.py:1840 core/models.py:1856
+msgid "Annonce"
+msgstr ""
+
+#: core/models.py:1786 core/models.py:1976
+msgid "Date de fin"
+msgstr ""
+
+#: core/models.py:1788
+msgid "Vérifiée"
+msgstr ""
+
+#: core/models.py:1819
+msgid "En Ligne"
+msgstr ""
+
+#: core/models.py:1820
+msgid "eTabib Workspace"
+msgstr ""
+
+#: core/models.py:1821
+msgid "Applications de eTabib"
+msgstr ""
+
+#: core/models.py:1822
+msgid "Applications mobile"
+msgstr ""
+
+#: core/models.py:1823
+msgid "Affichage CONGRES"
+msgstr "CONGRESS display"
+
+#: core/models.py:1828
+msgid "Toutes les spécialités"
+msgstr "All specialties"
+
+#: core/models.py:1830
+msgid "Toutes les zones"
+msgstr "All the Locations"
+
+#: core/models.py:1831
+msgid "Budget MAX"
+msgstr "Max budget"
+
+#: core/models.py:1839 core/models.py:1855
+msgid "Campagne"
+msgstr "Campaign"
+
+#: core/models.py:1841
+msgid "date impression"
+msgstr "Print Date"
+
+#: core/models.py:1844 core/models.py:1860
+msgid "coût"
+msgstr "Cost"
+
+#: core/models.py:1847
+msgid "Annonce Impression log"
+msgstr ""
+
+#: core/models.py:1848
+msgid "Annonces Impressions log"
+msgstr ""
+
+#: core/models.py:1857
+msgid "date de clic"
+msgstr "click date"
+
+#: core/models.py:1863
+msgid "Annonce Clic log"
+msgstr ""
+
+#: core/models.py:1864
+msgid "Annonces Clic log"
+msgstr ""
+
+#: core/models.py:1879 core/models.py:2234
+msgid "Titre"
+msgstr "Title"
+
+#: core/models.py:1880
+msgid "N°page"
+msgstr ""
+
+#: core/models.py:1881
+msgid "brand"
+msgstr ""
+
+#: core/models.py:1885
+msgid "Link"
+msgstr ""
+
+#: core/models.py:1922
+msgid "Début d'exécution"
+msgstr ""
+
+#: core/models.py:1923
+msgid "Durée réelle"
+msgstr ""
+
+#: core/models.py:1924
+msgid "Rapport d'intervention"
+msgstr ""
+
+#: core/models.py:1925 core/models.py:1958 core/models.py:2265
+msgid "Captures d'écran"
+msgstr ""
+
+#: core/models.py:1927
+msgid "Problème"
+msgstr ""
+
+#: core/models.py:1960
+msgid "Solution"
+msgstr ""
+
+#: core/models.py:1968
+msgid "Suivi Actif"
+msgstr ""
+
+#: core/models.py:1969
+msgid "Suivi Ponctuel"
+msgstr ""
+
+#: core/models.py:1970
+msgid "Intervention Technique"
+msgstr ""
+
+#: core/models.py:1971
+msgid "Demande de Formation"
+msgstr ""
+
+#: core/models.py:1972
+msgid "Demande commerciale"
+msgstr ""
+
+#: core/models.py:1975
+msgid "Heure de début"
+msgstr ""
+
+#: core/models.py:1977
+msgid "Heure de fin"
+msgstr ""
+
+#: core/models.py:1979
+msgid "Créé par"
+msgstr ""
+
+#: core/models.py:1988
+msgid "Date de clôture"
+msgstr ""
+
+#: core/models.py:1997
+#, python-format
+msgid "Groupe: %s"
+msgstr ""
+
+#: core/models.py:2078
+msgid "Pièce jointe"
+msgstr "Attachment"
+
+#: core/models.py:2080
+msgid "Fichier son"
+msgstr ""
+
+#: core/models.py:2084
+msgid "Décision à faire"
+msgstr ""
+
+#: core/models.py:2121
+msgid "Rencontrer dans"
+msgstr ""
+
+#: core/models.py:2144
+msgid "Traité"
+msgstr "processed"
+
+#: core/models.py:2167
+msgid "Liste"
+msgstr ""
+
+#: core/models.py:2187
+msgid "Attribuée à"
+msgstr "Assigned to"
+
+#: core/models.py:2191
+msgid "Message"
+msgstr "Message"
+
+#: core/models.py:2192
+msgid "Terminée"
+msgstr ""
+
+#: core/models.py:2198
+msgid "Dernier"
+msgstr ""
+
+#: core/models.py:2248
+msgid "DAILY"
+msgstr "DAILY"
+
+#: core/models.py:2249
+msgid "WEEKLY"
+msgstr "WEEKLY"
+
+#: core/models.py:2250
+msgid "MONTHLY"
+msgstr "MONTHLY"
+
+#: core/models.py:2251
+msgid "QUARTERLY"
+msgstr "QUARTERLY"
+
+#: core/models.py:2252
+msgid "YEARLY"
+msgstr "YEARLY"
+
+#: core/models.py:2256
+msgid "Description Brève"
+msgstr ""
+
+#: core/models.py:2258
+msgid "Identificateur unique"
+msgstr ""
+
+#: core/models.py:2259
+msgid "is a unique identifier specified in the development phase "
+msgstr ""
+
+#: core/models.py:2261
+msgid "Type de la consommation"
+msgstr ""
+
+#: core/models.py:2263
+msgid "Consommation"
+msgstr ""
+
+#: core/models.py:2264
+msgid "Icône"
+msgstr ""
+
+#: core/models.py:2448
+msgid "Module"
+msgstr ""
+
+#: core/models.py:2449
+msgid "Numéro de version"
+msgstr ""
+
+#: core/models.py:2452 core/models.py:2492
+msgid "Version number must be in the format X.Y.Z"
+msgstr ""
+
+#: core/models.py:2454 core/models.py:2494
+msgid "the accepted format is X.Y.Z"
+msgstr ""
+
+#: core/models.py:2457
+msgid "Dernière version"
+msgstr ""
+
+#: core/models.py:2458
+msgid "Le fichier zip"
+msgstr ""
+
+#: core/models.py:2460
+msgid "Version Etabib Compatible"
+msgstr ""
+
+#: core/models.py:2542 core/models.py:2566
+msgid "Version number must be in the format X.Y.Z.W"
+msgstr ""
+
+#: core/models.py:2544 core/models.py:2568
+msgid "the accepted format is X.Y.Z.W"
+msgstr ""
+
+#: core/models.py:2606
+msgid "User agent"
+msgstr ""
+
+#: core/models.py:2607
+msgid "Ip address"
+msgstr ""
+
+#: core/models.py:2609
+msgid "Label"
+msgstr ""
+
+#: core/models.py:2610
+msgid "Created at"
+msgstr ""
+
+#: core/models.py:2620
+msgid "Username"
+msgstr ""
+
+#: core/models.py:2621
+msgid "Password"
+msgstr ""
+
+#: core/signals.py:167
+#, python-format
+msgid "Une demande de téléconsultation par %s"
+msgstr "A teleconsultation request by %s"
+
+#: core/signals.py:169
+#, python-format
+msgid "Dr %s vous appel"
+msgstr "A call From Dr %s"
+
+#: core/signals.py:219
+msgid "Rechargement"
+msgstr "Recharge credit"
+
+#: core/signals.py:224
+msgid "Débitement"
+msgstr "Debit"
+
+#: core/tasks.py:67
+#, python-format
+msgid "%s: Votre solde de points est épuisé"
+msgstr "%s Your RACID points balance is exhausted"
+
+#: core/tasks.py:73
+msgid "Consommation hebdomadaire"
+msgstr "Weekly consumption"
+
+#: core/templates/profile_1st_login.html:7
+msgid "Assurez-vous que Votre cabinet est bien visible sur le web."
+msgstr ""
+
+#: core/templatetags/app_store_tags.py:21
+msgid "Uninstall"
+msgstr "Uninstall"
+
+#: core/templatetags/app_store_tags.py:23
+msgid "Cancel the installation"
+msgstr "Cancel the installation"
+
+#: core/templatetags/app_store_tags.py:25
+msgid "Cancel the uninstallation"
+msgstr "Cancel the uninstallation"
+
+#: core/templatetags/app_store_tags.py:30
+msgid "Ajouter au panier"
+msgstr "Add to cart"
+
+#: core/templatetags/app_store_tags.py:32
+msgid "Retirer du panier"
+msgstr "Remove From cart"
+
+#: core/templatetags/app_store_tags.py:38
+#: core/templatetags/app_store_tags.py:40
+#: core/templatetags/app_store_tags.py:42
+#: core/templatetags/app_store_tags.py:47
+#: core/templatetags/app_store_tags.py:49
+msgid "L'opération s'est bien déroulée"
+msgstr "The operation went well"
+
+#: core/templatetags/app_store_tags.py:56
+#, python-format
+msgid "Voulez-vous désinstaller l'application %s ?"
+msgstr "Do you want to uninstall the %s app?"
+
+#: core/templatetags/app_store_tags.py:58
+#, python-format
+msgid "Voulez-vous annuler l'installation de l'application %s ?"
+msgstr "Do you want to cancel the installation of the %s application?"
+
+#: core/templatetags/app_store_tags.py:60
+#, python-format
+msgid "Voulez-vous annuler la désinstallation de l'application %s ?"
+msgstr "Do you want to cancel the uninstallation of the %s application?"
+
+#: core/templatetags/app_store_tags.py:65
+#, python-format
+msgid "Voulez-vous ajouter l'application %s au panier?"
+msgstr "add the %s app to cart?"
+
+#: core/templatetags/app_store_tags.py:67
+#, python-format
+msgid "Voulez-vous retirer l'application %s du panier?"
+msgstr "remove the %s app from cart?"
+
+#: core/templatetags/partner_tags.py:117
+msgid "Non vérifiée"
+msgstr "not verified"
+
+#: core/templatetags/partner_tags.py:126
+msgid "Inactive"
+msgstr "\tInactive"
+
+#: core/templatetags/utils_tags.py:64
+msgid "heure,heures"
+msgstr ""
+
+#: core/utils.py:285 core/utils.py:289
+msgid "Équipe de soins"
+msgstr "Care Team"
+
+#: core/utils.py:287
+#, python-format
+msgid "%s souhaite vous ajouter à son équipe de soins"
+msgstr "%s would like to add you to his careteam"
+
+#: core/utils.py:292
+#, python-format
+msgid "%s a été ajouté à votre équipe de soins"
+msgstr "%s has been added to your care team"
+
+#: core/utils.py:294 core/utils.py:301 core/utils.py:308
+msgid "Rendez-vous"
+msgstr ""
+
+#: core/utils.py:296
+#, fuzzy, python-format
+#| msgid "Une demande de téléconsultation par %s"
+msgid "Une demande de rendez-vous %s par %s"
+msgstr "A teleconsultation request by %s"
+
+#: core/utils.py:303
+#, python-format
+msgid "%s a fixé un rendez-vous pour vous"
+msgstr ""
+
+#: core/utils.py:310
+#, python-format
+msgid "%s a refusé votre demande de rendez-vous"
+msgstr ""
+
+#: core/views/doctor_views.py:60
+msgid "Documentations"
+msgstr "Documentation"
+
+#: core/views/doctor_views.py:81 core/views/professional_views.py:35
+msgid "My Profile"
+msgstr "My Profile"
+
+#: core/views/doctor_views.py:89 core/views/professional_views.py:42
+msgid "Mise à jour du profil réussie"
+msgstr "Profile updated successfully"
+
+#: core/views/doctor_views.py:305 core/views/professional_views.py:23
+msgid "Dashboard"
+msgstr ""
+
+#: core/views/doctor_views.py:376
+msgid "Historique des points"
+msgstr "Historique des points"
+
+#: core/views/doctor_views.py:552
+msgid "Désolé, vous êtes déjà abonné à cette offre."
+msgstr ""
+
+#: core/views/doctor_views.py:581
+msgid "Bon de Commande"
+msgstr ""
+
+#: core/views/doctor_views.py:615
+msgid "Le coupon utilisé n'est plus valide!"
+msgstr "This coupon is no longer valid!"
+
+#: core/views/doctor_views.py:643
+#, python-format
+msgid "Coupon valide! une offre de type %s est attribué à votre compte."
+msgstr "valid Coupon ! the offer %s is assigned to your account."
+
+#: core/views/doctor_views.py:670
+msgid "Demande envoyé"
+msgstr ""
+
+#: core/views/doctor_views.py:677
+msgid "503 Service Indisponible"
+msgstr ""
+
+#: core/views/patient_views.py:50
+msgid "Profil mis à jour"
+msgstr "Profile Updated!"
+
+#: core/views/patient_views.py:57
+msgid "Mon Profil"
+msgstr "My Profil"
+
+#: core/views/views.py:106
+msgid "Notifications list"
+msgstr "Notifications list"
+
+#: core/views/views.py:139 core/views/views.py:167 core/views/views.py:194
+msgid "unread"
+msgstr "unread"
+
+#: core/views/views.py:324
+msgid "mot de passe changé!"
+msgstr "the Password is changed! "
+
+#, fuzzy
+#~| msgid "Recherche"
+#~ msgid "Rechercher..."
+#~ msgstr "Serach"
+
+#~ msgid ""
+#~ "Il existe une demande de la même type avec la même intervalle de date"
+#~ msgstr "A request is already runing at the same date range"
+
+#~ msgid "Fichier Audio"
+#~ msgstr "Audio file"
+
+#~ msgid "cliquer pour uploader un fichier"
+#~ msgstr "click to upload a file"
+
+#~ msgid "L'un des champs: Description ou Fichier Audio est requis"
+#~ msgstr "One of the fields: Description or Audio File is required"
+
+#~ msgid "Submit"
+#~ msgstr "Submit"
+
+#~ msgid "Société"
+#~ msgstr "Company"
+
+#~ msgid "Numéro du register de commerce"
+#~ msgstr "Trade Register ID"
+
+#~ msgid "Veuillez ajouter une ou plusieurs images pour ce produit."
+#~ msgstr "Please add one or more images for this product."
+
+#~ msgid "Veuillez ajouter une ou plusieurs images pour ce medicamant."
+#~ msgstr "Please add one or more images for this product."
+
+#~ msgid "Produit"
+#~ msgstr "Product"
+
+#~ msgid "Dimension d'image invalide"
+#~ msgstr "Invalid image Sizes"
+
+#~ msgid "Ce champ est obligatoire"
+#~ msgstr "this Field is required"
+
+#~ msgid "Veuillez ajouter au moins une image pour cette annonce."
+#~ msgstr "Please add at least one image for this Ad"
+
+#~ msgid "cliquer pour uploader une video"
+#~ msgstr "click to upload a video"
+
+#, python-format
+#~ msgid ""
+#~ "La vidéo sera Soumise à validation avant d'être publiée, décourez les "
+#~ "règles relatives au contenu.<a href='#'>Ici</a><br>La durée de la vidéo "
+#~ "doit être <= %s secondes"
+#~ msgstr ""
+#~ "The video will be Submitted for validation before being published, "
+#~ "discourage the rules relating to the content. <a href='#'> Here </a> <br> "
+#~ "The duration of the video must be <= %s "
+
+#~ msgid "veuillez entrer une date de début valide."
+#~ msgstr "please enter a valid start date."
+
+#~ msgid "veuillez entrer une date de fin valide."
+#~ msgstr "please enter a valid End date."
+
+#~ msgid "Veuillez entre une date de début et une date de fin valides."
+#~ msgstr "please enter a valid dates."
+
+#, fuzzy
+#~| msgid "Carte professionnelle"
+#~ msgid "Email professionnel"
+#~ msgstr "Professional card / justification"
+
+#, fuzzy
+#~| msgid "Site Web URL"
+#~ msgid "Site Web"
+#~ msgstr "Website URL"
+
+#, fuzzy
+#~| msgid "Facebook URL"
+#~ msgid "Page Facebook"
+#~ msgstr "Facebook URL"
+
+#~ msgid "Non Traité"
+#~ msgstr "not precessed"
+
+#~ msgid "events"
+#~ msgstr "events"
+
+#~ msgid "Forbidden"
+#~ msgstr "Forbidden"
+
+#~ msgid "Actions"
+#~ msgstr "Actions"
+
+#~ msgid "Liste des tâches"
+#~ msgstr "Tasklist"
+
+#, fuzzy
+#~| msgid "Ajouter au panier"
+#~ msgid "Ajouté par"
+#~ msgstr "Add to cart"
+
+#~ msgid "Mes produits"
+#~ msgstr "My Products"
+
+#~ msgid "Produit supprimée avec succès"
+#~ msgstr "Product Deleted !"
+
+#~ msgid "Vous ne pouvez pas supprimer ce produit"
+#~ msgstr "You Can't delete this product!"
+
+#~ msgid "Produit créé avec succès"
+#~ msgstr "Product Added !"
+
+#~ msgid "Produit mise à jour avec succès"
+#~ msgstr "Product updated!"
+
+#~ msgid "Vous ne pouvez pas mettre à jour ce produit"
+#~ msgstr "You Can't update this product!"
+
+#~ msgid "Médicament/Parapharmacie créé avec succès"
+#~ msgstr "Product Added !"
+
+#~ msgid "Médicament/Parapharmacie mise à jour avec succès"
+#~ msgstr "Product updated!"
+
+#~ msgid "Vous ne pouvez pas mettre à jour ce Médicament/Parapharmacie"
+#~ msgstr "You Can't update this product!"
+
+#~ msgid "Autre produit créé avec succès"
+#~ msgstr "Product Added !"
+
+#~ msgid "Vous ne pouvez pas mettre à jour ce Produit"
+#~ msgstr "You Can't update this product!"
+
+#~ msgid "Mes annonces"
+#~ msgstr "My Ads"
+
+#~ msgid "Annonce supprimée avec succès"
+#~ msgstr "Ad deleted!"
+
+#~ msgid "Vous ne pouvez pas supprimer cette Annonce"
+#~ msgstr "You Can't update this product!"
+
+#~ msgid "Annonce feed créé avec succès"
+#~ msgstr "Feed Ad created !"
+
+#~ msgid "Annonce feed mise à jour avec succès"
+#~ msgstr "Feed Ad updated!"
+
+#~ msgid "Vous ne pouvez pas mettre à jour cette Annonce feed"
+#~ msgstr "You Can't update this Ad !"
+
+#~ msgid "Annonce display créé avec succès"
+#~ msgstr "Display Ad created!"
+
+#~ msgid "Annonce DISPLAY mise à jour avec succès"
+#~ msgstr "Display Ad updated!"
+
+#~ msgid "Vous ne pouvez pas mettre à jour cette Annonce DISPLAY"
+#~ msgstr "You Can't update this Ad!"
+
+#~ msgid "Annonce video créé avec succès"
+#~ msgstr "Video Ad created!"
+
+#~ msgid "Annonce VIDEO mise à jour avec succès"
+#~ msgstr "Video Ad updated!"
+
+#~ msgid "Vous ne pouvez pas mettre à jour cette Annonce VIDEO"
+#~ msgstr "You Can't update this Ad"
+
+#~ msgid "Réseaux"
+#~ msgstr "Display Networks"
+
+#~ msgid "Mes compagnes"
+#~ msgstr "My Campaigns"
+
+#~ msgid "Campagne supprimée avec succès"
+#~ msgstr "Campaign deleted"
+
+#~ msgid "Vous ne pouvez pas supprimer cette Campagne"
+#~ msgstr "You Can't delete this Campaign"
+
+#~ msgid "Campagne créé avec succès"
+#~ msgstr "Campaign created!"
+
+#~ msgid "Campagne mise à jour avec succès"
+#~ msgstr "Campaign updated!"
+
+#~ msgid "Vous ne pouvez pas mettre à jour cette campagne"
+#~ msgstr "You Can't update this Campaign"
+
+#~ msgid "Campagne activée!."
+#~ msgstr "The Campaign is Activated"
+
+#~ msgid "Vous ne pouvez pas activer cette campagne"
+#~ msgstr "You Can't activate this Campaign"
+
+#~ msgid "Campagne annulée!"
+#~ msgstr "Campaign cancelled!"
+
+#~ msgid "Vous ne pouvez pas annuler cette campagne"
+#~ msgstr "You Can't cancel this Campaign!"
+
+#~ msgid "Campagne arrêtée!"
+#~ msgstr "Campaign Stopped!"
+
+#~ msgid "Vous ne pouvez pas arrêter cette campagne"
+#~ msgstr "You Can't stop this Campaign!"
+
+#~ msgid "Statistiques"
+#~ msgstr "Insights"
+
+#, fuzzy
+#~| msgid "Campagne supprimée avec succès"
+#~ msgid "Catalogue supprimée avec succès"
+#~ msgstr "Campaign deleted"
+
+#, fuzzy
+#~| msgid "Mise à jour du profil réussie"
+#~ msgid "Mise à jour du stand réussie"
+#~ msgstr "Profile updated successfully"
+
+#, fuzzy
+#~| msgid "Mon Profil"
+#~ msgid "Mon Profile"
+#~ msgstr "My Profil"
+
+#~ msgid ""
+#~ "Un document attestant votre affiliation au corps médical (Carte "
+#~ "professionnelle,                                    ordonnance cachetée "
+#~ "barrée, ou tout autre document"
+#~ msgstr ""
+#~ "A document certifying your affiliation with the medical profession "
+#~ "(Professional card, sealed and crossed out prescription, or any other "
+#~ "document)"
+
+#~ msgid "Image 728x90"
+#~ msgstr "1- STORE : INTERSTITIAL AD  (AD CODE= SI1)"
+
+#~ msgid "Image 360x200"
+#~ msgstr "2- STORE : INTERSTITIAL AD  (AD CODE= SI2)"
+
+#~ msgid "Image 450x416"
+#~ msgstr "4-Workspace : Go AD  (AD CODE= EG)"

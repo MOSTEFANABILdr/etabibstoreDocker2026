@@ -1,0 +1,24 @@
+services:
+  medica-ollama:
+    image: ollama/ollama:latest
+    container_name: medica_ollama
+    volumes:
+      - ./ollama_data:/root/.ollama
+    deploy:
+      resources:
+        reservations:
+          cpus: "0.0"
+    restart: unless-stopped
+    environment:
+      - OLLAMA_KEEP_ALIVE=24h
+
+  medica-backend:
+    build: ./backend
+    container_name: medica_backend
+    ports:
+      - "8090:8000"
+    environment:
+      - OLLAMA_HOST=http://medica-ollama:11434
+    depends_on:
+      - medica-ollama
+    restart: unless-stopped

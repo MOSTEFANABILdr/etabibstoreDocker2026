@@ -1,0 +1,31 @@
+{% load i18n %}
+{% load partner_tags %}
+<a title="{% trans 'Détail' %}"
+   href="{% url 'partner-detail-ads' ads.id ads.slug %}"
+   class="btn btn-default">
+    <i class="fa fa-eye" aria-hidden="true"></i>
+</a>
+{% if ads|isAnnonceFeed %}
+<a title="{% trans 'Mettre à jour' %}" href="{% url 'partner-update-ads-feed' ads.id %}"
+   class="btn btn-default fm-update" data-fm-head="{% trans 'Mise à jour de l\'annonce' %} "
+   data-fm-callback="reload">
+    <i class="fa fa-pencil-square-o" aria-hidden="true"></i>
+</a>
+{% elif ads|isAnnonceDisplay %}
+<a title="{% trans 'Mettre à jour' %}" href="{% url 'partner-update-ads-display' ads.id %}"
+   class="btn btn-default fm-update" data-fm-head="{% trans 'Mise à jour de l\'annonce' %} "
+   data-fm-callback="reload">
+    <i class="fa fa-pencil-square-o" aria-hidden="true"></i>
+</a>
+{% elif ads|isAnnonceVideo %}
+<a title="{% trans 'Mettre à jour' %}" href="{% url 'partner-update-ads-video' ads.id %}"
+   class="btn btn-default fm-update" data-fm-head="{% trans 'Mise à jour de l\'annonce' %} "
+   data-fm-callback="reload">
+    <i class="fa fa-pencil-square-o" aria-hidden="true"></i>
+</a>
+{% endif %}
+<a title="{% trans 'Supprimer' %}" href="{% url 'partner-delete-ads' ads.id %}"
+   class="btn btn-default fm-delete" data-fm-head="{% trans 'Supprimer l\'annonce' %}: {{ads.libelle}}"
+   data-fm-callback="reload">
+    <i class="fa fa-trash" aria-hidden="true"></i>
+</a>

@@ -1,0 +1,80 @@
+{% extends "base.html" %}
+{% load i18n %}
+{% load static %}
+
+{% block title %} {% trans 'Journal de téléconsultation' %} {% endblock %}
+
+{% block style %}
+<!-- jquery.dataTables CSS ============================================ -->
+<link rel="stylesheet" href='{% static "js/data-table/jquery.dataTables.min.css" %}'>
+<link rel="stylesheet" type="text/css"
+      href="https://cdn.datatables.net/responsive/2.2.3/css/responsive.bootstrap.min.css">
+<link href="https://cdn.jsdelivr.net/npm/smartwizard@5/dist/css/smart_wizard_all.min.css" rel="stylesheet"
+      type="text/css"/>
+<link href='{% static "css/lightbox2/css/lightbox.min.css" %}' rel="stylesheet"/>
+{% endblock %}
+
+{% block content %}
+<div class="container">
+    <div class="row">
+        <div class="col-md-6">
+            <h1 class="page-header">
+                <i class="fas fa-calendar"></i>
+                {% trans 'Journal de téléconsultation' %}
+            </h1>
+        </div>
+        {% include 'partial/messages-alerts.html' %}
+    </div>
+    <div class="mt-4">
+        {{ datatable }}
+    </div>
+</div>
+{% endblock %}
+
+{% block js %}
+{% include "fm/modal.html" %}
+<script type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/moment.js/2.9.0/moment-with-locales.min.js"></script>
+<script type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/bootstrap-datetimepicker/4.17.47/js/bootstrap-datetimepicker.min.js"></script>
+<script type="text/javascript" charset="utf8" src='{% static "js/data-table/jquery.dataTables.min.js" %}'></script>
+<script type="text/javascript" charset="utf8" src="{% static 'js/data-table/datatableview.js' %}?v=1.0"></script>
+<script type="text/javascript" charset="utf8" src="https://cdn.datatables.net/responsive/2.2.3/js/dataTables.responsive.js"></script>
+<script>
+	$(function () {
+	    $.fm({debug: true});
+		var common_options = {
+		    "language": {
+                {% if LANGUAGE_CODE == 'ar' %}
+                "url": "https://cdn.datatables.net/plug-ins/1.10.20/i18n/Arabic.json"
+                {% else %}
+                "url": "https://cdn.datatables.net/plug-ins/1.10.20/i18n/French.json"
+                {% endif %}
+            },
+            "processing": "Loading...",
+             "loadingRecords": "&nbsp;",
+		};
+        var datatable = datatableview.initialize('.datatable', common_options);
+        //load content
+        $(document).on("click", '.sessions', function() {
+            var id = $(this).data("id");
+            Lobibox.window({
+                title: 'Sessions',
+                //Available types: string, jquery object, function
+                content: function(){
+                    return $('.container');
+                },
+                url: '/teleconsultation/sessions/' + id,
+                loadMethod: 'GET',
+                //Load parameters
+                callback: function($this, type, ev){
+                    if (type === 'load'){
+                        $this.load(function(){
+                            //Do something when content is loaded
+                        });
+                    }
+                }
+            });
+        });
+	});
+
+</script>
+{% endblock %}

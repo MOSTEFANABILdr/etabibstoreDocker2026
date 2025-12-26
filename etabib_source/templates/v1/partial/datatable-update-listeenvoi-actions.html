@@ -1,0 +1,14 @@
+{% load i18n %}
+{% load role_tags %}
+<a title="{% trans 'Supprimer' %}"
+   href="{% url 'listenvoi-statique-detail-delete-contact' listenvoi.pk contact.pk %}"
+   class="btn btn-etabib"
+   data-fm-head=""
+   data-fm-callback="reload">
+    <i class="fa fa-trash" aria-hidden="true"></i>
+</a>
+
+
+
+
+

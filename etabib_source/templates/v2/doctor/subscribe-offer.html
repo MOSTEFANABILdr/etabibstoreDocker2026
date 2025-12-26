@@ -1,0 +1,99 @@
+{% extends "base.html" %}
+{% load i18n %}
+{% load static %}
+
+{% block title %} {% trans 'Abonnement' %} {% endblock %}
+
+{% block style %}
+{% endblock %}
+
+{% block content %}
+<div class="container">
+    <div class="row">
+        {% include 'partial/messages-alerts.html' %}
+        <div class="row pricing-page">
+            <div class="col-lg-12 col-md-12 col-sm-12 col-xs-12">
+                <div class="product-payment-inner-st">
+                    {% include 'partial/invoice.html' with hide_commercial=True show_coupon=True show_order_btn=True %}
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}
+
+{% block js %}
+<script>
+    function printInvoice() {
+        console.log("print");
+        $('#invoice').printThis({
+            pageTitle: "{{invoice_title}} {% trans 'N°' %}: {{invoice_number}}",
+            beforePrint : function() {
+                $(".hide-print").hide();
+            },
+            afterPrint : function() {
+                $(".hide-print").show();
+            }
+        });
+     }
+$(document).ready(function() {
+    var coupon = null;
+    $("#coupon").click(function() {
+        console.log('coupon');
+        var code = $("#coupon-code").val();
+        console.log(code);
+        var that = $(this);
+        $.ajax({
+            url: "{% url 'validate-coupon' %}",
+            dataType: 'json',
+            method: 'POST',
+            data: {
+                'csrfmiddlewaretoken': '{{ csrf_token }}',
+                'code': code,
+                'total': {{total}}
+            },
+            beforeSend: function() {
+                that.find('i').removeClass("fa fa-check").addClass("fa fa-spinner fa-spin");
+            },
+            success: function(response) {
+                coupon = response.id;
+                $('#coupon-value').text("{% trans 'Coupon valide! remise' %}:" + response.value + "%")
+                $('#total-without-coupon').html(
+                    "<del>" + $('#total-without-coupon').text() + "</del>"
+                );
+                $('#total-with-coupon').text(response.total + " DA");
+                $('#total2words').text(response.total2words);
+            },
+            error: function(jqXHR, textStatus, errorThrown) {
+                if (jqXHR.status == 401 || jqXHR.status == 404) {
+                    Lobibox.notify("warning", {
+                        msg: "{% trans "Le coupon utilisé n'est pas valide." %}",
+                        size: "mini",
+                        position: "top left"
+                    });
+                }
+                else {
+                    Lobibox.notify("error", {
+                        msg: "{% trans "Error." %}",
+                        size: "mini",
+                        position: "top left"
+                    });
+                }
+            },
+            complete: function() {
+                 that.find('i').removeClass("fa fa-spinner fa-spin").addClass("fa fa-check");
+            }
+        });
+    });
+    $("#order").click(function() {
+        console.log("order");
+        if (coupon) {
+            var url = "/doctor/order/offer/{{offre.id}}/" + coupon;
+        } else {
+            var url = "/doctor/order/offer/{{offre.id}}";
+        }
+        window.location.href = url;
+    });
+});
+</script>
+{% endblock %}

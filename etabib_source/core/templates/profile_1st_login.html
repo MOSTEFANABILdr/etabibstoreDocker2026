@@ -1,0 +1,26 @@
+{% load static i18n crispy_forms_tags%}
+
+<h3></h3>
+<section>
+    <div  class="text-center">
+        <h1 style="font-size: 1.2rem;">
+            {% trans 'Assurez-vous que Votre cabinet est bien visible sur le web.' %}
+        </h1>
+
+    </div>
+</section>
+
+<h3></h3>
+<section>
+    {% crispy form_p1 %}
+</section>
+
+<h3></h3>
+<section>
+    {% crispy form_p2 %}
+</section>
+
+<h3></h3>
+<section>
+    {% crispy form_p3 %}
+</section>

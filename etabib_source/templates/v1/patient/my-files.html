@@ -1,0 +1,233 @@
+{% extends "base.html" %}
+{% load i18n %}
+{% load static utils_tags role_tags %}
+{% load crispy_forms_tags %}
+{% block title %} {% trans 'Mes fichiers' %} {% endblock %}
+{% block style %}
+<!-- Google Fonts
+                    ============================================ -->
+<link
+        href="https://fonts.googleapis.com/css?family=Roboto:100,300,400,700,900"
+        rel="stylesheet">
+<!-- Bootstrap CSS
+                    ============================================ -->
+<link rel="stylesheet" href='{% static "css/bootstrap.min.css" %}'>
+<!-- Bootstrap CSS
+                    ============================================ -->
+<link rel="stylesheet" href='{% static "css/font-awesome.min.css" %}'>
+<!-- animate CSS
+                    ============================================ -->
+<link rel="stylesheet" href='{% static "css/animate.css" %}'>
+<!-- normalize CSS
+                    ============================================ -->
+<link rel="stylesheet" href='{% static "css/normalize.css" %}'>
+<!-- meanmenu icon CSS
+                    ============================================ -->
+<link rel="stylesheet" href='{% static "css/meanmenu.min.css" %}'>
+<!-- main CSS
+                    ============================================ -->
+<link rel="stylesheet" href='{% static "css/main.css" %}'>
+<!-- educate icon CSS
+                    ============================================ -->
+<link rel="stylesheet" href='{% static "css/educate-custon-icon.css" %}'>
+<!-- morrisjs CSS
+                    ============================================ -->
+<link rel="stylesheet" href='{% static "css/morrisjs/morris.css" %}'>
+<!-- mCustomScrollbar CSS
+                    ============================================ -->
+<link rel="stylesheet"
+      href='{% static "css/scrollbar/jquery.mCustomScrollbar.min.css" %}'>
+<!-- metisMenu CSS
+                    ============================================ -->
+<link rel="stylesheet"
+      href='{% static "css/metisMenu/metisMenu.min.css" %}'>
+<link rel="stylesheet"
+      href='{% static "css/metisMenu/metisMenu-vertical.css" %}'>
+<!-- modernizr JS
+                    ============================================ -->
+<script src='{% static "js/vendor/modernizr-2.8.3.min.js" %}'></script>
+<style>
+.file .file-name {
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+.file button {
+    margin: 5px;
+}
+
+
+</style>
+{% endblock %}
+{% block content %}
+<div class="widgets-programs-area">
+    <div class="container-fluid">
+        <div class="row">
+            <div class="col-lg-12">
+                {% include 'partial/messages-alerts.html' %}
+            </div>
+        </div>
+        <div class="row">
+            <div class="col-lg-3">
+                <div class="ibox ">
+                    <div class="ibox-content">
+                        <div class="file-manager">
+                            <h5>{% trans 'Mes fichiers' %}:</h5>
+                            {% trans 'Séléctionnez un dossier puis uploadez un fichier' %}
+                            <div class="hr-line-dashed"></div>
+                            <ul class="folder-list" style="padding: 0">
+                                <li><a href="#" onclick="event.preventDefault();fetchFiles(null, 1);">
+                                    <i class="fa fa-folder"></i>
+                                    {% trans 'Ordonnances' %}
+                                    <span class="badge badge-default" id="ord_count"></span>
+                                </a>
+                                </li>
+                                <li>
+                                    <a href="#" onclick="event.preventDefault();fetchFiles(null, 2);">
+                                        <i class="fa fa-folder"></i>
+                                        {% trans 'Bilans' %}
+                                        <span class="badge badge-default" id="bil_count"></span>
+                                    </a>
+                                </li>
+                                <li>
+                                    <a href="#" onclick="event.preventDefault();fetchFiles(null, 3);">
+                                        <i class="fa fa-folder"></i>
+                                        {% trans 'Certificats' %}
+                                        <span class="badge badge-default" id="certif_count"></span>
+                                    </a>
+                                </li>
+                                <li>
+                                    <a href="#" onclick="event.preventDefault();fetchFiles(null, 4);">
+                                        <i class="fa fa-folder"></i>
+                                        {% trans 'Lettres' %}
+                                        <span class="badge badge-default" id="letr_count"></span>
+                                    </a>
+                                </li>
+                                <li>
+                                    <a href="#" onclick="event.preventDefault();fetchFiles(null, 6);">
+                                        <i class="fa fa-folder"></i>
+                                        {% trans 'Comptes rendus' %}
+                                        <span class="badge badge-default" id="crend_count"></span>
+                                    </a>
+                                </li>
+                            </ul>
+                            <div class="hr-line-dashed"></div>
+                            <div class="alert alert-info" role="alert">
+                                {% trans "les fichiers uploadés seront automatiquement partagés avec votre équipe de soins" %}
+                            </div>
+                            <div class="hr-line-dashed"></div>
+                            {% crispy form %}
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class="col-lg-9">
+                <div class="row text-center" id="files-container">
+
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}
+{% block js %}
+<!-- bootstrap JS
+                    ============================================ -->
+<script src='{% static "js/bootstrap.min.js" %}'></script>
+<!-- wow JS
+                    ============================================ -->
+<script src='{% static "js/wow.min.js" %}'></script>
+<!-- meanmenu JS
+                    ============================================ -->
+<script src='{% static "js/jquery.meanmenu.js" %}'></script>
+<!-- sticky JS
+                    ============================================ -->
+<script src='{% static "js/jquery.sticky.js" %}'></script>
+<!-- scrollUp JS
+                    ============================================ -->
+<script src='{% static "js/jquery.scrollUp.min.js" %}'></script>
+<!-- mCustomScrollbar JS
+                    ============================================ -->
+<script
+        src='{% static "js/scrollbar/jquery.mCustomScrollbar.concat.min.js" %}'></script>
+<script src='{% static "js/scrollbar/mCustomScrollbar-active.js" %}'></script>
+<!-- metisMenu JS
+                    ============================================ -->
+<script src='{% static "js/metisMenu/metisMenu.min.js" %}'></script>
+<script src='{% static "js/metisMenu/metisMenu-active.js" %}'></script>
+<!-- plugins JS
+                    ============================================ -->
+<script src='{% static "js/plugins.js" %}'></script>
+<!-- main JS
+                    ============================================ -->
+<script src='{% static "js/main.js" %}'></script>
+<!-- tawk chat JS
+                    ============================================ -->
+{% include 'partial/tawk-script.html' %}
+<script>
+ Dropzone.autoDiscover = false;
+ var CSRF_TOKEN = '{{ csrf_token }}';
+
+function fetchFiles(page,type) {
+    $("#file_upload").attr("data-type", type);
+    $.ajax({
+      type: 'GET',
+      {% if user|is_patient %}
+      url: "{% url 'patient-files-fetch' %}?type=" + (type ? type : "1") + (page ? ("&page=" + page): ""),
+      {% else %}
+      url: "{% url 'doctor-files-fetch' %}?type=" + (type ? type : "1") + (page ? ("&page=" + page): ""),
+      {% endif %}
+      data: {},
+      beforeSend: function(XMLHttpRequest)
+      {
+         $("#files-container").html('<div><i class="fa fa-spinner fa-spin fa-3x dark-blue"></i><p>{% trans 'Chargement..' %}</p></div>');
+      },
+      success: function(data){
+        console.log(data);
+        $("#files-container").html(data.content);
+        $("#ord_count").html(data.ord_count);
+        $("#bil_count").html(data.bil_count);
+        $("#certif_count").html(data.certif_count);
+        $("#letr_count").html(data.letr_count);
+        $("#crend_count").html(data.crend_count);
+      },
+      error: function() {
+        $("#files-container").html('<div><i class="fa fa-exclamation-triangle fa-3x red"></i><p>{% trans 'Problème lors du chargement..' %}</p></div>');
+      }
+    });
+}
+function deleteFile(file_id, element) {
+    $.ajax({
+      type: 'GET',
+      url: "/patient/file/delete/" + file_id,
+      data: {},
+      beforeSend: function(XMLHttpRequest)
+      {
+         $(element).find('i').removeClass('fa-trash').addClass("fa-spinner fa-spin");
+      },
+      success: function(data){
+        fetchFiles(null, 1);
+      },
+      error: function(response) {
+         $(element).find('i').removeClass('fa-spinner fa-spin').addClass("fa-trash");
+         var msg = "{% trans 'Erreur lors de la suppression du fichier' %}";
+         if (response.status== 403 || response.status== 401) {
+            msg = "{% trans "Vous n'avez pas assez de privilèges pour effectuer cette action" %}";
+         }
+         Lobibox.notify('error',
+            {
+                size: 'mini',
+                msg: msg,
+                position: 'bottom left'
+            }
+        );
+      }
+    });
+}
+$(document).ready(function() {
+    fetchFiles(null, 1);
+});
+
+
+</script>
+{% endblock %}

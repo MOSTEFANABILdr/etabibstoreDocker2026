@@ -1,0 +1,31 @@
+{% load i18n %}
+{% load partner_tags %}
+<a title="{% trans 'Détail' %}"
+   href="{% url 'partner-detail-product' product.id product.slug %}"
+   class="btn btn-default">
+    <i class="fa fa-eye" aria-hidden="true"></i>
+</a>
+{% if product|isMedicalDevice %}
+<a title="{% trans 'Mettre à jour' %}" href="{% url 'partner-update-product' product.id %}"
+   class="btn btn-default fm-update" data-fm-head="{% trans 'Mise à jour du produit' %} "
+   data-fm-callback="reload">
+    <i class="fa fa-pencil-square-o" aria-hidden="true"></i>
+</a>
+{% elif product|isDrug %}
+<a title="{% trans 'Mettre à jour' %}" href="{% url 'partner-update-drug' product.id %}"
+   class="btn btn-default fm-update" data-fm-head="{% trans 'Mise à jour du Médicament/Parapharmacie' %} "
+   data-fm-callback="reload">
+    <i class="fa fa-pencil-square-o" aria-hidden="true"></i>
+</a>
+{% elif product|isAutre %}
+<a title="{% trans 'Mettre à jour' %}" href="{% url 'partner-update-other-product' product.id %}"
+   class="btn btn-default fm-update" data-fm-head="{% trans 'Mise à jour du Produit' %} "
+   data-fm-callback="reload">
+    <i class="fa fa-pencil-square-o" aria-hidden="true"></i>
+</a>
+{% endif %}
+<a title="{% trans 'Supprimer' %}" href="{% url 'partner-delete-product' product.id %}"
+   class="btn btn-default fm-delete" data-fm-head="{% trans 'Supprimer le produit' %}: {{product.libelle}}"
+   data-fm-callback="reload">
+    <i class="fa fa-trash" aria-hidden="true"></i>
+</a>

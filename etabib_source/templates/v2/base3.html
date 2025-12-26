@@ -1,0 +1,46 @@
+<!DOCTYPE html>
+{% load static i18n %}
+{% get_current_language as LANGUAGE_CODE %}
+<html lang="{{LANGUAGE_CODE}}" dir="{{LANGUAGE_DIRECTION}}">
+<head>
+	<meta charset="utf-8" />
+	<title>{% block title %} {% endblock %} | eTabib</title>
+	<meta content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no" name="viewport" />
+	<meta content="" name="description" />
+	<meta content="" name="author" />
+	<!-- ================== favicon =============================== -->
+	<link rel="shortcut icon" type="image/x-icon" href='{% static "img/logo/logdo.png" %}'>
+	<!-- ================== BEGIN BASE CSS STYLE ================== -->
+	<link href="https://fonts.googleapis.com/css?family=Open+Sans:300,400,600,700" rel="stylesheet" />
+	<link href="{% static 'v2/css/default/app.min.css' %}" rel="stylesheet" />
+	<script src="{% static 'v2/js/app.min.js' %}"></script>
+	<!-- ================== END BASE CSS STYLE ================== -->
+	<!-- ================== BEGIN CUSTOM CSS STYLE ================== -->
+	{% block style %} {% endblock %}
+	<link href="{% static 'v2/css/default/app.custom.css' %}?v=1.24" rel="stylesheet" />
+	<link href="{% static 'v2/css/default/app.responsive.css' %}?v=1.22" rel="stylesheet" />
+	<link href="{% static 'v2/css/default/rtl.css' %}?v=1.21" rel="stylesheet" />
+	<!-- ================== END CUSTOM CSS STYLE ================== -->
+	{% block extra_style %} {% endblock %}
+</head>
+
+<body>
+	<!-- begin #page-container -->
+	<div id="page-container" class="fade page-without-sidebar">
+		<div id="content" class="content">
+			{% block content %} {% endblock %}
+		</div>
+		<!-- end #content -->
+	</div>
+	<!-- end page container -->
+
+	<!-- ================== BEGIN BASE JS ================== -->
+	<script src="{% static 'v2/js/theme/default.min.js' %}"></script>
+	<script src="{% static 'v2/js/app.custom.js' %}"></script>
+	<!-- ================== END BASE JS ================== -->
+	<!-- ================== BEGIN CUSTOM JS ================== -->
+    {% block js %} {% endblock %}
+    <!-- ================== END CUSTOM JS ================== -->
+</body>
+
+</html>

@@ -1,0 +1,54 @@
+{% extends "base.html" %}
+{% load i18n %}
+{% load static  ads_tags %}
+
+{% block title %} {% trans 'Congre' %} {% endblock %}
+
+{% block style %}
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/tiny-slider/2.9.3/tiny-slider.css">
+<!--[if (lt IE 9)]><script src="https://cdnjs.cloudflare.com/ajax/libs/tiny-slider/2.9.3/min/tiny-slider.helper.ie8.js"></script><![endif]-->
+<style>
+.congress-title h1 {
+    font-weight: 600;
+    text-align: center;
+    font-size: 20px;
+    background-color: #f2f3f4;
+    color:#f7bf2f;
+    padding: 10px;
+    margin-left: -15px;
+    margin-right: -15px;
+
+}
+.congress-box {
+    border-style: solid;
+    border-color: lightgray;
+    border-width: thin;
+}
+.congress-box .congress-body .congress-description {
+    padding-top: 20px;
+}
+
+
+</style>
+{% endblock %}
+
+{% block content %}
+<div class="container">
+    <div class="col-lg-12 col-md-12 col-sm-12 col-xs-12">
+        <div class="endless_page_template">
+            {% include page_template %}
+        </div>
+    </div>
+</div>
+{% endblock %}
+
+{% block js %}
+<script src="https://cdnjs.cloudflare.com/ajax/libs/tiny-slider/2.9.2/min/tiny-slider.js"></script>
+<script src='{% static "el-pagination/js/el-pagination.js" %}'></script>
+<script>
+$(document).ready(function() {
+    $.endlessPaginate({paginateOnScroll: false});
+});
+
+</script>
+{% endblock %}

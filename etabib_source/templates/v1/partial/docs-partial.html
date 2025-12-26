@@ -1,0 +1,30 @@
+{% load el_pagination_tags %}
+{% load utils_tags %}
+{% paginate 12 documents %}
+<div class="row">
+    {% for d in documents %}
+    <div class="col-lg-3 col-md-6 col-sm-6" style="cursor: pointer;">
+        <div class="file">
+            <a class="video-btn" data-toggle="modal"
+                            data-target="#modalYT" data-src={{d.lien}}>
+                <span class="corner"></span>
+                <div class="icon">
+                    {{d.lien|getThmbnailFromGoogleDriveLink|safe}}
+                </div>
+                <div class="file-name" style="max-height: 100px; height: 100px">
+                    {{d.libelle}}
+                    <br>
+                    <small>{{d.date_ajout|date:"D d M Y"}}</small>
+                </div>
+            </a>
+        </div>
+    </div>
+    {% endfor %}
+</div>
+{% get_pages %}
+{% if pages.paginated %}
+<div class="row text-center">
+    {% show_current_number as page_number %}
+    {% include 'partial/pagination.html' with pages=pages current_page_number=page_number %}
+</div>
+{% endif %}

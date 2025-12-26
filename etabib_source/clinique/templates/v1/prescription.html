@@ -1,0 +1,411 @@
+{% extends "base.html" %}
+{% load i18n %}
+{% load static %}
+{% load role_tags %}
+{% load prescription_tags %}
+{% load crispy_forms_tags %}
+{% load el_pagination_tags %}
+{% block title %} {% trans 'Médicaments' %} {% endblock %}
+{% block style %}
+<!-- Google Fonts
+                    ============================================ -->
+<link
+        href="https://fonts.googleapis.com/css?family=Roboto:100,300,400,700,900"
+        rel="stylesheet">
+<!-- Bootstrap CSS
+                    ============================================ -->
+<link rel="stylesheet" href='{% static "css/bootstrap.min.css" %}'>
+<!-- Bootstrap CSS
+                    ============================================ -->
+<link rel="stylesheet" href='{% static "css/font-awesome.min.css" %}'>
+<!-- owl.carousel CSS
+                    ============================================ -->
+<link rel="stylesheet" href='{% static "css/owl.carousel.css" %}'>
+<link rel="stylesheet" href='{% static "css/owl.theme.css" %}'>
+<link rel="stylesheet" href='{% static "css/owl.transitions.css" %}'>
+<!-- animate CSS
+                    ============================================ -->
+<link rel="stylesheet" href='{% static "css/animate.css" %}'>
+<!-- normalize CSS
+                    ============================================ -->
+<link rel="stylesheet" href='{% static "css/normalize.css" %}'>
+<!-- meanmenu icon CSS
+                    ============================================ -->
+<link rel="stylesheet" href='{% static "css/meanmenu.min.css" %}'>
+<!-- main CSS
+                    ============================================ -->
+<link rel="stylesheet" href='{% static "css/main.css" %}'>
+<!-- educate icon CSS
+                    ============================================ -->
+<link rel="stylesheet" href='{% static "css/educate-custon-icon.css" %}'>
+<!-- mCustomScrollbar CSS
+                    ============================================ -->
+<link rel="stylesheet"
+      href='{% static "css/scrollbar/jquery.mCustomScrollbar.min.css" %}'>
+<!-- metisMenu CSS
+                    ============================================ -->
+<link rel="stylesheet"
+      href='{% static "css/metisMenu/metisMenu.min.css" %}'>
+<link rel="stylesheet"
+      href='{% static "css/metisMenu/metisMenu-vertical.css" %}'>
+<!-- Custom modals css ============================================ -->
+<link rel="stylesheet" href='{% static "css/modals.css" %}'>
+<!-- modernizr JS ============================================ -->
+<script src='{% static "js/vendor/modernizr-2.8.3.min.js" %}'></script>
+<!-- bootstrap-toggle CSS ============================================ -->
+<link href="https://gitcdn.github.io/bootstrap-toggle/2.2.2/css/bootstrap-toggle.min.css" rel="stylesheet">
+<!-- jquery.dataTables CSS ============================================ -->
+<link rel="stylesheet" href='{% static "js/data-table/jquery.dataTables.min.css" %}'>
+<link rel="stylesheet" type="text/css"
+      href="https://cdn.datatables.net/responsive/2.2.3/css/responsive.bootstrap.min.css">
+<style>
+dl {
+    margin-bottom:50px;
+}
+dl dt {
+    float:left;
+    font-weight:bold;
+    margin-right:10px;
+    padding:5px;
+    width:150px;
+}
+dl dd {
+    margin:2px 0;
+    padding:5px 0;
+}
+.ibox-content h1 {
+    font-weight: 700;
+    color: #000;
+    font-size: 30px;
+    margin: 0 0 15px;
+    padding-left: 15px;
+}
+.ibox-content h2 {
+    font-weight: 700;
+    color: #000;
+    font-size: 30px;
+    margin: 0 0 15px;
+    padding-left: 15px;
+}
+.panel h1 {
+    font-weight: 700;
+    color: #7ed957;
+    font-size: 95px;
+    margin: 0 0 15px;
+    padding-left: 15px;
+}
+.ibox-content h3 {
+    font-weight: 700;
+    color: #000;
+    font-size: 18px;
+    margin: 0 0 15px;
+    padding-left: 15px;
+}
+.panel h6 {
+    font-weight: 700;
+    color: #000;
+    font-size: 20px;
+    margin: 0 0 15px;
+    padding-left: 15px;
+}
+.panel h5 {
+    font-weight: 700;
+    color: #000;
+    font-size: 20px;
+    margin: 0 0 15px;
+    padding-left: 15px;
+}
+.panel h4 {
+    color: #000;
+    margin-top:35px;
+}
+.panel h3 {
+    color: #000;
+}
+
+.dropdown-menu {
+    min-width: 120px;
+}
+
+.dropdown-menu>li>a {
+    padding: 3px 4px;
+    max-width: 300px;
+    white-space: normal;
+}
+
+.dropdown-submenu {
+    position: relative;
+}
+
+.dropdown-submenu>.dropdown-menu {
+    top: 0;
+    left: 100%;
+    margin-top: -6px;
+    margin-left: -1px;
+    -webkit-border-radius: 0 6px 6px 6px;
+    -moz-border-radius: 0 6px 6px;
+    border-radius: 0 6px 6px 6px;
+}
+
+.dropdown-submenu:hover>.dropdown-menu {
+    display: block;
+}
+
+.dropdown-submenu > a:after {
+    display: block;
+    content: " ";
+    float: right;
+    width: 0;
+    height: 0;
+    border-color: transparent;
+    border-style: solid;
+    border-width: 5px 0 5px 5px;
+    border-left-color: #ccc;
+    margin-top: 5px;
+    margin-right: -10px;
+}
+
+.dropdown-submenu:hover > a:after {
+    border-left-color: #fff;
+}
+
+.dropdown-submenu.pull-left {
+    float: none;
+}
+
+.dropdown-submenu.pull-left>.dropdown-menu {
+    left: -100%;
+    margin-left: 10px;
+    -webkit-border-radius: 6px 0 6px 6px;
+    -moz-border-radius: 6px 0 6px 6px;
+    border-radius: 6px 0 6px 6px;
+}
+
+
+</style>
+{% endblock %}
+{% block content %}
+<div class="program-widget-bc">
+    <div class="container-fluid">
+        <div class="row">
+            <div class="col-lg-5 col-md-5 col-sm-5 col-xs-12">
+                <div class="hpanel shadow-inner responsive-mg-b-30">
+                    <div class="ibox-content">
+                        <h3 class="dark-blue">
+                            {% trans 'Base de données des médicaments' %}
+                        </h3>
+                        <div class="row">
+                            <div class="col-lg-12">
+                                    {% csrf_token %}
+                                    {% crispy form %}
+                                    {{ form.media }}
+                            </div>
+                        </div>
+                        <div id="drugs-list" class="endless_page_template">
+                        {% if nom_commerciaux %}
+                            {% include page_template %}
+                        {% endif %}
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class="panel col-lg-7 col-md-7 col-sm-7 col-xs-12">
+              <div class="panel-body">
+                  <div class="row">
+                      <div class="col-lg-3 col-md-3">
+                          <button class="btn btn-etabib" onclick="print_ordonnance()">
+                            <i class="fa fa-print"></i>
+                              {% trans 'Imprimer A5' %}
+                        </button>
+                      </div>
+                      <div class="col-lg-5 col-md-5">
+                          <input id="patient-name" placeholder="{% trans 'Nom du patient' %}" type="text" class="textinput form-control">
+                      </div>
+
+                      <div class="col-lg-4 col-md-4">
+                          <input id="patient-age" placeholder="{% trans 'Age du patient' %}" type="text" class="textinput form-control">
+                      </div>
+                  </div>
+                  <hr>
+                <div class="table-responsive">
+                    <table id="table-ordonnance" class="table table-striped m-2 p-2 table-bordered dt-responsive compact nowrap">
+                    </table>
+                </div>
+              </div>
+            </div>
+        </div>
+    </div>
+</div>
+<!-- datepicker ============================================ -->
+<script type="text/javascript"
+        src="https://cdnjs.cloudflare.com/ajax/libs/moment.js/2.9.0/moment-with-locales.min.js"></script>
+<script type="text/javascript"
+        src="https://cdnjs.cloudflare.com/ajax/libs/bootstrap-datetimepicker/4.17.47/js/bootstrap-datetimepicker.min.js"></script>
+{% endblock %}
+
+{% block js %}
+<!-- dataTables ============================================ -->
+<script type="text/javascript" charset="utf8" src='{% static "js/data-table/jquery.dataTables.min.js" %}'></script>
+<script type="text/javascript" charset="utf8" src="{% static 'js/data-table/datatableview.js' %}?v=1.0"></script>
+<script type="text/javascript" charset="utf8"
+        src="https://cdn.datatables.net/responsive/2.2.3/js/dataTables.responsive.js"></script>
+<!-- AJAX DATATABLE JS ============================================ -->
+<script type="text/javascript" src="{% static 'ajax_datatable/js/utils.js' %}"></script>
+<!-- bootstrap JS ============================================ -->
+<script src='{% static "js/bootstrap.min.js" %}'></script>
+<!-- wow JS ============================================ -->
+<script src='{% static "js/wow.min.js" %}'></script>
+<!-- price-slider JS
+                    ============================================ -->
+<script src='{% static "js/jquery-price-slider.js" %}'></script>
+<!-- meanmenu JS
+                    ============================================ -->
+<script src='{% static "js/jquery.meanmenu.js" %}'></script>
+<!-- owl.carousel JS
+                    ============================================ -->
+<script src='{% static "js/owl.carousel.min.js" %}'></script>
+<!-- sticky JS ============================================ -->
+<script src='{% static "js/jquery.sticky.js" %}'></script>
+<!-- scrollUp JS ============================================ -->
+<script src='{% static "js/jquery.scrollUp.min.js" %}'></script>
+<!-- counterup JS ============================================ -->
+<script src='{% static "js/counterup/jquery.counterup.min.js" %}'></script>
+<script src='{% static "js/counterup/waypoints.min.js" %}'></script>
+<script src='{% static "js/counterup/counterup-active.js" %}'></script>
+<!-- mCustomScrollbar JS ============================================ -->
+<script src='{% static "js/scrollbar/jquery.mCustomScrollbar.concat.min.js" %}'></script>
+<script src='{% static "js/scrollbar/mCustomScrollbar-active.js" %}'></script>
+<!-- metisMenu JS  ============================================ -->
+<script src='{% static "js/metisMenu/metisMenu.min.js" %}'></script>
+<script src='{% static "js/metisMenu/metisMenu-active.js" %}'></script>
+<!-- plugins JS  ============================================ -->
+<script src='{% static "js/plugins.js" %}'></script>
+<!-- main JS ============================================ -->
+<script src='{% static "js/main.js" %}'></script>
+<!-- tawk chat JS  ============================================ -->
+{% include 'partial/tawk-script.html' %}
+<!-- endless pagination JS ============================================ -->
+<script src='{% static "el-pagination/js/el-pagination.js" %}'></script>
+<!-- bootstrap-toggle JS ============================================ -->
+<script src="https://gitcdn.github.io/bootstrap-toggle/2.2.2/js/bootstrap-toggle.min.js"></script>
+<script>
+ $(function () {
+	$.endlessPaginate({
+	});
+    document.querySelector('select[name="dci"]').onchange=function() {
+        dci_id = $(this).val();
+        //clearing detail
+        $('#drug-detail').html("");
+        //showing spinner
+        $("#drugs-list").html("<div class='text-center'><i class='fa fa-spinner fa-spin fa-2x dark-blue'></i></div>")
+        //loading list
+        $('#drugs-list').load('{% url 'prescription' %}', {
+		    'dci_id': dci_id,
+		    'csrfmiddlewaretoken': '{{csrf_token}}'
+		    },
+            function() {
+            }
+        );
+    };
+
+    // Init table-ordonnance
+    AjaxDatatableViewUtils.initialize_table( $("#table-ordonnance"), "{% url 'ordonnance' %}",
+        {
+            "bLengthChange": false,
+            "searching": false,
+            "ordering":  false,
+            "autoWidth": false,
+            "language": {
+                "url": "//cdn.datatables.net/plug-ins/1.10.21/i18n/French.json"
+            },
+            "responsive": false,
+        },
+        { 'ordonnance_pk': {{ ordonnance_pk }} }
+    );
+
+    $(document).on("click", ".medicament", function(e) {
+        e.preventDefault();
+        //get data id
+        var medicament_id = $(this).data("med-id");
+        //showing spinner
+        $("#drug-detail").html("<div class='text-center'><i class='fa fa-spinner fa-spin fa-2x dark-blue'></i></div>")
+        //load detail
+        $('#drug-detail').load('{% url 'professional-drugs-detail' %}', {
+		    'medicament_id': medicament_id,
+		    'csrfmiddlewaretoken': '{{csrf_token}}'
+		    },
+            function() {
+                $('input[type=checkbox][data-toggle^=toggle]').bootstrapToggle();
+                 $([document.documentElement, document.body]).animate({
+                    scrollTop: $("#drug-detail").offset().top
+                }, 1000);
+            }
+        );
+    });
+
+ });
+
+function action(details) {
+    // Action triggered when clicking on the forme button
+    $('.mnmedic').html('');
+    $('.mnmedic').html("<div class='text-center'><i class='fa fa-spinner fa-spin fa-2x'></i></div>")
+    $('.mnmedic').load("{% url 'ordonnance-menu-detail' %}", {
+        'details': details,
+        'csrfmiddlewaretoken': '{{ csrf_token }}',
+    }, function(data) {
+    });
+}
+
+function addToOrdonnance(elt, ps ,pk){
+    var data = {
+        'medic_pk': pk,
+        'medic_ps':ps,
+        'ordonnance_pk': '{{ordonnance_pk}}',
+        'csrfmiddlewaretoken': '{{ csrf_token }}',
+    };
+    $.post("{% url 'ordonnance-add' %}", data, function(){
+        $('#table-ordonnance').DataTable().ajax.reload();
+    });
+}
+
+// Ordonnance row Action
+function removeFromOrdonnance(id_row){
+    var data = {
+        'id': id_row,
+        'csrfmiddlewaretoken': '{{ csrf_token }}',
+    };
+    $.ajax({
+        type: "POST",
+        url: "{% url 'ordonnance-remove' %}",
+        data: data,
+        statusCode: {
+            200: function() {
+                 $('#table-ordonnance').DataTable().ajax.reload();
+            },
+            400: function() {
+                console.log("400");
+            },
+        },
+    });
+
+}
+
+function print_ordonnance(){
+    var patient_name = $('#patient-name').val();
+    var patient_age = $('#patient-age').val();
+    window.open(`{% url 'ordonnance-pdf' ordonnance_pk %}?patient=${patient_name}&age=${patient_age}`);
+}
+
+function update_poso(elt) {
+    $.post("{% url 'ordonnance-update' %}",
+    {
+        'id': $(elt).data('id'),
+        'poso':$(elt).val(),
+        'csrfmiddlewaretoken': '{{ csrf_token }}',
+    },
+    function(){
+    });
+}
+
+</script>
+{% endblock %}

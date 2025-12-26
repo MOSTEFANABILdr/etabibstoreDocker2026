@@ -1,0 +1,198 @@
+{% extends "base.html" %}
+{% load i18n %}
+{% load static ads_tags utils_tags role_tags %}
+
+{% block title %} {% trans 'Dashboard' %} {% endblock %}
+
+{% block style %}
+{% endblock %}
+
+{% block content %}
+<div class="container">
+    <div class="row">
+        {% include 'partial/messages-alerts.html' %}
+    </div>
+    {% ad728x360 request as annonce %}
+    {% if annonce %}
+    {% include 'partial/banner_ads.html' with annonce=annonce %}
+    <br>
+    {% endif %}
+    <div class="row">
+        <div class="col-xl-3 col-md-6">
+            <div class="widget widget-stats bg-light ">
+                <div class="stats-icon"><i class="fa fa-calendar text-dark"></i></div>
+                <div class="stats-info ">
+                    <h4 class="text-dark">{% trans 'Rendez-vous non traités' %}</h4>
+                    <p class="text-dark">{{untreated_appointments}}</p>
+                </div>
+                <div class="stats-link">
+                    <a href="{% url 'doctor-appointments' %}">
+                        {% trans "Voir plus" %}
+                        <i class="fa fa-arrow-alt-circle-right">
+                        </i>
+                    </a>
+                </div>
+            </div>
+        </div>
+        <div class="col-xl-3 col-md-6">
+            <div class="widget widget-stats bg-light">
+                <div class="stats-icon"><i class="fa fa-bullhorn text-dark"></i></div>
+                <div class="stats-info">
+                    <h4 class="text-dark">{% trans "Rendez-vous d'aujourd'hui" %}</h4>
+                    <p class="text-dark">{{today_appointments}}</p>
+                </div>
+                <div class="stats-link">
+                    <a href="{% url 'appointments-agenda' %}">
+                        {% trans "Voir plus" %}
+                        <i class="fa fa-arrow-alt-circle-right"></i>
+                    </a>
+                </div>
+            </div>
+        </div>
+        <div class="col-xl-3 col-md-6">
+            <div class="widget widget-stats bg-light">
+                <div class="stats-icon">
+                    <img width="40px" src="{% static 'img/coins.svg' %}">
+                </div>
+                <div class="stats-info">
+                    <h4 class="text-dark">{% trans 'Mes points' %}</h4>
+                    <p class="text-dark"> {{user.medecin.points}}</p>
+                </div>
+                <div class="stats-link">
+                    <a href="{% url 'doctor-points-history' %}">
+                        {% trans "Historique" %}
+                        <i class="fa fa-arrow-alt-circle-right">
+                        </i>
+                    </a>
+                </div>
+            </div>
+        </div>
+    </div>
+    <div class="row">
+        <div class="col-lg-8 col-md-6 col-sm-6 col-xs-12">
+            <div class="panel panel-default">
+                <div class="panel-heading">
+                    <h4 class="panel-title">{% trans 'Vidéo' %}</h4>
+                </div>
+                <div class="panel-body pr-1">
+                    <video width="100%" height="450" class="img-responsive center-block" id="adsVideo" playsinline muted
+                        controls>
+                        <!-- Source will be set by JS -->
+                    </video>
+                    <script>
+                        document.addEventListener("DOMContentLoaded", function () {
+                            var playlistBaseUrl = "https://ads.etabib.dz/vids/etabib/";
+                            var playlistUrl = playlistBaseUrl + "playlist.json";
+                            var videoPlayer = document.getElementById('adsVideo');
+                            var videoList = [];
+                            var currentIndex = 0;
+
+                            function playNext() {
+                                if (videoList.length === 0) return;
+                                currentIndex++;
+                                if (currentIndex >= videoList.length) {
+                                    currentIndex = 0; // Loop
+                                }
+                                loadVideo(currentIndex);
+                            }
+
+                            function loadVideo(index) {
+                                if (videoList.length > 0 && videoList[index]) {
+                                    videoPlayer.src = playlistBaseUrl + videoList[index];
+                                    videoPlayer.play().catch(e => console.log("Auto-play prevented:", e));
+                                }
+                            }
+
+                            // Fetch playlist
+                            fetch(playlistUrl)
+                                .then(response => response.json())
+                                .then(data => {
+                                    if (Array.isArray(data) && data.length > 0) {
+                                        videoList = data;
+                                        loadVideo(0); // Play first video
+
+                                        videoPlayer.onended = function () {
+                                            playNext();
+                                        };
+                                    } else {
+                                        console.error("Playlist is empty or invalid format.");
+                                    }
+                                })
+                                .catch(error => console.error("Error loading playlist:", error));
+                        });
+                    </script>
+                </div>
+            </div>
+        </div>
+        <div class="col-lg-4 col-md-6 col-sm-6 col-xs-12">
+            <div class="panel panel-default">
+                <div class="panel-heading">
+                    <h4 class="panel-title">{% trans "Équipe de soins" %}</h4>
+                    <small class="dark-blue">{% trans "Demandes" %} ({{care_team_requests.count}})</small>
+                </div>
+                <div class="panel-body pr-1">
+                    <div class="endless_page_template">
+                        {% include page_template %}
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}
+{% block js %}
+<script src="https://vjs.zencdn.net/7.10.2/video.js"></script>
+<script src='{% static "el-pagination/js/el-pagination.js" %}'></script>
+<script>
+    function treatRequest(data, element) {
+        $.post("{% url 'doctor-care-team-treat' %}", data)
+            .fail(function (xhr, status, error) {
+                console.log(error);
+            })
+            .done(function (data, statusText, xhr) {
+                var status = xhr.status;
+                if (status == 200) {
+                    element.closest(".widget-list-item").remove();
+                    if (data.accepte) {
+                        Lobibox.notify(
+                            'success', {
+                            size: 'mini'
+                            , msg: data.patient + " " + "{% trans 'est ajouté à votre liste de contacts' %}"
+                            , position: 'right top'
+                        });
+                    }
+                }
+            });
+    }
+    $(function () {
+        //Endlesss pagination
+        $.endlessPaginate();
+
+        //
+        $(document).on("click", ".ct-request-accepte", function (e) {
+            e.preventDefault();
+            var id = $(this).data("id");
+            var data = {
+                "id": id,
+                'csrfmiddlewaretoken': '{{ csrf_token }}',
+                'accepte': 1
+            };
+            treatRequest(data, $(this));
+        });
+        $(document).on("click", ".ct-request-delete", function (e) {
+            e.preventDefault();
+            var id = $(this).data("id");
+            var data = {
+                "id": id,
+                'csrfmiddlewaretoken': '{{ csrf_token }}',
+                'accepte': 0
+            };
+            treatRequest(data, $(this));
+        });
+    })
+
+
+
+
+</script>
+{% endblock %}

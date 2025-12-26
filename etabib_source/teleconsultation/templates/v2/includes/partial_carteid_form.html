@@ -1,0 +1,8 @@
+{% load i18n %}
+{% load crispy_forms_tags %}
+
+<div class="modal-header">
+    <h4 class="modal-title">{% trans "Scanner la Carte d'Identité " %}</h4>
+</div>
+{% csrf_token %}
+{% crispy form %}

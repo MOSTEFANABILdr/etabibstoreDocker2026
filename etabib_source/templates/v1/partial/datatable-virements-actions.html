@@ -1,0 +1,33 @@
+{% load i18n %}
+{% load role_tags %}
+{% if virement.ajouter_par == user %}
+<a title="{% trans 'Supprimer' %}"
+   href="{% url 'commercial-delete-virement' virement.pk %}"
+   class="btn btn-etabib fm-delete"
+   data-fm-head="{% trans 'Supprimer' %}"
+   data-fm-callback="reload">
+    <i class="fa fa-trash" aria-hidden="true"></i>
+</a>
+<a title="{% trans 'Modifier' %}"
+   href="{% url 'commercial-update-virement' virement.pk %}"
+   class="btn btn-etabib fm-update"
+   data-fm-head="{% trans 'Modifier' %}"
+   data-fm-callback="reload">
+    <i class="fa fa-pencil-square-o" aria-hidden="true"></i>
+</a>
+{% elif virement.ajouter_par|is_doctor %}
+<a title="{% trans 'Supprimer' %}"
+   href="{% url 'commercial-delete-virement' virement.pk %}"
+   class="btn btn-etabib fm-delete"
+   data-fm-head="{% trans 'Supprimer' %}"
+   data-fm-callback="reload">
+    <i class="fa fa-trash" aria-hidden="true"></i>
+</a>
+<a title="{% trans 'Modifier' %}"
+   href="{% url 'commercial-update-virement' virement.pk %}"
+   class="btn btn-etabib fm-update"
+   data-fm-head="{% trans 'Modifier' %}"
+   data-fm-callback="reload">
+    <i class="fa fa-pencil-square-o" aria-hidden="true"></i>
+</a>
+{% endif %}

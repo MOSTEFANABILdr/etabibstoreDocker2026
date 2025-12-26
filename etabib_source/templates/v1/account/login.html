@@ -1,0 +1,299 @@
+{% extends "base2.html" %}
+{% load i18n %}
+{% load static %}
+{% load widget_tweaks %}
+{% block title %} {% trans "Sign In" %} {%endblock %}
+{% block style %}
+<!-- Google Fonts
+                    ============================================ -->
+<link href="https://fonts.googleapis.com/css?family=Play:400,700"
+      rel="stylesheet">
+<!-- Bootstrap CSS
+                    ============================================ -->
+<link rel="stylesheet" href='{% static "css/bootstrap.min.css" %}'>
+<!-- Bootstrap CSS
+                    ============================================ -->
+<link rel="stylesheet" href='{% static "css/font-awesome.min.css" %}'>
+<!-- animate CSS
+                    ============================================ -->
+<link rel="stylesheet" href='{% static "css/animate.css" %}'>
+<!-- normalize CSS
+                    ============================================ -->
+<link rel="stylesheet" href='{% static "css/normalize.css" %}'>
+<!-- main CSS
+                    ============================================ -->
+<link rel="stylesheet" href='{% static "css/main.css" %}'>
+<!-- morrisjs CSS
+                    ============================================ -->
+<link rel="stylesheet" href='{% static "css/morrisjs/morris.css" %}'>
+<!-- mCustomScrollbar CSS
+                    ============================================ -->
+<link rel="stylesheet"
+      href='{% static "css/scrollbar/jquery.mCustomScrollbar.min.css" %}'>
+<!-- metisMenu CSS
+                    ============================================ -->
+<link rel="stylesheet" href='{% static "css/metisMenu/metisMenu.min.css" %}'>
+<link rel="stylesheet" href='{% static "css/metisMenu/metisMenu-vertical.css" %}'>
+<!-- forms CSS
+                    ============================================ -->
+<link rel="stylesheet" href='{% static "css/form/all-type-forms.css" %}'>
+<!-- modernizr JS
+                    ============================================ -->
+<script src='{% static "js/vendor/modernizr-2.8.3.min.js" %}'></script>
+{% endblock %} {% block content %}
+<div class="error-pagewrap">
+    <div class="error-page-int wrap-login">
+        <div class="m-b-md custom-login">
+            <img width="96px" class="main-logo" src='{% static "img/logo/logdo.png" %}' alt=""/>
+        </div>
+        <div class="mg-t-15">
+            {% include 'partial/language-selector.html' with show_language_name=True %}
+        </div>
+        <div class="content-error">
+            {% if messages %}
+            <div>
+                <ul>
+                    {% for message in messages %}
+                    <div class="alert alert-{{ message.tags }}">
+                        <button type="button" class="close" data-dismiss="alert" aria-label="Close">
+                            <span aria-hidden="true">&times;</span>
+                        </button>
+                        <p>{{message}}</p>
+                    </div>
+                    {% endfor %}
+                </ul>
+            </div>
+            {% endif %}
+            {% for error in form.non_field_errors %}
+            <div class="alert alert-danger alert-mg-b alert-danger-style4">
+                <p>{{error}}</p>
+            </div>
+            {%endfor %}
+            <div class="hpanel">
+                <div class="panel-body mg-t-15 text-center login-body" style="margin-bottom: 0px;">
+                    <h2 style="font-size: 29px;">إتصـل بصحتكَ</h2>
+                    <h2 style="font-size: 17px;">{% trans "Connectez-vous avec" %}:</h2>
+                    <form action="{% url 'account_login' %}" id="login_form" method="POST" id="loginForm">
+                        {% csrf_token %}
+                        <div class="form-group {% if form.login.errors %} has-error {% endif %}">
+                            {% trans "Identifiant" as identifiant %}
+                            {% render_field form.login placeholder=identifiant value="" class="form-control center-block etabib-form-control" %}
+                            {% if form.login.errors %}
+                            <ul class="list-unstyled">
+                                {% for error in form.login.errors %}
+                                <li><span class="help-block">{{ error|escape }}</span></li>
+                                {% endfor %}
+                            </ul>
+                            {% endif %}
+                        </div>
+                        <div class="form-group {% if form.password.errors %} has-error {% endif %}">
+                            {% trans "Mot de passe" as password %}
+                            {% render_field form.password placeholder=password value="" class="form-control center-block etabib-form-control" %}
+                            {% if form.password.errors %}
+                            <ul class="list-unstyled">
+                                {% for error in form.password.errors %}
+                                <li><span class="help-block">{{ error|escape }}</span></li>
+                                {% endfor %}
+                            </ul>
+                            {% endif %}
+                        </div>
+                        {% if redirect_field_value %}
+                        <input type="hidden" name="{{ redirect_field_name }}" value="{{ redirect_field_value }}"/>
+                        {% endif %}
+                        <div class="checkbox login-checkbox hide">
+                            <label>
+                                {% render_field form.remember class="i-checks" %}
+                                {{form.remember.label}}
+                            </label>
+                        </div>
+                        <button class="btn btn-etabib center-block " style="width: 250px;" type="submit">
+                            {% trans "Sign In" %}
+                        </button>
+                        <a href="#" class="btn btn-etabib center-block" style="width:250px" data-toggle="modal" data-target="#qrModal">
+                            {% trans 'Sign In with Qr Code' %}
+                        </a>
+                        <br>
+                        <button style="margin-top: 5px;" class="btn btn-link" onclick="location.href='{% url 'account_reset_password' %}'">
+                            <strong>{% trans "Forgot Password ?" %}</strong>
+                        </button>
+                    </form>
+                </div>
+            </div>
+        </div>
+        <div style="border-top: solid;background: #3ed5ff; padding: 10px 0px 15px 0px">
+            <h2 style="font-size: 17px;color:white;">{% trans 'Êtes-vous nouveau sur le service?' %}</h2>
+            <a style="width:250px" class="btn btn-create-account" href="{% url 'account_signup' %}">
+                {% trans " Créer un nouveau compte" %}
+            </a>
+            <div class="row mg-t-15">
+                {% load account socialaccount %}
+                {% get_providers as socialaccount_providers %}
+                <div class="col-lg-12 col-md-12 col-sm-12 col-xs-12">
+                    {% for provider in socialaccount_providers %}
+                    {% if provider.name == "Google" %}
+                    <button title="{{provider.name}}" type="button" class="google-button" style="width: 250px"
+                            onclick="location.href='{% provider_login_url provider.id process=process scope=scope auth_params=auth_params %}'">
+                          <span class="google-button__icon">
+                            <svg viewBox="0 0 366 372" xmlns="http://www.w3.org/2000/svg"><path
+                                    d="M125.9 10.2c40.2-13.9 85.3-13.6 125.3 1.1 22.2 8.2 42.5 21 59.9 37.1-5.8 6.3-12.1 12.2-18.1 18.3l-34.2 34.2c-11.3-10.8-25.1-19-40.1-23.6-17.6-5.3-36.6-6.1-54.6-2.2-21 4.5-40.5 15.5-55.6 30.9-12.2 12.3-21.4 27.5-27 43.9-20.3-15.8-40.6-31.5-61-47.3 21.5-43 60.1-76.9 105.4-92.4z"
+                                    id="Shape" fill="#EA4335"/><path
+                                    d="M20.6 102.4c20.3 15.8 40.6 31.5 61 47.3-8 23.3-8 49.2 0 72.4-20.3 15.8-40.6 31.6-60.9 47.3C1.9 232.7-3.8 189.6 4.4 149.2c3.3-16.2 8.7-32 16.2-46.8z"
+                                    id="Shape" fill="#FBBC05"/><path
+                                    d="M361.7 151.1c5.8 32.7 4.5 66.8-4.7 98.8-8.5 29.3-24.6 56.5-47.1 77.2l-59.1-45.9c19.5-13.1 33.3-34.3 37.2-57.5H186.6c.1-24.2.1-48.4.1-72.6h175z"
+                                    id="Shape" fill="#4285F4"/><path
+                                    d="M81.4 222.2c7.8 22.9 22.8 43.2 42.6 57.1 12.4 8.7 26.6 14.9 41.4 17.9 14.6 3 29.7 2.6 44.4.1 14.6-2.6 28.7-7.9 41-16.2l59.1 45.9c-21.3 19.7-48 33.1-76.2 39.6-31.2 7.1-64.2 7.3-95.2-1-24.6-6.5-47.7-18.2-67.6-34.1-20.9-16.6-38.3-38-50.4-62 20.3-15.7 40.6-31.5 60.9-47.3z"
+                                    fill="#34A853"/></svg>
+                          </span>
+                        <span class="google-button__text">{% trans 'Ou Utilisez' %} {{provider.name}}</span>
+                    </button>
+                    {% endif %}
+                    {% endfor %}
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<div class="modal fade" id="qrModal" data-current-step="0" data-backdrop="static" data-keyboard="false" role="dialog" aria-labelledby="qrModalLabel" aria-hidden="true">
+    <div class="modal-dialog" role="document">
+        <div class="modal-content">
+            <div class="modal-header header-color-modal bg-color-1">
+                <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+            </div>
+            <div class="modal-body">
+                <div class="row">
+                    <div class="col-lg-12 col-md-12 col-sm-12 col-xs-12">
+                        <div id="error"></div>
+                    </div>
+                </div>
+                <div class="row">
+                    <div class="col-lg-12 col-md-12 col-sm-12 col-xs-12">
+                        <h2>{% trans 'Scan the QR code using the camera' %}</h2>
+                        <div id="reader"></div>
+                        <hr>
+                        <h2>{% trans 'Or choose an image from the gallery' %}</h2>
+                        <input type="file" id="qr-input-file" accept="image/*">
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+{% endblock %} {% block js %}
+<script src='{% static "js/html5-qrcode.min.js" %}'></script>
+<!-- bootstrap JS
+                    ============================================ -->
+<script src='{% static "js/bootstrap.min.js" %}'></script>
+<!-- wow JS
+                    ============================================ -->
+<script src='{% static "js/wow.min.js" %}'></script>
+<!-- meanmenu JS
+                    ============================================ -->
+<script src='{% static "js/jquery.meanmenu.js" %}'></script>
+<!-- owl.carousel JS
+                    ============================================ -->
+<script src='{% static "js/owl.carousel.min.js" %}'></script>
+<!-- sticky JS
+                    ============================================ -->
+<script src='{% static "js/jquery.sticky.js" %}'></script>
+<!-- scrollUp JS
+                    ============================================ -->
+<script src='{% static "js/jquery.scrollUp.min.js" %}'></script>
+<!-- mCustomScrollbar JS
+                    ============================================ -->
+<script src='{% static "js/scrollbar/jquery.mCustomScrollbar.concat.min.js" %}'></script>
+<script src='{% static "js/scrollbar/mCustomScrollbar-active.js" %}'></script>
+<!-- metisMenu JS
+                    ============================================ -->
+<script src='{% static "js/metisMenu/metisMenu.min.js" %}'></script>
+<script src='{% static "js/metisMenu/metisMenu-active.js" %}'></script>
+<!-- tab JS
+                    ============================================ -->
+<script src='{% static "js/tab.js" %}'></script>
+<!-- icheck JS
+                    ============================================ -->
+<script src='{% static "js/icheck/icheck.min.js" %}'></script>
+<script src='{% static "js/icheck/icheck-active.js" %}'></script>
+<!-- plugins JS
+                    ============================================ -->
+<script src='{% static "js/plugins.js" %}'></script>
+<!-- main JS
+                    ============================================ -->
+<script src='{% static "js/main.js" %}'></script>
+<!-- tawk chat JS
+                    ============================================ -->
+{% include 'partial/tawk-script.html' %}
+<script>
+var scanned = false;
+function onScanSuccess(qrCodeMessage) {
+    if (! scanned){
+        console.log("{{ csrf_token }}");
+        var data = {
+            'csrfmiddlewaretoken': '{{ csrf_token }}',
+            'pk' : qrCodeMessage,
+        };
+        $.ajax({
+            type: "POST",
+            url: "{% url 'qr-code-login' %}",
+            data: data,
+            success: function(patient) {
+                $("#error").html("");
+                window.location.href = "{% url 'index' %}";
+            },
+            error: function(xhr, ajaxOptions, thrownError)
+            {
+                $("#error").html("<div class='p-3 mb-2 bg-danger text-white'>{% trans 'Choisissez un code QR valide' %}</div>")
+            }
+        });
+        scanned = true;
+    }
+}
+
+$(document).ready(function() {
+    const html5QrCode = new Html5Qrcode("reader");
+    $('#qrModal').on('shown.bs.modal', function () {
+        const config = { fps: 10, qrbox: { width: 250, height: 250 } };
+        html5QrCode.start({ facingMode: "environment" }, config, onScanSuccess);
+    });
+
+    $('#qrModal').on('hidden.bs.modal', function (e) {
+        html5QrCode.stop().then((ignore) => {
+            // QR Code scanning is stopped.
+        }).catch((err) => {
+            // Stop failed, handle it.
+        });
+    });
+
+    // File based scanning
+    const fileinput = document.getElementById('qr-input-file');
+    fileinput.addEventListener('change', e => {
+
+        html5QrCode.stop().then((ignore) => {
+            // QR Code scanning is stopped.
+        }).catch((err) => {
+            // Stop failed, handle it.
+        });
+        html5QrCode.clear();
+
+
+        if (e.target.files.length == 0) {
+            // No file selected, ignore
+            return;
+        }
+        const imageFile = e.target.files[0];
+        // Scan QR Code
+        html5QrCode.scanFile(imageFile, true)
+        .then(decodedText => {
+            onScanSuccess(decodedText);
+        })
+        .catch(err => {
+            // failure, handle it.
+            $("#error").html("<div class='p-3 mb-2 bg-danger text-white'>{% trans 'Choisissez un code QR valide' %}</div>")
+        });
+    });
+});
+
+</script>
+
+{% endblock %}

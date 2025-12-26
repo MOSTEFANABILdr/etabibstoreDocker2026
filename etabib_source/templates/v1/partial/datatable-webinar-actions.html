@@ -1,0 +1,8 @@
+{% load i18n congre_tags %}
+{% if webinar|is_soon or webinar|is_active %}
+<a title="{% trans 'Accéder au webinar' %}" target="_blank"
+   href="{% url 'speaker-webinar-detail' webinar.id %}"
+   class="btn btn-default">
+    <i class="fa fa-video-camera" aria-hidden="true"></i>
+</a>
+{% endif %}

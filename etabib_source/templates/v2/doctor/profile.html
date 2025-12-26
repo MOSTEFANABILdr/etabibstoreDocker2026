@@ -1,0 +1,1115 @@
+{% extends "base.html" %}
+{% load i18n %}
+{% load static %}
+{% load avatar_tags crispy_forms_tags utils_tags %}
+
+{% block title %} {% trans 'My profile' %} {% endblock %}
+
+{% block style %}
+<link href="{% static 'v2/plugins/x-editable-bs4/dist/bootstrap4-editable/css/bootstrap-editable.css' %}"
+      rel="stylesheet"/>
+<link href="{% static 'v2/plugins/x-editable-bs4/dist/inputs-ext/address/address.css' %}" rel="stylesheet"/>
+<link href="{% static 'v2/plugins/x-editable-bs4/dist/inputs-ext/typeaheadjs/lib/typeahead.js-bootstrap.css' %}"
+      rel="stylesheet"/>
+<link href="{% static 'v2/plugins/bootstrap-datepicker/dist/css/bootstrap-datepicker.min.css' %}" rel="stylesheet"/>
+<link href="{% static 'v2/plugins/bootstrap-datepicker/dist/css/bootstrap-datepicker3.min.css' %}" rel="stylesheet"/>
+<link href="{% static 'v2/plugins/select2/dist/css/select2.min.css' %}" rel="stylesheet"/>
+<link rel="stylesheet" href='https://cdnjs.cloudflare.com/ajax/libs/cropperjs/1.5.6/cropper.min.css'>
+<link href="https://releases.transloadit.com/uppy/v2.6.0/uppy.min.css" rel="stylesheet">
+{% endblock %}
+
+{% block content %}
+<!-- begin profile -->
+<div class="profile">
+    <div class="profile-header">
+        <div class="profile-bg">
+            <!-- BEGIN profile-header-content -->
+            <div class="profile-header-content">
+                <!-- BEGIN profile-header-img -->
+                <div class="profile-header-img">
+                    {% avatar user %}
+                    {% crispy avatarForm %}
+                </div>
+                <!-- END profile-header-img -->
+                <!-- BEGIN profile-header-info -->
+                <div class="profile-header-info">
+                    <h4 class="mt-0 mb-1">{{medecin.full_name}}</h4>
+                    <p class="mb-2">{{medecin.contact.specialite}}</p>
+                    <div class="btn-group" role="group" aria-label="Basic example">
+                        <label style="margin-bottom: 0rem!important" for="id_image" class="btn btn-xs btn-etabib">
+                            <i class="fa fa-cloud-upload-alt"></i>
+                            {% trans 'Changer' %}
+                        </label>
+                        <a class="btn btn-xs btn-etabib fm-create ml-2"
+                           data-fm-head=""
+                           data-fm-callback="reload"
+                           href="{% url 'change-password' %}">
+                            <i class="fa fa-key"></i>
+                            {% trans 'Changer le mot de passe' %}
+                        </a>
+                    </div>
+                </div>
+                <!-- END profile-header-info -->
+            </div>
+            <!-- END profile-header-content -->
+        </div>
+        <!-- BEGIN profile-header-tab -->
+        <ul class="profile-header-tab nav nav-tabs">
+            <li class="nav-item">
+                <a href="#profile-about" class="nav-link active" data-toggle="tab">
+                    <i class="fa fa-user"></i>
+                    {% trans 'Informations de base' %}
+                </a>
+            </li>
+            <li class="nav-item">
+                <a href="#profile-accounts" class="nav-link" data-toggle="tab">
+                    <i class="fa fa-table"></i>
+                    {% trans 'Comptes' %}
+                </a>
+            </li>
+            <li class="nav-item">
+                <a href="#profile-docs" class="nav-link" data-toggle="tab">
+                    <i class="fa fa-file-medical-alt"></i>
+                    {% trans 'Documents' %}
+                </a>
+            </li>
+            <li class="nav-item">
+                <a href="#profile-commands" class="nav-link" data-toggle="tab">
+                    <i class="fa fa fa-key"></i>
+                    {% trans 'Mes commandes' %}
+                </a>
+            </li>
+        </ul>
+        <!-- END profile-header-tab -->
+    </div>
+</div>
+<!-- end profile -->
+<!-- begin profile-content -->
+<div class="profile-content">
+    <!-- begin tab-content -->
+    <div class="tab-content p-0">
+        <!-- begin #profile-about tab -->
+        <div class="tab-pane fade show active" id="profile-about">
+            <h4 class="m-t-0 m-b-20">
+                {% trans 'Informations de base' %}
+            </h4>
+            <div class="row">
+                <div class="col-md-6">
+                    <!-- begin table -->
+                    <div class="table-responsive">
+                        <table class="table table-profile">
+                            <tbody>
+                            <tr>
+                                <td class="field">{% trans 'Nom' %}</td>
+                                <td>
+                                    <label id="nom" data-type="text"
+                                           data-params="{csrfmiddlewaretoken:'{{csrf_token}}'}"
+                                           data-url="{% url 'doctor-profile-update-ajax' medecin.id %}"
+                                           data-pk="{{medecin.id}}"
+                                           data-title="Nom">
+                                        {{medecin.contact.nom}}
+                                    </label>
+                                </td>
+                            </tr>
+                            <tr>
+                                <td class="field">{% trans 'Prénom' %}</td>
+                                <td>
+                                    <label id="prenom" data-type="text"
+                                           data-params="{csrfmiddlewaretoken:'{{csrf_token}}'}"
+                                           data-url="{% url 'doctor-profile-update-ajax' medecin.id %}"
+                                           data-pk="{{medecin.id}}"
+                                           data-title="Prénom">
+                                        {{medecin.contact.prenom}}
+                                    </label>
+                                </td>
+                            </tr>
+                            <tr>
+                                <td class="field">{% trans 'Spécialité' %}</td>
+                                <td>
+                                    <label id="specialite" data-type="select2"
+                                           data-params="{csrfmiddlewaretoken:'{{csrf_token}}'}"
+                                           data-url="{% url 'doctor-profile-update-ajax' medecin.id %}"
+                                           data-pk="{{medecin.id}}"
+                                           data-value='{{medecin.contact.specialite.id|default_if_none:""}}'
+                                           data-title="Select Speciality"
+                                           class="">
+                                        {{medecin.contact.specialite.}}
+                                    </label>
+                                </td>
+                            </tr>
+                            <tr>
+                                <td class="field">{% trans 'Qualifications' %}</td>
+                                <td>
+                                    <label id="qualifications" data-type="select2"
+                                           data-params="{csrfmiddlewaretoken:'{{csrf_token}}'}"
+                                           data-url="{% url 'doctor-profile-update-ajax' medecin.id %}"
+                                           data-pk="{{medecin.id}}"
+                                           data-value='{{medecin.contact.qualifications.all|join_fk_by:","}}'
+                                           data-title="Select Speciality"
+                                           class="">
+                                        {{medecin.contact.qualifications.all|join_fk_value_by:","}}
+                                    </label>
+                                </td>
+                            </tr>
+                            <tr>
+                                <td class="field">{% trans 'Sexe' %}</td>
+                                <td>
+                                    <label id="sexe"
+                                           data-params="{csrfmiddlewaretoken:'{{csrf_token}}'}"
+                                           data-url="{% url 'doctor-profile-update-ajax' medecin.id %}"
+                                           data-type="select"
+                                           data-pk="{{medecin.contact.id}}" data-value="{{medecin.contact.sexe}}"
+                                           data-title="Select sex">
+                                    </label>
+                                </td>
+                            </tr>
+                            <tr>
+                                <td class="profile-title" colspan="2">
+                                    {% trans 'Adresse' %}:
+                                </td>
+                            </tr>
+                            <tr>
+                                <td class="field">{% trans 'Pays' %}</td>
+                                <td>
+                                    <label id="pays" data-type="select2"
+                                           data-params="{csrfmiddlewaretoken:'{{csrf_token}}'}"
+                                           data-url="{% url 'doctor-profile-update-ajax' medecin.id %}"
+                                           data-pk="{{medecin.id}}"
+                                           data-value='{{medecin.contact.pays.id|default_if_none:""}}'
+                                           data-title="Select country"
+                                           class="">
+                                        {{medecin.contact.pays.name}}
+                                    </label>
+                                </td>
+                            </tr>
+                            <tr>
+                                <td class="field">{% trans 'Ville' %}</td>
+                                <td>
+                                    <label id="ville" data-type="select2"
+                                           data-params="{csrfmiddlewaretoken:'{{csrf_token}}'}"
+                                           data-url="{% url 'doctor-profile-update-ajax' medecin.id %}"
+                                           data-pk="{{medecin.id}}"
+                                           data-value='{{medecin.contact.ville.id|default_if_none:""}}'
+                                           data-title="Select city">
+                                        {{medecin.contact.ville.name|default_if_none:""}}
+                                    </label>
+                                </td>
+                            </tr>
+                            <tr>
+                                <td class="field">{% trans 'Adresse' %}</td>
+                                <td>
+                                    <label id="adresse" data-type="textarea"
+                                           data-params="{csrfmiddlewaretoken:'{{csrf_token}}'}"
+                                           data-url="{% url 'doctor-profile-update-ajax' medecin.id %}"
+                                           data-pk="{{medecin.id}}"
+                                           data-title="Adresse">
+                                        {{medecin.contact.adresse|default_if_none:""}}
+                                    </label>
+                                </td>
+                            </tr>
+                            <tr>
+                                <td class="profile-title" colspan="2">
+                                    {% trans 'Liens' %}:
+                                </td>
+                            </tr>
+                            <tr>
+                                <td class="field">{% trans 'Facebook URL' %}</td>
+                                <td>
+                                    <a id="facebook" data-type="url"
+                                       data-params="{csrfmiddlewaretoken:'{{csrf_token}}'}"
+                                       data-url="{% url 'doctor-profile-update-ajax' medecin.id %}"
+                                       data-pk="{{medecin.id}}"
+                                       data-title="Facebook">
+                                        {{medecin.contact.facebook|default_if_none:""}}
+                                    </a>
+                                </td>
+                            </tr>
+                            <tr>
+                                <td class="field">{% trans 'Twitter URL' %}</td>
+                                <td>
+                                    <a id="twitter" data-type="url"
+                                       data-params="{csrfmiddlewaretoken:'{{csrf_token}}'}"
+                                       data-url="{% url 'doctor-profile-update-ajax' medecin.id %}"
+                                       data-pk="{{medecin.id}}"
+                                       data-title="Twitter">
+                                        {{medecin.contact.twitter|default_if_none:""}}
+                                    </a>
+                                </td>
+                            </tr>
+                            <tr>
+                                <td class="field">{% trans 'Site Web' %}</td>
+                                <td>
+                                    <a id="pageweb" data-type="url"
+                                       data-params="{csrfmiddlewaretoken:'{{csrf_token}}'}"
+                                       data-url="{% url 'doctor-profile-update-ajax' medecin.id %}"
+                                       data-pk="{{medecin.id}}"
+                                       data-title="Site Web">
+                                        {{medecin.contact.pageweb|default_if_none:""}}
+                                    </a>
+                                </td>
+                            </tr>
+                            <tr>
+                                <td class="field">{% trans 'Bio' %}</td>
+                                <td>
+                                    <label id="infos" data-type="textarea"
+                                           data-params="{csrfmiddlewaretoken:'{{csrf_token}}'}"
+                                           data-url="{% url 'doctor-profile-update-ajax' medecin.id %}"
+                                           data-pk="{{medecin.id}}"
+                                           data-title="infos">
+                                        {{medecin.infos|default_if_none:""}}
+                                    </label>
+                                </td>
+                            </tr>
+                            </tbody>
+                        </table>
+                    </div>
+                    <!-- end table -->
+                </div>
+                <div class="col-md-6">
+                    <!-- begin table -->
+                    <div class="table-responsive">
+                        <table class="table table-profile">
+                            <tbody>
+                            <tr>
+                                <td class="profile-title" colspan="2">
+                                    {% trans 'Téléphones publics' %}:
+                                </td>
+                            </tr>
+                            <tr>
+                                <td class="field">{% trans 'Mobile' %}1</td>
+                                <td>
+                                    <label id="mobile1" data-type="text"
+                                           data-params="{csrfmiddlewaretoken:'{{csrf_token}}'}"
+                                           data-url="{% url 'doctor-profile-update-ajax' medecin.id %}"
+                                           data-pk="{{medecin.id}}"
+                                           data-title="mobile1">
+                                        {{medecin.contact.mobile_1|default_if_none:""}}
+                                    </label>
+                                </td>
+                            </tr>
+                            <tr>
+                                <td class="field">{% trans 'Mobile' %}2</td>
+                                <td>
+                                    <label id="mobile2" data-type="text"
+                                           data-params="{csrfmiddlewaretoken:'{{csrf_token}}'}"
+                                           data-url="{% url 'doctor-profile-update-ajax' medecin.id %}"
+                                           data-pk="{{medecin.id}}"
+                                           data-title="nom">
+                                        {{medecin.contact.mobile_2|default_if_none:""}}
+                                    </label>
+                                </td>
+                            </tr>
+                            <tr>
+                                <td class="field">{% trans 'Fixe' %}</td>
+                                <td>
+                                    <label id="fixe" data-type="text"
+                                           data-params="{csrfmiddlewaretoken:'{{csrf_token}}'}"
+                                           data-url="{% url 'doctor-profile-update-ajax' medecin.id %}"
+                                           data-pk="{{medecin.id}}"
+                                           data-title="Select city">
+                                        {{medecin.contact.fixe|default_if_none:""}}
+                                    </label>
+                                </td>
+                            </tr>
+                            <tr>
+                                <td title="{% blocktrans %}
+                                            Ces informations seront utiliseés pour la relation clientèle eTabib et ne seront pas publiques
+                                            {% endblocktrans %}" class="profile-title" colspan="2">
+                                    {% trans 'Téléphones privés' %}:
+                                </td>
+                            </tr>
+                            <tr>
+                                <td class="field">{% trans 'Mobile' %}</td>
+                                <td>
+                                    <label id="mobile" data-type="text"
+                                           data-params="{csrfmiddlewaretoken:'{{csrf_token}}'}"
+                                           data-url="{% url 'doctor-profile-update-ajax' medecin.id %}"
+                                           data-pk="{{medecin.id}}"
+                                           data-title="Select city">
+                                        {{medecin.contact.mobile|default_if_none:""}}
+                                    </label>
+                                </td>
+                            </tr>
+                            </tbody>
+                        </table>
+                    </div>
+                    <!-- end table -->
+                </div>
+            </div>
+        </div>
+        <!-- end #profile-about tab -->
+        <!-- begin #profile-accounts tab -->
+        <div class="tab-pane fade" id="profile-accounts">
+            <div class="row">
+                <div class="col-md-6">
+                    <!-- begin table -->
+                    <div class="table-responsive">
+                        <table class="table table-profile">
+                            <tbody>
+                            <tr>
+                                <td class="field">{% trans "Tarif d'une consultation à distance" %}</td>
+                                <td>
+                                    <label id="consultation" data-type="number"
+                                           data-params="{csrfmiddlewaretoken:'{{csrf_token}}'}"
+                                           data-url="{% url 'doctor-profile-update-ajax' medecin.id %}"
+                                           data-pk="{{medecin.id}}"
+                                           data-value='{{medecin.tarif_consultation.amount|default_if_none:""}}'
+                                           data-title="Tarif d'une consultation">
+                                        {{medecin.tarif_consultation|default_if_none:""}}
+                                    </label>
+                                </td>
+                            </tr>
+                            <tr>
+                                <td class="field">{% trans "Tarif d'une consultation au cabinet" %}</td>
+                                <td>
+                                    <label id="consultation_cabinet" data-type="number"
+                                           data-params="{csrfmiddlewaretoken:'{{csrf_token}}'}"
+                                           data-url="{% url 'doctor-profile-update-ajax' medecin.id %}"
+                                           data-pk="{{medecin.id}}"
+                                           data-value='{{medecin.tarif_cslt_cabinet.amount|default_if_none:""}}'
+                                           data-title="Tarif d'une consultation">
+                                        {{medecin.tarif_cslt_cabinet|default_if_none:""}}
+                                    </label>
+                                </td>
+                            </tr>
+                            <tr>
+                                <td class="field">{% trans "Tarif d'une consultation à domicile" %}</td>
+                                <td>
+                                    <label id="consultation_domicile" data-type="number"
+                                           data-params="{csrfmiddlewaretoken:'{{csrf_token}}'}"
+                                           data-url="{% url 'doctor-profile-update-ajax' medecin.id %}"
+                                           data-pk="{{medecin.id}}"
+                                           data-value='{{medecin.tarif_cslt_domicile.amount|default_if_none:""}}'
+                                           data-title="Tarif d'une consultation">
+                                        {{medecin.tarif_cslt_domicile|default_if_none:""}}
+                                    </label>
+                                </td>
+                            </tr>
+                            <tr>
+                                <td class="profile-title" colspan="2">
+                                    {% trans 'Compte CCP' %}:
+                                </td>
+                            </tr>
+                            <tr>
+                                <td class="field">{% trans "Numéro CCP" %}</td>
+                                <td>
+                                    <label id="ccp" data-type="number"
+                                           data-params="{csrfmiddlewaretoken:'{{csrf_token}}'}"
+                                           data-url="{% url 'doctor-profile-update-ajax' medecin.id %}"
+                                           data-pk="{{medecin.id}}"
+                                           data-title="Numéro CCP">
+                                        {{medecin.ccp}}
+                                    </label>
+                                </td>
+                            </tr>
+                            <tr>
+                                <td class="field">{% trans "Clé" %}</td>
+                                <td>
+                                    <label id="cle" data-type="number"
+                                           data-params="{csrfmiddlewaretoken:'{{csrf_token}}'}"
+                                           data-url="{% url 'doctor-profile-update-ajax' medecin.id %}"
+                                           data-pk="{{medecin.id}}"
+                                           data-title="Clé">
+                                        {{medecin.cle}}
+                                    </label>
+                                </td>
+                            </tr>
+                            </tbody>
+                        </table>
+                    </div>
+                    <!-- end table -->
+                </div>
+                <div class="col-md-6">
+                    <!-- begin table -->
+                    <div class="table-responsive">
+                        <table class="table table-profile">
+                            <tbody>
+                            <tr>
+                                <td class="profile-title" colspan="2">
+                                    {% trans 'Compte bancaire' %}:
+                                </td>
+                            </tr>
+                            <tr>
+                                <td class="field">{% trans "Banque" %}</td>
+                                <td>
+                                    <label id="banque" data-type="select2"
+                                           data-params="{csrfmiddlewaretoken:'{{csrf_token}}'}"
+                                           data-url="{% url 'doctor-profile-update-ajax' medecin.id %}"
+                                           data-pk="{{medecin.id}}"
+                                           data-title="Banque">
+                                        {{medecin.bank.name|default_if_none:""}}
+                                    </label>
+                                </td>
+                            </tr>
+                            <tr>
+                                <td class="field">{% trans "Agence" %}</td>
+                                <td>
+                                    <label id="agence" data-type="text"
+                                           data-params="{csrfmiddlewaretoken:'{{csrf_token}}'}"
+                                           data-url="{% url 'doctor-profile-update-ajax' medecin.id %}"
+                                           data-pk="{{medecin.id}}"
+                                           data-title="Clé">
+                                        {{medecin.bank_agence|default_if_none:""}}
+                                    </label>
+                                </td>
+                            </tr>
+                            <tr>
+                                <td class="field">{% trans "Numéro du Compte" %}</td>
+                                <td>
+                                    <label id="ncompte" data-type="text"
+                                           data-params="{csrfmiddlewaretoken:'{{csrf_token}}'}"
+                                           data-url="{% url 'doctor-profile-update-ajax' medecin.id %}"
+                                           data-pk="{{medecin.id}}"
+                                           data-title="Clé">
+                                        {{medecin.bank_compte|default_if_none:""}}
+                                    </label>
+                                </td>
+                            </tr>
+                            <tr>
+                                <td class="field">{% trans "Clé RIB" %}</td>
+                                <td>
+                                    <label id="rib" data-type="text"
+                                           data-params="{csrfmiddlewaretoken:'{{csrf_token}}'}"
+                                           data-url="{% url 'doctor-profile-update-ajax' medecin.id %}"
+                                           data-pk="{{medecin.id}}"
+                                           data-title="Clé RIB">
+                                        {{medecin.bank_rib|default_if_none:""}}
+                                    </label>
+                                </td>
+                            </tr>
+                            </tbody>
+                        </table>
+                    </div>
+                    <!-- end table -->
+                </div>
+            </div>
+        </div>
+        <!-- end #profile-accounts tab -->
+        <!-- begin #profile-docs tab -->
+        <div class="tab-pane fade" id="profile-docs">
+            <div class="row">
+                <div class="col-lg-4 col-md-6 mt-10">
+                    <h5>
+                        {% trans 'Les documents qui décrivent votre spécialité' %}
+                    </h5>
+                    <div id="file1-container">
+                        {% for file_spec in files_spec %}
+                        <div class="mb-2 p-10 bg-light rounded">
+                            <div class="media media-xs overflow-visible align-items-center">
+                            <span class="media-left">
+                                <i class="fa fa-file fa-2x text-info "></i>
+                            </span>
+                                <div class="media-body valign-middle">
+                                    <a href="{{file_spec.options.file.url}}">{{file_spec.options.file.name}}</a>
+                                </div>
+                                <div class="media-body valign-middle text-right overflow-visible">
+                                    <div class="btn-group btn-group-sm">
+                                        <button class="btn btn-default"
+                                                onclick="deleteCertif(this, {{file_spec.source}});">
+                                            <i class="fa fa-trash"></i>
+                                            {% trans 'Supprimer' %}
+                                        </button>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                        {% endfor %}
+                    </div>
+                    <div class="grid">
+                        <div class="column-full">
+                            <div id="UppyInput"></div>
+                            <div id="UppyInput-Progress"></div>
+                        </div>
+                    </div>
+                </div>
+                <div class="col-lg-4 col-md-6">
+                    <h5>
+                        {% trans 'Les documents qui décrivent votre Qualifications' %}
+                    </h5>
+                    <div id="file2-container">
+                        {% for file_qual in files_qual %}
+                        <div class="mb-2 p-10 bg-light rounded">
+                            <div class="media media-xs overflow-visible align-items-center">
+                            <span class="media-left">
+                                <i class="fa fa-file fa-2x text-info "></i>
+                            </span>
+                                <div class="media-body valign-middle">
+                                    <a href="{{file_qual.options.file.url}}">{{file_qual.options.file.name}}</a>
+                                </div>
+                                <div class="media-body valign-middle text-right overflow-visible">
+                                    <div class="btn-group btn-group-sm">
+                                        <button class="btn btn-default"
+                                                onclick="deleteCertif(this, {{file_qual.source}});">
+                                            <i class="fa fa-trash"></i>
+                                            {% trans 'Supprimer' %}
+                                        </button>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                        {% endfor %}
+                    </div>
+                    <div class="grid">
+                        <div class="column-full">
+                            <div id="UppyInput2"></div>
+                            <div id="UppyInput-Progress2"></div>
+                        </div>
+                    </div>
+                </div>
+                <div class="col-lg-4 col-md-6">
+                    <h5>
+                        {% trans 'Autorisation de travail' %}
+                    </h5>
+                    <div id="file3-container">
+                        {% for file_agrm in files_agrm %}
+                        <div class="mb-2 p-10 bg-light rounded">
+                            <div class="media media-xs overflow-visible align-items-center">
+                            <span class="media-left">
+                                <i class="fa fa-file fa-2x text-info "></i>
+                            </span>
+                                <div class="media-body valign-middle">
+                                    <a href="{{file_agrm.options.file.url}}">{{file_agrm.options.file.name}}</a>
+                                </div>
+                                <div class="media-body valign-middle text-right overflow-visible">
+                                    <div class="btn-group btn-group-sm">
+                                        <button class="btn btn-default"
+                                                onclick="deleteCertif(this, {{file_agrm.source}});">
+                                            <i class="fa fa-trash"></i>
+                                            {% trans 'Supprimer' %}
+                                        </button>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                        {% endfor %}
+                    </div>
+                    <div class="grid">
+                        <div class="column-full">
+                            <div id="UppyInput3"></div>
+                            <div id="UppyInput-Progress3"></div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <!-- end #profile-videos tab -->
+        <!-- begin #profile-commands tab -->
+        <div class="tab-pane fade" id="profile-commands">
+            <h4 class="m-t-0 m-b-20">{% trans 'Mes Commandes' %}</h4>
+            <!-- begin row -->
+            <div class="row row-space-6">
+                <table class="table">
+                    <thead>
+                        <th></th>
+                        <th>{% trans "Commande N°" %}</th>
+                        <th>{% trans "Date d'ajout" %}</th>
+                        <th>{% trans "Date d'expiration" %}</th>
+                        <th></th>
+                    </thead>
+                    <tbody>
+                    {% for tuple in licenses %}
+                        <tr>
+                            <td>{{forloop.counter}}</td>
+                            <td>{{tuple.1.id}}</td>
+                            <td>{{tuple.0.date_creation|date:'Y-m-d H:i'}}</td>
+                            <td>{{tuple.0.date_expiration|date:'Y-m-d H:i'}}</td>
+                            <td>
+                                <a href="{% url 'detail-order' tuple.1.id %}" class="btn btn-default">
+                                    {% trans 'Détail' %}
+                                </a>
+                            </td>
+                        </tr>
+                    {% endfor %}
+                    </tbody>
+                </table>
+            </div>
+            <!-- end row -->
+        </div>
+        <!-- end #profile-commands tab -->
+    </div>
+    <!-- end tab-content -->
+</div>
+<!-- end profile-content -->
+<!-- MODAL TO CROP THE IMAGE -->
+<div class="modal fade" id="modalCrop">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <div class="modal-header">
+                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                    <span aria-hidden="true">&times;</span>
+                </button>
+                <h4 class="modal-title">Recadrer la photo.</h4>
+            </div>
+            <div class="modal-body" style="padding:0px;">
+                <img src="" id="image" style="max-width: 100%;">
+            </div>
+            <div class="modal-footer">
+                <div class="btn-group pull-left" role="group">
+                    <button type="button" class="btn btn-default js-zoom-in">
+                        <span class="glyphicon glyphicon-zoom-in"></span>
+                    </button>
+                    <button type="button" class="btn btn-default js-zoom-out">
+                        <span class="glyphicon glyphicon-zoom-out"></span>
+                    </button>
+                </div>
+                <button type="button" class="btn btn-default" data-dismiss="modal">{% trans 'Annuler' %}</button>
+                <button type="button" class="btn btn-etabib js-crop-and-upload">
+                    <i id="spinner" class='fa fa-2x fa-spinner fa-spin hide'></i>
+                    {% trans 'Recadrer et télécharger' %}
+                </button>
+            </div>
+        </div>
+    </div>
+</div>
+<!-- end MODAL -->
+<!-- Template -->
+<div class="hide" id="tile_template">
+    <div class="mb-2 p-10 bg-light rounded">
+        <div class="media media-xs overflow-visible align-items-center">
+            <span class="media-left">
+                <i class="fa fa-file fa-2x text-info "></i>
+            </span>
+            <div class="media-body valign-middle">
+                <a href="##url##">
+                    ##name##
+                </a>
+            </div>
+            <div class="media-body valign-middle text-right overflow-visible">
+                <div class="btn-group btn-group-sm">
+                    <button class="btn btn-default"
+                            onclick="deleteCertif(this, ##id##);">
+                        <i class="fa fa-trash"></i>
+                        {% trans 'Supprimer' %}
+                    </button>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+<!-- endTemplate-->
+{% endblock %}
+
+{% block js %}
+<script src="{% static 'v2/plugins/jquery-migrate/dist/jquery-migrate.min.js' %}"></script>
+<script src="{% static 'v2/plugins/x-editable-bs4/dist/bootstrap4-editable/js/bootstrap-editable.min.js' %}"></script>
+<script src="{% static 'v2/plugins/x-editable-bs4/dist/inputs-ext/address/address.js' %}"></script>
+<script src="{% static 'v2/plugins/x-editable-bs4/dist/inputs-ext/typeaheadjs/lib/typeahead.js' %}"></script>
+<script src="{% static 'v2/plugins/x-editable-bs4/dist/inputs-ext/typeaheadjs/typeaheadjs.js' %}"></script>
+<script src="{% static 'v2/plugins/x-editable-bs4/dist/inputs-ext/wysihtml5/wysihtml5.js' %}"></script>
+<script src="{% static 'v2/plugins/bootstrap-datepicker/dist/js/bootstrap-datepicker.min.js' %}"></script>
+<script src="{% static 'v2/plugins/select2/dist/js/select2.full.min.js' %}"></script>
+<script src="{% static 'v2/plugins/moment/min/moment.min.js' %}"></script>
+<script src='https://cdnjs.cloudflare.com/ajax/libs/cropperjs/1.5.6/cropper.min.js'></script>
+<script src='{% static "js/cropper/jquery-cropper.min.js" %}'></script>
+<script src="https://releases.transloadit.com/uppy/v2.6.0/uppy.min.js"></script>
+<script src="https://releases.transloadit.com/uppy/locales/v2.0.6/fr_FR.min.js"></script>
+<script src="https://releases.transloadit.com/uppy/locales/v2.0.6/ar_SA.min.js"></script>
+<script>
+    $(function () {
+        /* SCRIPT TO OPEN THE MODAL WITH THE PREVIEW */
+        $("#id_image").change(function () {
+          if (this.files && this.files[0]) {
+            var reader = new FileReader();
+            reader.onload = function (e) {
+              $("#image").attr("src", e.target.result);
+              $("#modalCrop").modal("show");
+            }
+            reader.readAsDataURL(this.files[0]);
+          }
+        });
+
+      /* SCRIPTS TO HANDLE THE CROPPER BOX */
+        var $image = $("#image");
+        var cropBoxData;
+        var canvasData;
+        $("#modalCrop").on("shown.bs.modal", function () {
+          $image.cropper({
+            viewMode: 1,
+            aspectRatio: 1/1,
+            minCropBoxWidth: 200,
+            minCropBoxHeight: 200,
+            ready: function () {
+              $image.cropper("setCanvasData", canvasData);
+              $image.cropper("setCropBoxData", cropBoxData);
+            }
+          });
+        }).on("hidden.bs.modal", function () {
+          cropBoxData = $image.cropper("getCropBoxData");
+          canvasData = $image.cropper("getCanvasData");
+          $image.cropper("destroy");
+        });
+        // Enable zoom in button
+        $(".js-zoom-in").click(function () {
+          $image.cropper("zoom", 0.1);
+        });
+
+        // Enable zoom out button
+        $(".js-zoom-out").click(function () {
+          $image.cropper("zoom", -0.1);
+        });
+
+        /* SCRIPT TO COLLECT THE DATA AND POST TO THE SERVER */
+        $(".js-crop-and-upload").click(function () {
+          console.log("click");
+          var cropData = $image.cropper("getData");
+          $("#id_x").val(cropData["x"]);
+          $("#id_y").val(cropData["y"]);
+          $("#id_height").val(cropData["height"]);
+          $("#id_width").val(cropData["width"]);
+           $("#avatar-form").submit();
+        });
+        $('#avatar-form').submit(function(evt) {
+            evt.preventDefault();
+            var formData = new FormData(this);
+            $("#spinner").removeClass('hide');
+            $.ajax({
+            type: 'POST',
+            url: "{% url 'avatar-upload' %}",
+            data:formData,
+            cache:false,
+            contentType: false,
+            processData: false,
+            success: function(data) {
+                location.reload();
+            },
+            error: function(data) {
+                $("#spinner").addClass('hide');
+                console.log("error");
+                console.log(data);
+            }
+            });
+        });
+
+        /* X-editable */
+        $.fn.editable.defaults.mode = 'inline';
+        $.fn.editable.defaults.emptytext = '{% trans "Cliquez pour modifier" %}';
+		$.fn.editable.defaults.inputclass = 'form-control input-sm';
+		$('#nom, #prenom, #adresse, #mobile, #mobile1, #mobile2, #fixe').editable();
+		$('#facebook, #twitter, #pageweb, #infos').editable();
+		$('#consultation, #ccp, #cle, #agence, #ncompte, #rib, #consultation_domicile, #consultation_cabinet').editable();
+        $('#pays').editable({
+		    type: 'select2',
+		    tpl: '<select id="country-select"></select>',
+		    id: function (item) {
+                return item.id;
+            },
+			select2: {
+			    ajax: {
+                    dataType: 'json',
+                    url: "{% url 'country-autocomplete' %}",
+                    data: function (params) {
+                        var query = {
+                            q: params.term,
+                            page: params.page
+                        }
+                      return query;
+                    },
+                    results: function (data, page) {
+                        return { results: data.results };
+                    }
+                },
+				width: 200,
+				placeholder: '{% trans "Select country" %}',
+				allowClear: true,
+			},
+            display: function(value, sourceData, response) {
+                var that = $(this);
+                cTmp = value;
+                $.get( "/api/country/" + value, function( data ) {
+                    $(that).html(data.name);
+                });
+            }
+		});
+		$('#ville').editable({
+			tpl: '<select id="city-select"></select>',
+			select2: {
+			    ajax: {
+                    dataType: 'json',
+                    url: "{% url 'city-autocomplete' %}",
+                    data: function (params) {
+                        var query = {
+                            q: params.term,
+                            page: params.page
+                        }
+                        if (cTmp)  {
+                            query["forward"] = '{"country":' + cTmp + '}';
+                        }
+                      return query;
+                    },
+                    results: function (data, page) {
+                        return { results: data.results };
+                    }
+                },
+				width: 200,
+				placeholder: '{% trans "Select city" %}',
+				allowClear: true
+			},
+			display: function(value, sourceData, response) {
+                var that = $(this);
+                $.get( "/api/city/" + value, function( data ) {
+                    $(that).html(data.name);
+                });
+            }
+		});
+		$('#specialite').editable({
+		    type: 'select2',
+		    tpl: '<select id="specialite-select"></select>',
+		    id: function (item) {
+                return item.id;
+            },
+			select2: {
+			    ajax: {
+                    dataType: 'json',
+                    url: "{% url 'speciality-autocomplete' %}",
+                    data: function (params) {
+                        var query = {
+                            q: params.term,
+                            page: params.page
+                        }
+                      return query;
+                    },
+                    results: function (data, page) {
+                        return { results: data.results };
+                    }
+                },
+				width: 200,
+				placeholder: '{% trans "Select Speciality" %}',
+				allowClear: true,
+			},
+            display: function(value, sourceData, response) {
+                var that = $(this);
+                $.get( "/api/speciality/" + value, function( data ) {
+                    var lang = "{{LANGUAGE_CODE}}";
+                    if (lang == "ar") {
+                        $(that).html(data.libelle_ar);
+                    } else {
+                        $(that).html(data.libelle);
+                    }
+                });
+            }
+		});
+		$('#qualifications').editable({
+		    type: 'select2',
+		    tpl: '<select id="qualification-select"></select>',
+			select2: {
+			    tokenSeparators: [",", " "],
+			    multiple: true,
+			    ajax: {
+                    dataType: 'json',
+                    url: "{% url 'qualification-autocomplete' %}",
+                    data: function (params) {
+                        var query = {
+                            q: params.term,
+                            page: params.page
+                        }
+                      return query;
+                    },
+                    results: function (data, page) {
+                        return { results: data.results };
+                    }
+                },
+				width: 200,
+				placeholder: '{% trans "Select Qualifications" %}',
+				allowClear: true,
+			},
+			display: function(value) {
+                var that = $(this);
+                const myArray = value.toString().split(',');
+                var txt = "";
+                myArray.forEach(element => {
+                    $.get( "/api/qualification/" + element, function( data ) {
+                        txt += data.libelle + ",";
+                        $(that).html(txt);
+                    });
+                });
+            },
+		});
+		$('#sexe').editable({
+			prepend: 'non séléctionné',
+			source: [{
+					value: "HOMME",
+					text: 'Homme'
+				},
+				{
+					value: "FEMME",
+					text: 'Femme'
+				}
+			],
+			display: function (value, sourceData) {
+				var icons = {
+						'': '',
+						"HOMME": '<i class="fa fa-male m-r-5"></i>',
+						"FEMME": '<i class="fa fa-female m-r-5"></i>'
+					},
+					elem = $.grep(sourceData, function (o) {
+						return o.value == value;
+					});
+
+				if (elem.length) {
+					$(this).text(elem[0].text).prepend(icons[value]);
+				} else {
+					$(this).empty();
+				}
+			}
+		});
+		$('#banque').editable({
+		    type: 'select2',
+		    tpl: '<select id="banque-select"></select>',
+		    id: function (item) {
+                return item.id;
+            },
+			select2: {
+			    ajax: {
+                    dataType: 'json',
+                    url: "{% url 'bank-autocomplete' %}",
+                    data: function (params) {
+                        var query = {
+                            q: params.term,
+                            page: params.page
+                        }
+                      return query;
+                    },
+                    results: function (data, page) {
+                        return { results: data.results };
+                    }
+                },
+				width: 200,
+				placeholder: '{% trans "Select bank" %}',
+				allowClear: true,
+			},
+            display: function(value, sourceData, response) {
+                var that = $(this);
+                cTmp = value;
+                $.get( "/api/bank/" + value, function( data ) {
+                    $(that).html(data.name);
+                });
+            }
+		});
+    });
+
+
+
+
+
+
+
+
+</script>
+<!-- Modal -->
+{% include "fm/modal.html" %}
+<!-- /.modal -->
+<script type="text/javascript">
+    $(function() {
+        $.fm({debug: true});
+    });
+
+
+
+
+
+
+
+
+</script>
+<script>
+var uppy = new Uppy.Core({
+    restrictions: {
+        maxNumberOfFiles: 1,
+        "autoProceed": true
+    }
+})
+.use(Uppy.FileInput, { target: '#UppyInput', pretty: true })
+    .use(Uppy.StatusBar, {
+        id: 'StatusBar',
+        hideAfterFinish: true,
+        showProgressDetails: true,
+        target: '#UppyInput-Progress',
+        locale: Uppy.locales.fr_FR
+})
+.use(Uppy.XHRUpload, {
+    endpoint: '{% url "certificat-upload" %}',
+    headers: {
+        'X-CSRFToken': "{{ csrf_token }}"
+    }
+});
+
+uppy.on('file-added', (file) => {
+    uppy.setFileMeta(file.id, {
+        t: "1"
+    })
+});
+uppy.on("upload-success", (status, event) => {
+    var $clone = $("#tile_template").clone().removeClass("hide").html();
+   $clone = $clone.replace("##name##", event.body.filename)
+                   .replace("##url##", event.body.file_url)
+                   .replace("##id##", event.body.file_id);
+   $("#file1-container").append($clone);
+})
+
+var uppy2 = new Uppy.Core({"autoProceed": true})
+    .use(Uppy.FileInput, { target: '#UppyInput2', pretty: true })
+    .use(Uppy.StatusBar, {
+        id: 'StatusBar2',
+        hideAfterFinish: true,
+        showProgressDetails: true,
+        target: '#UppyInput-Progress2',
+        locale: Uppy.locales.fr_FR
+    })
+    .use(Uppy.XHRUpload, {
+        endpoint: '{% url "certificat-upload" %}',
+        headers: {
+            'X-CSRFToken': "{{ csrf_token }}"
+        }
+    });
+
+uppy2.on('file-added', (file) => {
+    uppy2.setFileMeta(file.id, {
+        t: "2"
+    })
+});
+uppy2.on("upload-success", (status, event) => {
+    var $clone = $("#tile_template").clone().removeClass("hide").html();
+   $clone = $clone.replace("##name##", event.body.filename)
+                   .replace("##url##", event.body.file_url)
+                   .replace("##id##", event.body.file_id);
+   $("#file2-container").append($clone);
+})
+
+var uppy3 = new Uppy.Core({"autoProceed": true})
+    .use(Uppy.FileInput, { target: '#UppyInput3', pretty: true })
+    .use(Uppy.StatusBar, {
+        id: 'StatusBar3',
+        hideAfterFinish: true,
+        showProgressDetails: true,
+        target: '#UppyInput-Progress3',
+        locale: Uppy.locales.fr_FR
+    })
+    .use(Uppy.XHRUpload, {
+        endpoint: '{% url "certificat-upload" %}',
+        headers: {
+            'X-CSRFToken': "{{ csrf_token }}"
+        }
+    });
+
+uppy3.on('file-added', (file) => {
+    uppy3.setFileMeta(file.id, {
+        t: "3"
+    })
+});
+uppy3.on("upload-success", (status, event) => {
+   var $clone = $("#tile_template").clone().removeClass("hide").html();
+   $clone = $clone.replace("##name##", event.body.filename)
+                   .replace("##url##", event.body.file_url)
+                   .replace("##id##", event.body.file_id);
+   $("#file3-container").append($clone);
+})
+
+function deleteCertif(element, id) {
+    console.log("sdfsdfsdf");
+    $(element).find("i").addClass("fa-spinner fa-spin").removeClass("fa-trash");
+    $.post("{% url 'certif-delete' %}",{"id": id,  'X-CSRFToken': "{{ csrf_token }}"},function(data, status){
+        $(element).closest(".rounded").remove();
+    });
+}
+</script>
+{% endblock %}

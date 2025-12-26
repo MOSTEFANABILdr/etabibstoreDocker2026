@@ -1,0 +1,29 @@
+{% extends "base.html" %}
+{% load i18n %}
+{% load static avatar_tags %}
+{% block title %}
+{% trans 'État civile' %}
+{% endblock %}
+{% block style %}
+{% endblock %}
+{% block content %}
+<div class="container">
+    <h1 class="page-header">
+        <i class="fas fa-users"></i>
+        {% trans 'Mon équipe de soin' %}
+    </h1>
+    <div class="endless_page_template">
+            {% include page_template %}
+    </div>
+</div>
+{% endblock %}
+{% block js %}
+<script src='{% static "el-pagination/js/el-pagination.js" %}'></script>
+<script>
+$(function() {
+    //Endlesss pagination
+	$.endlessPaginate({
+	});
+});
+</script>
+{% endblock %}

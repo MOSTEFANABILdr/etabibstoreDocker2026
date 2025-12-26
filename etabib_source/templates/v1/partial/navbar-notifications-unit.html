@@ -1,0 +1,16 @@
+{% load notif_tags %}
+{% for notification in notifications %}
+<li>
+    {% notificationContent notification as obj %}
+    <a href="{{notification|renderNotificationOnClickUrl}}">
+        <div class="notification-icon">
+            {{notification|renderNotificationIcon|safe}}
+        </div>
+        <div class="notification-content">
+            <span class="notification-date pull-right">{{notification.timestamp}}</span>
+            <h2>{{obj.0}}</h2>
+            <p>{{obj.1}}</p>
+        </div>
+    </a>
+</li>
+{% endfor %}

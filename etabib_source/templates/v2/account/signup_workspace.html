@@ -1,0 +1,62 @@
+{% extends "base2.html" %}
+{% load i18n %}
+{% load static crispy_forms_tags%}
+{% block title %} {% trans 'Veuillez saisir les informations suivantes' %} {% endblock %}
+{% block style %}
+<!-- dropzone CSS ============================================ -->
+<link rel="stylesheet" href='{% static "css/dropzone/dropzone.css" %}'>
+<style>
+#page-container
+{
+    padding-top: 0px !important;
+    background-image: url("/static/img/login-bg.png");
+    background-repeat: no-repeat;
+    min-height:100%;
+    height: auto;
+    background-size:cover;
+    background-blend-mode: multiply;
+}
+</style>
+{% endblock %}
+{% block content %}
+<!-- begin coming-soon -->
+<div class="coming-soon">
+    <div class="brand">
+        <img width="120px" class="main-logo"
+             src='{% static "img/logo/etabib_126.png" %}' alt=""/>
+        </br>
+        {% include 'partial/language-selector.html' %}
+    </div>
+
+    <!-- begin coming-soon-content -->
+    <div class="coming-soon-content">
+        <div class="input-group">
+            <div class="desc">
+                <h5 >{% trans "Pour bénéficier d'une licence gratuite Veuillez Remplir la demande suivante et uploader votre carte Pro?" %}</h5 >
+            </div>
+            {{ form.media }}
+            {% if form.helper %}
+            {% crispy form form.helper %}
+            {% else %}
+            {% crispy form %}
+            {% endif %}
+        </div>
+    </div>
+    <!-- end coming-soon-content -->
+</div>
+<!-- end coming-soon -->
+
+<!-- begin scroll to top btn -->
+<a href="javascript:;" class="btn btn-icon btn-circle btn-success btn-scroll-to-top fade show"
+   data-click="scroll-top"><i class="fa fa-angle-up"></i></a>
+<!-- end scroll to top btn -->
+{% endblock %}
+
+{% block js %}
+<script src='{% static "js/dropzone/dropzone.js" %}'></script>
+<script src='{% static "js/dropzonee/jquery.cookie.js" %}'></script>
+<script>
+Dropzone.autoDiscover = false;
+
+</script>
+{% endblock %}

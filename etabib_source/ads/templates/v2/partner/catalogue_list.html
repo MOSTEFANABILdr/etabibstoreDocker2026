@@ -1,0 +1,49 @@
+{% extends "base.html" %}
+{% load i18n %}
+{% load static %}
+{% load role_tags %}
+
+{% block title %} {% trans 'Mes catalogues' %} {% endblock %}
+
+{% block style %}
+{% endblock %}
+
+{% block content %}
+<div class="container">
+    <div class="row">
+        {% include 'partial/messages-alerts.html' %}
+        <div class="col-lg-12 col-md-12 col-sm-12 col-xs-12">
+            {% if user|is_partner %}
+            <a title="{% trans 'Ajouter un catalogue' %}"
+               href="{% url 'partner-create-catalogue' %}"
+               class="btn btn-etabib fm-create floatright"
+               data-fm-head="{% trans 'Ajouter un catalogue' %}"
+               data-fm-callback="reload">
+                <i class="fa fa-edit" aria-hidden="true"></i>
+                {% trans 'Ajouter un catalogue' %}
+            </a>
+            <h3>{% trans 'Mes catalogues' %}</h3>
+            {% else %}
+            <h3>{% trans 'Liste des catalogues' %}</h3>
+            {% endif %}
+            <div class="endless_page_template ">
+                {% include page_template %}
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}
+
+{% block js %}
+<script src='{% static "el-pagination/js/el-pagination.js" %}'></script>
+<script>
+  $(document).ready(function () {
+  //Endlesss pagination
+    $.endlessPaginate();
+});
+
+
+
+
+</script>
+{% endblock %}

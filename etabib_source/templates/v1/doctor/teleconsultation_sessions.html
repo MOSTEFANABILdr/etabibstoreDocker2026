@@ -1,0 +1,22 @@
+{% load static i18n utils_tags %}
+{% for session in demand.sessions.all %}
+    <h1>{% trans 'Session:' %} {{forloop.counter}}</h1>
+    <p>
+        <strong>{% trans 'Date de création:' %}</strong>
+        {{session.date_creation|date:'Y-m-d H:i'}}
+    </p>
+    {% if session.statistiques_conférenciers.all %}
+    <table class="table table-bordered">
+        <tr>
+            <th>{% trans 'Participant' %}</th>
+            <th>{% trans 'total dominant speaker time' %}</th>
+        </tr>
+        {% for st in session.statistiques_conférenciers.all %}
+        <tr>
+            <td>{{st.user.get_full_name}}</td>
+            <td>{{st.total_dominant_speaker_time|duration}}</td>
+        </tr>
+        {% endfor %}
+    </table>
+    {% endif %}
+{% endfor %}

@@ -1,0 +1,37 @@
+{% extends "base.html" %}
+{% load i18n %}
+{% load static crispy_forms_tags%}
+
+{% block title %} {% trans 'Veuillez saisir les informations suivantes' %} {% endblock %}
+
+{% block style %}
+<!-- dropzone CSS ============================================ -->
+<link rel="stylesheet" href='{% static "css/dropzone/dropzone.css" %}'>
+{% endblock %}
+{% block content %}
+<div class="container">
+    <div class="row">
+        {% include 'partial/messages-alerts.html' %}
+        <div class="col-md-12 offset-md-2 ">
+            <h1 class="page-header">
+				<i class="fas fa-info-circle"></i>
+				{% trans 'Veuillez saisir les informations suivantes' %}:
+			</h1>
+            {{ form.media }}
+            {% if form.helper %}
+            {% crispy form form.helper %}
+            {% else %}
+            {% crispy form %}
+            {% endif %}
+        </div>
+    </div>
+</div>
+{% endblock %}
+
+{% block js %}
+<script src='{% static "js/dropzone/dropzone.js" %}'></script>
+<script src='{% static "js/dropzonee/jquery.cookie.js" %}'></script>
+<script>
+    Dropzone.autoDiscover = false;
+</script>
+{% endblock %}

@@ -1,0 +1,37 @@
+{% load i18n utils_tags %}
+{% random_int 1 10000 as randint %}
+<style>
+</style>
+<div id="modal-ads" class="modal" tabindex="-1" role="dialog">
+  <div class="modal-dialog modal-lg" role="document">
+    <div class="modal-content">
+      <div class="modal-header">
+        <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+          <span aria-hidden="true">&times;</span>
+        </button>
+      </div>
+      <div class="modal-body">
+        <div id="banner_{{randint}}">
+            <div class="row">
+                <div class="col-lg-12">
+                    <div class="big-annonce">
+                        <a href="{{annonce.annonce_url}}" target="_blank">
+                            <img class="img-responsive" src="{{annonce.image_url}}">
+                            <span class="bdge">{% trans 'annonce' %}</span>
+                        </a>
+                    </div>
+                </div>
+            </div>
+            <script>
+                 $(function () {
+                     $.get( "/api/annonce/impression/" + "{{annonce.campagne_id}}" + "/" + "{{annonce.annonce_id}}" + "/" + {{request.user.id}} + "/" + "1", function( data ) {});
+                 });
+            </script>
+        </div>
+      </div>
+      <div class="modal-footer">
+        <button type="button" class="btn btn-secondary" data-dismiss="modal">{% trans 'Close' %}</button>
+      </div>
+    </div>
+  </div>
+</div>

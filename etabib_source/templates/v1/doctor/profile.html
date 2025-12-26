@@ -1,0 +1,776 @@
+{% extends 'base.html' %}
+{% load i18n %}
+{% load static %}
+{% load avatar_tags %}
+{% load crispy_forms_tags %}
+{% block title %} {% trans 'My profile' %} {% endblock %}
+{% block style %}
+<!-- Google Fonts
+                    ============================================ -->
+<link
+        href="https://fonts.googleapis.com/css?family=Roboto:100,300,400,700,900"
+        rel="stylesheet">
+<!-- Bootstrap CSS
+                    ============================================ -->
+<link rel="stylesheet" href='{% static "css/bootstrap.min.css" %}'>
+<!-- Bootstrap CSS
+                    ============================================ -->
+<link rel="stylesheet" href='{% static "css/font-awesome.min.css" %}'>
+<!-- owl.carousel CSS
+                    ============================================ -->
+<link rel="stylesheet" href='{% static "css/owl.carousel.css" %}'>
+<link rel="stylesheet" href='{% static "css/owl.theme.css" %}'>
+<link rel="stylesheet" href='{% static "css/owl.transitions.css" %}'>
+<!-- animate CSS
+                    ============================================ -->
+<link rel="stylesheet" href='{% static "css/animate.css" %}'>
+<!-- normalize CSS
+                    ============================================ -->
+<link rel="stylesheet" href='{% static "css/normalize.css" %}'>
+<!-- meanmenu icon CSS
+                    ============================================ -->
+<link rel="stylesheet" href='{% static "css/meanmenu.min.css" %}'>
+<!-- main CSS
+                    ============================================ -->
+<link rel="stylesheet" href='{% static "css/main.css" %}'>
+<!-- educate icon CSS
+                    ============================================ -->
+<link rel="stylesheet" href='{% static "css/educate-custon-icon.css" %}'>
+<!-- morrisjs CSS
+                    ============================================ -->
+<link rel="stylesheet" href='{% static "css/morrisjs/morris.css" %}'>
+<!-- mCustomScrollbar CSS
+                    ============================================ -->
+<link rel="stylesheet"
+      href='{% static "css/scrollbar/jquery.mCustomScrollbar.min.css" %}'>
+<!-- metisMenu CSS
+                    ============================================ -->
+<link rel="stylesheet"
+      href='{% static "css/metisMenu/metisMenu.min.css" %}'>
+<link rel="stylesheet"
+      href='{% static "css/metisMenu/metisMenu-vertical.css" %}'>
+<!-- cropper CSS ============================================ -->
+<link rel="stylesheet" href='https://cdnjs.cloudflare.com/ajax/libs/cropperjs/1.5.6/cropper.min.css'>
+<!-- modernizr JS ============================================ -->
+<script src='{% static "js/vendor/modernizr-2.8.3.min.js" %}'></script>
+<!-- filepond css ============================================ -->
+<link href="https://unpkg.com/filepond/dist/filepond.css" rel="stylesheet">
+<link href="https://cdn.jsdelivr.net/npm/filepond-plugin-get-file@1.0.3/dist/filepond-plugin-get-file.min.css"
+      rel="stylesheet">
+<style>
+.wizard > .content{
+    min-height: 30em !important;
+    background: #f5f5f5 !important
+}
+.modal-dialog {
+    width: none !important;
+}
+@media (min-width: 768px){
+    .modal-dialog {
+        width: 900px !important;
+    }
+}
+.wizard > .steps {
+    display: none !important;
+}
+#modal_phone img {
+    opacity: 0.8;
+    width:100%;
+}
+#map_gps {
+    width:auto !important;
+}
+.profile-label input[type="file"] {
+    display: none;
+}
+.custom-file-upload {
+    border: 1px solid #ccc;
+    display: inline-block;
+    padding: 6px 12px;
+    cursor: pointer;
+}
+/* USER PROFILE */
+#user-profile h2 {
+    padding-right: 15px;
+}
+#user-profile .profile-status {
+	font-size: 0.75em;
+	padding-left: 12px;
+	margin-top: -10px;
+	padding-bottom: 10px;
+	color: #8dc859;
+}
+#user-profile .profile-status.offline {
+	color: #fe635f;
+}
+#user-profile .profile-img {
+	border: 1px solid #e1e1e1;
+	padding: 4px;
+	margin-top: 10px;
+	margin-bottom: 10px;
+}
+#user-profile .profile-label {
+	text-align: center;
+	padding: 5px 0;
+}
+#user-profile .profile-label .label {
+	padding: 5px 15px;
+	font-size: 1em;
+}
+#user-profile .profile-stars {
+	color: #FABA03;
+	padding: 7px 0;
+	text-align: center;
+}
+#user-profile .profile-stars > i {
+	margin-left: -2px;
+}
+#user-profile .profile-since {
+	text-align: center;
+	margin-top: -5px;
+}
+#user-profile .profile-details {
+	padding: 15px 0;
+	border-top: 1px solid #e1e1e1;
+	border-bottom: 1px solid #e1e1e1;
+	margin: 15px 0;
+}
+#user-profile .profile-details ul {
+	padding: 0;
+	margin-top: 0;
+	margin-bottom: 0;
+	margin-left: 40px;
+}
+#user-profile .profile-details ul > li {
+	margin: 3px 0;
+	line-height: 1.5;
+}
+#user-profile .profile-details ul > li > i {
+	padding-top: 2px;
+}
+#user-profile .profile-details ul > li > span {
+	color: #34d1be;
+}
+#user-profile .profile-header {
+	position: relative;
+}
+#user-profile .profile-header > h3 {
+	margin-top: 10px
+}
+#user-profile .profile-header .edit-profile {
+	margin-top: -6px;
+	position: absolute;
+	right: 0;
+	top: 0;
+}
+#user-profile .profile-tabs {
+	margin-top: 30px;
+}
+#user-profile .profile-user-info {
+	padding-bottom: 20px;
+}
+#user-profile .profile-user-info .profile-user-details {
+	position: relative;
+	padding: 4px 0;
+}
+#user-profile .profile-user-info .profile-user-details .profile-user-details-label {
+	width: 110px;
+	float: left;
+	bottom: 0;
+	font-weight: bold;
+	left: 0;
+	position: absolute;
+	text-align: right;
+	top: 0;
+	width: 110px;
+	padding-top: 4px;
+}
+#user-profile .profile-user-info .profile-user-details .profile-user-details-value {
+	margin-left: 120px;
+}
+#user-profile .profile-social li {
+	padding: 4px 0;
+}
+#user-profile .profile-social li > i {
+	padding-top: 6px;
+}
+@media only screen and (max-width: 767px) {
+	#user-profile .profile-user-info .profile-user-details .profile-user-details-label {
+		float: none;
+		position: relative;
+		text-align: left;
+	}
+	#user-profile .profile-user-info .profile-user-details .profile-user-details-value {
+		margin-left: 0;
+	}
+	#user-profile .profile-social {
+		margin-top: 20px;
+	}
+}
+@media only screen and (max-width: 420px) {
+	#user-profile .profile-header .edit-profile {
+		display: block;
+		position: relative;
+		margin-bottom: 15px;
+	}
+	#user-profile .profile-message-btn .btn {
+		display: block;
+	}
+}
+
+
+.main-box {
+    background: #FFFFFF;
+    -webkit-box-shadow: 1px 1px 2px 0 #CCCCCC;
+    -moz-box-shadow: 1px 1px 2px 0 #CCCCCC;
+    -o-box-shadow: 1px 1px 2px 0 #CCCCCC;
+    -ms-box-shadow: 1px 1px 2px 0 #CCCCCC;
+    box-shadow: 1px 1px 2px 0 #CCCCCC;
+    margin-bottom: 16px;
+    padding: 20px;
+}
+.main-box h2 {
+    margin: 0 0 15px -20px;
+    padding: 5px 0 5px 20px;
+    border-left: 10px solid #c2c2c2; /*7e8c8d*/
+}
+fieldset {
+    border: solid 1px #DDD !important;
+    padding: 0 10px 10px 10px;
+    border-bottom: none;
+}
+
+legend {
+    width: auto !important;
+    border: none;
+    font-size: 14px;
+}
+
+
+</style>
+{% endblock %}
+{% block content %}
+<div class="single-pro-review-area mt-t-30 mg-b-15">
+    <div class="container-fluid">
+        <div class="row">
+            <div class="col-lg-12">
+                {% include 'partial/messages-alerts.html' %}
+            </div>
+            <div class="row" id="user-profile">
+                <div class="col-lg-12">
+                    <div class="col-lg-3 col-md-4  col-sm-12 col-xs-12">
+                        <div class="main-box clearfix">
+                            <h2>{{medecin.full_name}} </h2>
+                            {% comment %}
+                            <div class="profile-status">
+                                <i class="fa fa-check-circle"></i> {% trans 'En ligne' %}
+                            </div>
+                            {% endcomment %}
+                            {% avatar user class="profile-img img-responsive center-block" %}
+                            <div class="profile-label">
+                                <label for="id_image" class="label label-danger custom-file-upload">
+                                    {% trans "Changer" %} <i class="fa fa-cloud-upload"></i>
+                                </label>
+                                {% crispy avatarForm %}
+                            </div>
+                        </div>
+                    </div>
+                    <div class="col-lg-9 col-md-8  col-sm-12 col-xs-12">
+                        <div class="main-box clearfix">
+                            <div class="profile-header">
+                                <a class="btn btn-etabib floatright fm-create"
+                                   data-fm-head=""
+                                   data-fm-callback="reload"
+                                   href="{% url 'change-password' %}">
+                                    {% trans 'Changer le mot de passe' %}
+                                </a>
+                            </div>
+                            <br>
+                            <div class="row">
+                                <div class="col-sm-8">
+                                    <div class="col-sm-6">
+                                        <strong>{% trans 'Nom' %}</strong>
+                                    </div>
+                                    <div class="col-sm-6">
+                                        {{medecin.full_name}}
+                                    </div>
+                                    <div class="col-sm-6">
+                                        <strong>{% trans 'Adresse' %}</strong>
+                                    </div>
+                                    <div class="col-sm-6">
+                                        {{medecin.contact.addresse}}
+                                        {{medecin.contact.pays}}
+                                        {{medecin.contact.ville.region.name}}
+                                        {{medecin.contact.ville.name}}
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="tabs-wrapper profile-tabs">
+                                <ul class="nav nav-tabs">
+                                    <li class="active">
+                                        <a href="#tab-profile" data-toggle="tab">
+                                            <i class="fa fa-user"></i> {% trans 'Mes informations' %}
+                                        </a>
+                                    </li>
+                                    <li>
+                                        <a href="#tab-license" data-toggle="tab">
+                                            <i class="fa fa-key"></i> {% trans 'Mes licences' %}
+                                        </a>
+                                    </li>
+                                </ul>
+                                <div class="tab-content">
+                                    <div class="tab-pane fade in active" id="tab-profile">
+                                        <div class="col-lg-12 col-md-12 col-sm-12 col-xs-12">
+                                            <br>
+                                            {% crispy form form.helper %}
+                                        </div>
+                                    </div>
+                                    <div class="tab-pane fade" id="tab-license">
+                                        <div class="row">
+                                            <div class="col-lg-12 col-md-12 col-sm-12 col-xs-12">
+                                                <div class="static-table-list">
+                                                    <table class="table">
+                                                        <thead>
+                                                        <tr>
+                                                            <th></th>
+                                                            <th>{% trans 'Licence' %}</th>
+                                                            <th>{% trans 'Consommée' %}</th>
+                                                            <th>{% trans "Date d'ajout" %}</th>
+                                                            <th>{% trans 'Commande' %}</th>
+                                                        </tr>
+                                                        </thead>
+                                                        <tbody>
+                                                        {% for tuple in licenses %}
+                                                        <tr>
+                                                            <td>{{forloop.counter}}</td>
+                                                            <td>
+                                                                {% if tuple.0 %}
+                                                                {{tuple.0}}
+                                                                {% else %}
+                                                                {% trans "l'offre n'inclut pas une licence eTabib Workspace" %}
+                                                                {% endif %}
+                                                            </td>
+                                                            <td>
+                                                                {% if tuple.0 %}
+                                                                {{ tuple.0.poste|yesno:"Oui,Non" }}
+                                                                {% endif %}
+                                                            </td>
+                                                            <td>{{tuple.1.date_creation|date:'Y-m-d H:i'}}</td>
+                                                            <td>
+                                                                <a href="{% url 'detail-order' tuple.1.id %}">
+                                                                    {{tuple.1.id}}
+                                                                </a>
+                                                            </td>
+                                                        </tr>
+                                                        {% endfor %}
+                                                        </tbody>
+                                                    </table>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+<!-- MODAL TO CROP THE IMAGE -->
+<div class="modal fade" id="modalCrop">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <div class="modal-header">
+                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                    <span aria-hidden="true">&times;</span>
+                </button>
+                <h4 class="modal-title">Recadrer la photo.</h4>
+            </div>
+            <div class="modal-body" style="padding:0px;">
+                <img src="" id="image" style="max-width: 100%;">
+            </div>
+            <div class="modal-footer">
+                <div class="btn-group pull-left" role="group">
+                    <button type="button" class="btn btn-default js-zoom-in">
+                        <span class="glyphicon glyphicon-zoom-in"></span>
+                    </button>
+                    <button type="button" class="btn btn-default js-zoom-out">
+                        <span class="glyphicon glyphicon-zoom-out"></span>
+                    </button>
+                </div>
+                <button type="button" class="btn btn-default" data-dismiss="modal">{% trans 'Annuler' %}</button>
+                <button type="button" class="btn btn-etabib js-crop-and-upload">
+                    <i id="spinner" class='fa fa-2x fa-spinner fa-spin hide'></i>
+                    {% trans 'Recadrer et télécharger' %}
+                </button>
+            </div>
+        </div>
+    </div>
+</div>
+
+{% if form_p1 %}
+<!-- MODAL TO ENTER THE PHONE -->
+<div class="modal fade" id="modal_phone" role="dialog" data-backdrop="static" data-keyboard="false">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <div class="modal-body">
+                <div class="row">
+                    <div class="col-lg-5">
+                        <img style="" class="center" src="{% static  'img/Humaaans.png' %}">
+                    </div>
+                    <div id="div-steps" class="col-lg-7 center-block">
+                        {% include 'profile_1st_login.html' with form_p1=form_p1 form_p2=form_p2 form_p3=form_p3%}
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+{% endif %}
+
+{% endblock %}
+{% block js %}
+{{ form.media }}
+<!-- bootstrap JS
+                    ============================================ -->
+<script src='{% static "js/bootstrap.min.js" %}'></script>
+<script src='{% static "js/jquery.steps.min.js" %}'></script>
+<!-- wow JS
+                    ============================================ -->
+<script src='{% static "js/wow.min.js" %}'></script>
+<!-- price-slider JS
+                    ============================================ -->
+<script src='{% static "js/jquery-price-slider.js" %}'></script>
+<!-- meanmenu JS
+                    ============================================ -->
+<script src='{% static "js/jquery.meanmenu.js" %}'></script>
+<!-- owl.carousel JS
+                    ============================================ -->
+<script src='{% static "js/owl.carousel.min.js" %}'></script>
+<!-- sticky JS  ============================================ -->
+<script src='{% static "js/jquery.sticky.js" %}'></script>
+<!-- scrollUp JS ============================================ -->
+<script src='{% static "js/jquery.scrollUp.min.js" %}'></script>
+<!-- Cropper JS ============================================ -->
+<script src='https://cdnjs.cloudflare.com/ajax/libs/cropperjs/1.5.6/cropper.min.js'></script>
+<script src='{% static "js/cropper/jquery-cropper.min.js" %}'></script>
+<!-- mCustomScrollbar JS ============================================ -->
+<script src='{% static "js/scrollbar/jquery.mCustomScrollbar.concat.min.js" %}'></script>
+<script src='{% static "js/scrollbar/mCustomScrollbar-active.js" %}'></script>
+<!-- metisMenu JS ============================================ -->
+<script src='{% static "js/metisMenu/metisMenu.min.js" %}'></script>
+<script src='{% static "js/metisMenu/metisMenu-active.js" %}'></script>
+<!-- plugins JS
+                    ============================================ -->
+<script src='{% static "js/plugins.js" %}'></script>
+<!-- main JS  ============================================ -->
+<script src='{% static "js/main.js" %}'></script>
+<!-- filepond JS ============================================ -->
+<script src="https://unpkg.com/filepond/dist/filepond.js"></script>
+<!-- include FilePond plugins -->
+<script src="https://unpkg.com/filepond-plugin-file-validate-size/dist/filepond-plugin-file-validate-size.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/filepond-plugin-get-file@1.0.3/dist/filepond-plugin-get-file.min.js"></script>
+<!-- include FilePond jQuery adapter -->
+<script src="https://unpkg.com/jquery-filepond/filepond.jquery.js"></script>
+<!-- tawk chat JS
+                    ============================================ -->
+{% include 'partial/tawk-script.html' %}
+<script>
+    $(function () {
+        {% if form_p1 %}
+            var go_next = false;
+            $("#div-steps").steps({
+                headerTag: "h3",
+                bodyTag: "section",
+                transitionEffect: "fade",
+                autoFocus: true,
+                titleTemplate: '#index#',
+                enableKeyNavigation: false,
+                enablePagination: true,
+                  /* Labels */
+                labels: {
+                    cancel: "Fermer",
+                    current: "Étape actuelle:",
+                    pagination: "Pagination",
+                    finish: "تأكيد ✔",
+                    next: "التالي >>",
+                    previous: "<< الرجوع",
+                    loading: "تحميل ..."
+                },
+                /* Events */
+                onStepChanging: function (event, currentIndex, newIndex) {
+                    var forme_id = null;
+                    if (currentIndex > newIndex){
+                        return true;
+                    }
+                    if (go_next){
+                        go_next = false;
+                        return true;
+                    }
+                    if(currentIndex === 0){
+                        return true;
+                    }else{
+                        forme_id = "#form_p"+ currentIndex;
+                    }
+                    if (forme_id){
+                        $.post("{% url 'doctor-profile-update' %}", $(forme_id).serialize())
+                        .done(function(response){
+                            if (response['success']){
+                                go_next = true;
+                                $("#div-steps").steps("next");
+                            }else{
+                                $(forme_id).replaceWith(response['form_html']);
+                            }
+                        })
+                        .fail(function(data){
+                            console.log(data);
+                        });
+                    }
+                    return go_next;
+                },
+                onFinishing: function (event, currentIndex) {
+                    if (go_next){
+                        go_next = false;
+                        return true;
+                    }
+                    $.post("{% url 'doctor-profile-update' %}", $("#form_p3").serialize())
+                    .done(function(response){
+                        if (response['success']){
+                            go_next = true;
+                            $("#modal_phone").modal("hide");
+                            location.reload();
+                        }else{
+                            $("#form_p3").replaceWith(response['form_html']);
+                        }
+                    })
+                    .fail(function(data){
+                        console.log(data);
+                    });
+                    return go_next;
+                }
+            });
+            $("#modal_phone").modal("show");
+        {% endif %}
+      /* SCRIPT TO OPEN THE MODAL WITH THE PREVIEW */
+      $("#id_image").change(function () {
+          if (this.files && this.files[0]) {
+            var reader = new FileReader();
+            reader.onload = function (e) {
+              $("#image").attr("src", e.target.result);
+              $("#modalCrop").modal("show");
+            }
+            reader.readAsDataURL(this.files[0]);
+          }
+        });
+
+      /* SCRIPTS TO HANDLE THE CROPPER BOX */
+        var $image = $("#image");
+        var cropBoxData;
+        var canvasData;
+        $("#modalCrop").on("shown.bs.modal", function () {
+          $image.cropper({
+            viewMode: 1,
+            aspectRatio: 1/1,
+            minCropBoxWidth: 200,
+            minCropBoxHeight: 200,
+            ready: function () {
+              $image.cropper("setCanvasData", canvasData);
+              $image.cropper("setCropBoxData", cropBoxData);
+            }
+          });
+        }).on("hidden.bs.modal", function () {
+          cropBoxData = $image.cropper("getCropBoxData");
+          canvasData = $image.cropper("getCanvasData");
+          $image.cropper("destroy");
+        });
+        // Enable zoom in button
+        $(".js-zoom-in").click(function () {
+          $image.cropper("zoom", 0.1);
+        });
+
+        // Enable zoom out button
+        $(".js-zoom-out").click(function () {
+          $image.cropper("zoom", -0.1);
+        });
+
+        /* SCRIPT TO COLLECT THE DATA AND POST TO THE SERVER */
+        $(".js-crop-and-upload").click(function () {
+          console.log("click");
+          var cropData = $image.cropper("getData");
+          $("#id_x").val(cropData["x"]);
+          $("#id_y").val(cropData["y"]);
+          $("#id_height").val(cropData["height"]);
+          $("#id_width").val(cropData["width"]);
+           $("#avatar-form").submit();
+        });
+        $('#avatar-form').submit(function(evt) {
+            evt.preventDefault();
+            var formData = new FormData(this);
+            $("#spinner").removeClass('hide');
+            $.ajax({
+            type: 'POST',
+            url: "{% url 'avatar-upload' %}",
+            data:formData,
+            cache:false,
+            contentType: false,
+            processData: false,
+            success: function(data) {
+                location.reload();
+            },
+            error: function(data) {
+                $("#spinner").addClass('hide');
+                console.log("error");
+                console.log(data);
+            }
+            });
+        });
+        //file input plugin
+        FilePond.registerPlugin(
+            FilePondPluginFileValidateSize,
+            FilePondPluginGetFile
+        );
+
+        var filSpecOps = {
+            'labelIdle': '<span class="filepond--label-action"> <i class="fa fa-4x fa-cloud-upload"></i> </span>',
+            files:{{files_spec|safe}},
+            server: {
+                process:(fieldName, file, metadata, load, error, progress, abort, transfer, options) => {
+                    const formData = new FormData();
+                    formData.append("file", file, file.name);
+
+                    const request = new XMLHttpRequest();
+                    request.responseType = 'json';
+                    request.open('POST', '{% url "certificat-upload" %}');
+                    request.setRequestHeader('X-CSRFToken', '{{ csrf_token }}');
+
+
+                    request.upload.onprogress = (e) => {
+                        progress(e.lengthComputable, e.loaded, e.total);
+                    };
+
+                    request.onload = function() {
+                        if (request.status == 200) {
+                            // the load method accepts either a string (id) or an object
+                            load(request.response['file_id']);
+                            $("#id_specialite_certificat_file_id").val(request.response['file_id']);
+                        }
+                        else {
+                            // Can call the error method if something is wrong, should exit after
+                            error('oh no');
+                        }
+                    };
+
+                    request.send(formData);
+
+                    return {
+                        abort: () => {
+                            request.abort();
+                            abort();
+                        }
+                    };
+                },
+            }
+        };
+        var filagrmOps = {
+            'labelIdle': '<span class="filepond--label-action"> <i class="fa fa-4x fa-cloud-upload"></i> </span>',
+            files:{{files_agrm|safe}},
+            server: {
+                process:(fieldName, file, metadata, load, error, progress, abort, transfer, options) => {
+                    const formData = new FormData();
+                    formData.append("file", file, file.name);
+
+                    const request = new XMLHttpRequest();
+                    request.responseType = 'json';
+                    request.open('POST', '{% url "certificat-upload" %}');
+                    request.setRequestHeader('X-CSRFToken', '{{ csrf_token }}');
+
+
+                    request.upload.onprogress = (e) => {
+                        progress(e.lengthComputable, e.loaded, e.total);
+                    };
+
+                    request.onload = function() {
+                        if (request.status == 200) {
+                            // the load method accepts either a string (id) or an object
+                            load(request.response['file_id']);
+                            $("#id_agrement_id").val(request.response['file_id']);
+                        }
+                        else {
+                            // Can call the error method if something is wrong, should exit after
+                            error('oh no');
+                        }
+                    };
+
+                    request.send(formData);
+
+                    return {
+                        abort: () => {
+                            request.abort();
+                            abort();
+                        }
+                    };
+                },
+            }
+        };
+        var qualFiles = {{file_qual_arr}};
+        var filOps = {
+            allowDownloadByUrl: true,
+            'labelIdle': '<span class="filepond--label-action"> <i class="fa fa-4x fa-cloud-upload"></i> </span>',
+            files: {{files_qual|safe}},
+            server: {
+                process:(fieldName, file, metadata, load, error, progress, abort, transfer, options) => {
+                    const formData = new FormData();
+                    formData.append("file", file, file.name);
+
+                    const request = new XMLHttpRequest();
+                    request.responseType = 'json';
+                    request.open('POST', '{% url "certificat-upload" %}');
+                    request.setRequestHeader('X-CSRFToken', '{{ csrf_token }}');
+
+                    request.upload.onprogress = (e) => {
+                        progress(e.lengthComputable, e.loaded, e.total);
+                    };
+
+                    request.onload = function() {
+                        if (request.status == 200) {
+                            // the load method accepts either a string (id) or an object
+                            load(request.response['file_id']);
+                            qualFiles.push(request.response['file_id']);
+                            $("#id_qualifications_certificat_file_id").val(qualFiles.join(","));
+                        }
+                        else {
+                            // Can call the error method if something is wrong, should exit after
+                            error('oh no');
+                        }
+                    };
+
+                    request.send(formData);
+
+                    return {
+                        abort: () => {
+                            request.abort();
+                            abort();
+                        }
+                    };
+                },
+            }
+        };
+        $('.specfile').filepond(filSpecOps);
+        $('.qualfile').filepond(filOps);
+        $('.agrmfile').filepond(filagrmOps);
+
+        $('.specfile').on('FilePond:removefile', function(e) {
+            $("#id_specialite_certificat_file_id").val("");
+        });
+        $('.agrmfile').on('FilePond:removefile', function(e) {
+            $("#id_agrement_id").val("");
+        });
+        $('.qualfile').on('FilePond:removefile', function(e) {
+            qualFiles = qualFiles.filter(value => value !== e.detail.file.serverId);
+            $("#id_qualifications_certificat_file_id").val(qualFiles.join(","));
+        });
+    });
+</script>
+{% endblock %}

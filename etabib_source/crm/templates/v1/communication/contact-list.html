@@ -1,0 +1,308 @@
+{% extends "base.html" %}
+{% load i18n %}
+{% load static %}
+{% load role_tags %}
+{% block title %} {% trans 'Contact list' %} {% endblock %}
+{% block style %}
+<!-- Google Fonts
+                    ============================================ -->
+<link
+        href="https://fonts.googleapis.com/css?family=Roboto:100,300,400,700,900"
+        rel="stylesheet">
+<!-- Bootstrap CSS
+                    ============================================ -->
+<link rel="stylesheet" href='{% static "css/bootstrap.min.css" %}'>
+<!-- Bootstrap CSS
+                    ============================================ -->
+<link rel="stylesheet" href='{% static "css/font-awesome.min.css" %}'>
+<!-- owl.carousel CSS
+                    ============================================ -->
+<link rel="stylesheet" href='{% static "css/owl.carousel.css" %}'>
+<link rel="stylesheet" href='{% static "css/owl.theme.css" %}'>
+<link rel="stylesheet" href='{% static "css/owl.transitions.css" %}'>
+<!-- animate CSS
+                    ============================================ -->
+<link rel="stylesheet" href='{% static "css/animate.css" %}'>
+<!-- normalize CSS
+                    ============================================ -->
+<link rel="stylesheet" href='{% static "css/normalize.css" %}'>
+<!-- meanmenu icon CSS
+                    ============================================ -->
+<link rel="stylesheet" href='{% static "css/meanmenu.min.css" %}'>
+<!-- main CSS
+                    ============================================ -->
+<link rel="stylesheet" href='{% static "css/main.css" %}'>
+<!-- educate icon CSS
+                    ============================================ -->
+<link rel="stylesheet" href='{% static "css/educate-custon-icon.css" %}'>
+<!-- mCustomScrollbar CSS
+                    ============================================ -->
+<link rel="stylesheet"
+      href='{% static "css/scrollbar/jquery.mCustomScrollbar.min.css" %}'>
+<!-- metisMenu CSS
+                    ============================================ -->
+<link rel="stylesheet"
+      href='{% static "css/metisMenu/metisMenu.min.css" %}'>
+<link rel="stylesheet"
+      href='{% static "css/metisMenu/metisMenu-vertical.css" %}'>
+<!-- modernizr JS ============================================ -->
+<script src='{% static "js/vendor/modernizr-2.8.3.min.js" %}'></script>
+<!-- jquery.dataTables CSS ============================================ -->
+<link rel="stylesheet" href='{% static "js/data-table/jquery.dataTables.min.css" %}'>
+<link rel="stylesheet" type="text/css" href="https://cdn.datatables.net/responsive/2.2.3/css/responsive.bootstrap.min.css">
+<link rel="stylesheet" type="text/css" href="https://cdn.datatables.net/select/1.3.3/css/select.dataTables.min.css">
+
+<style>
+.clickable{
+    cursor: pointer;
+}
+.panel-heading span {
+	margin-top: -20px;
+	font-size: 15px;
+}
+div.dataTables_wrapper div.dataTables_processing {
+   top: 0%;
+   color: #3ed5ff;
+}
+
+</style>
+
+{% endblock %}
+{% block content %}
+<div class="single-pro-review-area mt-t-30 mg-b-15">
+    <div class="container-fluid">
+        <div class="row">
+            <div class="col-lg-12 col-md-12 col-sm-12 col-xs-12">
+                <div class="product-payment-inner-st">
+                    <h3>{% trans 'Contact List' %}</h3>
+                    {% if perms.core.crm_can_view_contact_list %}
+                    <a class="btn btn-etabib floatright" href="{% url 'operator-add-contact' %}">
+                        {% trans 'Add contact' %}
+                    </a>
+                    {% endif %}
+                    <br>
+                    {% if messages %}
+                    <div class="row">
+                        <ul>
+                            {% for message in messages %}
+                            <div class="alert alert-{{ message.tags }}">
+                                <button type="button" class="close" data-dismiss="alert" aria-label="Close">
+                                    <span aria-hidden="true">&times;</span>
+                                </button>
+                                <p>{{message}}</p>
+                            </div>
+                            {% endfor %}
+                        </ul>
+                    </div>
+                    {% endif %}
+                    <div class="row mg-t-30">
+                        <div class="col-md-12">
+                            <div class="panel panel-default">
+                                <div class="panel-heading">
+                                    <h3 class="panel-title">
+                                        {% trans 'Filtre avancé' %}
+                                    </h3>
+                                    <span class="pull-right clickable panel-collapsed">
+                                        <i class="glyphicon glyphicon-chevron-up"></i>
+                                    </span>
+                                </div>
+                                <div id="demo" class="panel-body collapse">
+                                    <div class="col-md-6">
+                                        <h1>{% trans 'Filtrer par état de contact' %}</h1>
+                                        <div class="list-group list-group-flush">
+                                            <a href="#" data-filter="default_filter"
+                                               class="filter-stats list-group-item active">
+                                                {% trans 'Filtre par défaut' %}
+                                                <span class="float-right badge badge-light round">
+                                                    {{default_filter_counts}}
+                                                </span>
+                                            </a>
+                                            <a href="#" data-filter="filter_verified_doctors"
+                                               class="filter-stats list-group-item">
+                                                {% trans 'Médecins vérifiés' %}
+                                                <span class="float-right badge badge-light round">
+                                                    {{doctors_counts}}
+                                                </span>
+                                            </a>
+                                            <a href="#" data-filter="filter_doctors_without_offer"
+                                               class="filter-stats list-group-item">
+                                                {% trans 'Médecins vérifiés(Sans offre)' %}
+                                                <span class="float-right badge badge-light round">
+                                                    {{doctors_witout_offer_count}}
+                                                </span>
+                                            </a>
+                                            <a href="#" data-filter="filter_doctors_no_cards"
+                                               class="filter-stats list-group-item">
+                                                {% trans 'Médecins (inscription non terminée)' %}
+                                                <span class="float-right badge badge-light round">
+                                                    {{doctors_no_cards_counts}}
+                                                </span>
+                                            </a>
+                                            <a href="#" data-filter="filter_rejected_cards"
+                                               class="filter-stats list-group-item">
+                                                {% trans 'Médecins (Carte professionnelle rejeté)' %}
+                                                <span class="float-right badge badge-light round">
+                                                    {{doctors_cards_rejected_counts}}
+                                                </span>
+                                            </a>
+                                            <a href="#" data-filter="filter_partners"
+                                               class="filter-stats list-group-item">
+                                                {% trans 'Partenaire' %}
+                                                <span class="float-right badge badge-light round">
+                                                    {{partners_counts}}
+                                                </span>
+                                            </a>
+                                            <a href="#" data-filter="filter_contacts"
+                                               class="filter-stats list-group-item">
+                                                {% trans 'Contacts' %}
+                                                <span class="float-right badge badge-light round">
+                                                    {{contacts_counts}}
+                                                </span>
+                                            </a>
+                                            <a href="#" data-filter="filter_archived"
+                                               class="filter-stats list-group-item">
+                                                {% trans 'Contacts archivés' %}
+                                                <span class="float-right badge badge-light round">
+                                                    {{archived_counts}}
+                                                </span>
+                                            </a>
+                                        </div>
+                                    </div>
+                                    <div class="col-md-6">
+                                        <h1>{% trans 'Filtrer par la date d\'inscription' %}</h1>
+                                        <div class="col-md-6">
+                                            <label>Min</label>
+                                            <input type="date" id="fromperiod" name="from">
+                                        </div>
+                                        <div class="col-md-6 text-right">
+                                            <label>Max</label>
+                                            <input type="date" id="toperiod" name="from">
+                                        </div>
+                                    </div>
+
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    <div id="myTabContent" class="tab-content custom-product-edit">
+                        <div class="product-tab-list tab-pane fade active in" id="description">
+                            <br>
+                            <div class="asset-inner">
+                                {{ datatable }}
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+<!-- datepicker ============================================ -->
+<script type="text/javascript"
+        src="https://cdnjs.cloudflare.com/ajax/libs/moment.js/2.9.0/moment-with-locales.min.js"></script>
+<script type="text/javascript"
+        src="https://cdnjs.cloudflare.com/ajax/libs/bootstrap-datetimepicker/4.17.47/js/bootstrap-datetimepicker.min.js"></script>
+{% endblock %}
+{% block js %}
+<!-- dataTables ============================================ -->
+<script type="text/javascript" charset="utf8" src='{% static "js/data-table/jquery.dataTables.min.js" %}'></script>
+<script type="text/javascript" charset="utf8" src="{% static 'js/data-table/datatableview.js' %}?v=1.0"></script>
+<script type="text/javascript" charset="utf8" src="https://cdn.datatables.net/responsive/2.2.3/js/dataTables.responsive.js"></script>
+<script type="text/javascript" charset="utf8" src="https://cdn.datatables.net/select/1.3.3/js/dataTables.select.min.js"></script>
+<!-- bootstrap JS ============================================ -->
+<script src='{% static "js/bootstrap.min.js" %}'></script>
+<!-- wow JS ============================================ -->
+<script src='{% static "js/wow.min.js" %}'></script>
+<!-- price-slider JS
+                    ============================================ -->
+<script src='{% static "js/jquery-price-slider.js" %}'></script>
+<!-- meanmenu JS
+                    ============================================ -->
+<script src='{% static "js/jquery.meanmenu.js" %}'></script>
+<!-- owl.carousel JS
+                    ============================================ -->
+<script src='{% static "js/owl.carousel.min.js" %}'></script>
+<!-- sticky JS ============================================ -->
+<script src='{% static "js/jquery.sticky.js" %}'></script>
+<!-- scrollUp JS ============================================ -->
+<script src='{% static "js/jquery.scrollUp.min.js" %}'></script>
+<!-- counterup JS ============================================ -->
+<script src='{% static "js/counterup/jquery.counterup.min.js" %}'></script>
+<script src='{% static "js/counterup/waypoints.min.js" %}'></script>
+<script src='{% static "js/counterup/counterup-active.js" %}'></script>
+<!-- mCustomScrollbar JS ============================================ -->
+<script src='{% static "js/scrollbar/jquery.mCustomScrollbar.concat.min.js" %}'></script>
+<script src='{% static "js/scrollbar/mCustomScrollbar-active.js" %}'></script>
+<!-- metisMenu JS  ============================================ -->
+<script src='{% static "js/metisMenu/metisMenu.min.js" %}'></script>
+<script src='{% static "js/metisMenu/metisMenu-active.js" %}'></script>
+<!-- plugins JS  ============================================ -->
+<script src='{% static "js/plugins.js" %}'></script>
+<!-- main JS ============================================ -->
+<script src='{% static "js/main.js" %}'></script>
+<!-- tawk chat JS  ============================================ -->
+{% include 'partial/tawk-script.html' %}
+<script>
+	datatableview.auto_initialize= false;
+	$(function () {
+	    $('.card-head > span').click(function(){
+            $(this).parent().parent().toggleClass('collapsed');
+            $(this).parent().parent().find('.card-body').slideToggle();
+        });
+	    var filter_status = null;
+		var common_options = {
+		    "language": {
+                {% if LANGUAGE_CODE == 'ar' %}
+                "url": "https://cdn.datatables.net/plug-ins/1.10.20/i18n/Arabic.json"
+                {% else %}
+                "url": "https://cdn.datatables.net/plug-ins/1.10.20/i18n/French.json"
+                {% endif %}
+            },
+            "processing": "Loading...",
+             "loadingRecords": "&nbsp;",
+             select: true,
+             "ajax": {
+                "data": function ( d ) {
+                    d.date_joined_from = $("#fromperiod").val();
+                    d.date_joined_to = $("#toperiod").val();
+                    d.filter_stats = filter_status;
+                }
+            }
+		};
+        var tables = datatableview.initialize('.datatable', common_options);
+        tables.forEach(table => {
+            $('#fromperiod, #toperiod').change( function() {
+                table.clear().draw();
+                 $([document.documentElement, document.body]).animate({
+                    scrollTop: $('.datatable').offset().top
+                }, 2000);
+            });
+            $('.filter-stats').click( function(e) {
+                e.preventDefault();
+                $('.filter-stats').removeClass("active");
+                $(this).addClass('active')
+                filter_status = $(this).data('filter');
+                table.clear().draw();
+                $([document.documentElement, document.body]).animate({
+                    scrollTop: $('.datatable').offset().top
+                }, 2000);
+            });
+        });
+	});
+
+    $(document).on('click', '.panel-heading span.clickable', function(e){
+        var $this = $(this);
+        if(!$this.hasClass('panel-collapsed')) {
+            $this.parents('.panel').find('.panel-body').slideUp();
+            $this.addClass('panel-collapsed');
+            $this.find('i').removeClass('glyphicon-chevron-down').addClass('glyphicon-chevron-up');
+
+        } else {
+            $this.parents('.panel').find('.panel-body').slideDown();
+            $this.removeClass('panel-collapsed');
+            $this.find('i').removeClass('glyphicon-chevron-up').addClass('glyphicon-chevron-down');
+
+        }
+    })
+</script>
+{% endblock %}

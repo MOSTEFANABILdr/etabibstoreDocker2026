@@ -1,0 +1,26 @@
+{% for medic in details %}
+     <li class="dropdown-submenu" style="cursor:copy;">
+         <a  class="dropdown-item menu_poso" data-pk="{{ medic.pk }}" data-poso="{{ medic.forme_posologie }}" tabindex="-1" >
+             {{ medic.dosage }} {{ medic.cond }}</a>
+     </li>
+{% endfor %}
+<script>
+    $('.menu_poso').one('mouseover', function(){
+        var menu_poso = $(this);
+        menu_poso.append("<i class='fa fa-spinner fa-spin' id='loading'></i>")
+        $.post("{% url 'ordonnance-menu-detail' %}",
+        {
+            'medicId': $(this).data("pk"),
+            'forme': $(this).data("poso"),
+            'csrfmiddlewaretoken': '{{ csrf_token }}',
+        }, function(html) {
+            menu_poso.parent().append($(html));
+            $('#loading').remove();
+        });
+    });
+
+    $('.menu_poso').one('click', function(){
+        addToOrdonnance(this, "", $(this).data('pk'));
+    });
+
+</script>

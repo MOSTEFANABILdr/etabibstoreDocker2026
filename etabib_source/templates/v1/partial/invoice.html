@@ -1,0 +1,296 @@
+{% load i18n %}
+{% load static %}
+<div id="invoice">
+    <div class="row">
+        <div class="col-md-12">
+            <div class="row">
+                <div class="col-xs-2">
+                    <img class="img-responsive pull-left" src="{% static 'img/logo/ihsm.png' %}"/>
+                </div>
+                <div class="col-xs-7" style="border-right: 1px solid #ccc;">
+                    <h1>IBN HAMZA</h1>
+                    <p>Services & Micro applications ,SARL</p>
+                    <p>NRC : 16/00- 1042685B 16</p>
+                    <p>NIS: 00 16 1609 00931 51</p>
+                    <p>NIF: 00 16 1610 4268525</p>
+                    <p>RIP: 007 99999 0021002424 60</p>
+                    <p>RIB: 021 00019 1130041078 (SOGEDZAL B. EL KIFFANE)</p>
+                </div>
+                <div class="col-xs-3">
+                    <div class="invoice-title pull-right">
+                        <br>
+                        <br>
+                        <br>
+                        <h2>{{invoice_title}}</h2>
+                        <h3 class="">{% trans 'N°' %}: {{invoice_number}}</h3>
+                    </div>
+                </div>
+            </div>
+            <hr>
+            <div class="row">
+                <div class="col-md-6 col-xs-6">
+                    <address>
+                        <strong>{% trans 'Facturé à' %}:</strong><br>
+                        {{contact.full_name}}<br>
+                        {{contact.pays|default:""}}<br>
+                        {{contact.ville|default:""}}<br>
+                        {{contact.adresse|default:""}}
+                    </address>
+                </div>
+                <div class="col-md-6 col-xs-6 text-right">
+                    <address>
+                        <strong>{% trans 'Date' %}:</strong><br>
+                        {{date}}<br><br>
+                        <br>
+                        {% if not hide_commercial %}
+                        <strong>{% trans 'Commercial' %}:</strong><br>
+                        {{commercial.full_name}}
+                        {% endif %}
+                    </address>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div class="row">
+        <div class="col-md-12">
+            <div class="panel panel-default">
+                <div class="panel-heading">
+                    <h3 class="panel-title">
+                        <strong>
+                            {% trans 'Récapitulatif de la commande' %}
+                        </strong>
+                    </h3>
+                </div>
+                <div class="panel-body">
+                    <div class="table-responsive">
+                        <table class="table table-condensed">
+                            <thead>
+                            <tr>
+                                <td>
+                                    <strong>
+                                        {% trans 'Article' %}
+                                    </strong>
+                                </td>
+                                <td class="text-center">
+                                    <strong>
+                                        {% trans 'Prix' %}
+                                    </strong>
+                                </td>
+                                <td class="text-center">
+                                    <strong>
+                                        {% trans 'Quantité' %}
+                                    </strong>
+                                </td>
+                                <td class="text-right">
+                                    <strong>
+                                        {% trans 'Totale' %}
+                                    </strong>
+                                </td>
+                            </tr>
+                            </thead>
+                            <tbody>
+                            <!-- foreach ($order->lineItems as $line) or some such thing here -->
+                            {% for item in items %}
+                            <tr>
+                                <td>{{item.article}}</td>
+                                <td class="text-center">{{item.prix}} {{currency}}</td>
+                                <td class="text-center">{{item.quantite}}</td>
+                                <td class="text-right">{{item.total}} {{currency}}</td>
+                            </tr>
+                            {% endfor %}
+                            {% for item in loyalty_services %}
+                            <tr>
+                                <td>{{item.libelle}}</td>
+                                <td class="text-center"></td>
+                                <td class="text-center"></td>
+                                <td class="text-right"></td>
+                            </tr>
+                            {% endfor %}
+                            <tr>
+                                <td class="thick-line"></td>
+                                <td class="thick-line"></td>
+                                <td class="thick-line text-center">
+                                    <strong>Total HT</strong></td>
+                                <td class="thick-line text-right">{{total_ht}} {{currency}}</td>
+                            </tr>
+                            {% if reduction %}
+                            <tr>
+                                <td class="no-line"></td>
+                                <td class="no-line"></td>
+                                <td class="no-line text-center">
+                                    <strong>Réduction</strong></td>
+                                <td class="no-line text-right">{{reduction}}</td>
+                            </tr>
+                            {% endif %}
+                            {% if total_reduction %}
+                            <tr>
+                                <td class="no-line"></td>
+                                <td class="no-line"></td>
+                                <td class="no-line text-center">
+                                    <strong>Total avec réduction</strong></td>
+                                <td class="no-line text-right">{{total_reduction}} {{currency}}</td>
+                            </tr>
+                            {% endif %}
+                            <tr>
+                                <td class="no-line"></td>
+                                <td class="no-line"></td>
+                                <td class="no-line text-center">
+                                    <strong>{{tva_text}}</strong></td>
+                                <td class="no-line text-right">{{tva}} {{currency}}</td>
+                            </tr>
+                            {% if show_coupon %}
+                            <tr>
+                                <td class="no-line"></td>
+                                <td class="no-line"></td>
+                                <td class="no-line text-center">
+                                    <strong>{% trans 'Code Promo' %}</strong>
+                                </td>
+                                <td class="no-line text-right">
+                                    <input id="coupon-code" type="text" placeholder="{% trans 'Votre code' %}">
+                                    <button id="coupon" class="btn btn-etabib hide-print">
+                                        <i class="fa fa-check"></i>
+                                    </button>
+                                    <br>
+                                    <span class="green" id="coupon-value"></span>
+                                </td>
+                            </tr>
+                            {% endif %}
+                            <tr>
+                                <td class="no-line"></td>
+                                <td class="no-line"></td>
+                                <td class="no-line text-center"><strong>Total</strong>
+                                </td>
+                                <td class="no-line text-right">
+                                    <span id="total-without-coupon">{{total}} {{currency}}</span>
+                                    <br>
+                                    <span id="total-with-coupon"></span>
+                                </td>
+                            </tr>
+                            </tbody>
+                        </table>
+                    </div>
+                    <p>
+                        <strong>
+                            TOUT EN LETTRE:
+                        </strong>
+                        <span id="total2words">{{total2words|upper}}</span>
+                    </p>
+                    <br>
+                    <div class="btn-group pull-right hide-print">
+                        <button id="print" onclick="printInvoice(); return false;" class="btn btn-default">
+                            <i class="fa fa-print"></i> {% trans 'Imprimer' %}
+                        </button>
+                        {% if show_order_btn %}
+                        <button id="order" class="btn btn-etabib">
+                            <i class="fa fa-shopping-cart"></i> {% trans 'Commander' %}
+                        </button>
+                        {% endif %}
+                    </div>
+                </div>
+            </div>
+            <div class="row">
+                <div class="col-xs-5">
+                    <p>
+                        ADRESSEZ VOS CHEQUES A L'ORDRE DE /
+                        SARL IBNHAMZA SERVICES & MICRO APPLICATIONS
+                    </p>
+                </div>
+                <div class="col-xs-7">
+                    <p class="pull-right">
+                        CACHET HUMIDE
+                    </p>
+                </div>
+            </div>
+            <br>
+            <br>
+            <br>
+            <hr>
+            <p class="text-center">
+                <small>
+                    SARL IBNHAMZA SERVICE & MICRO APPLICATIONS - SOCIETE UNIPERSONNELLE A RESPONSABILITE LIMITEE AU
+                    CAPITAL SOCIAL
+                    300 000 .00 DA SIEGE SOCIAL PARC TECH NOLOGIQUE SIDI ABDALLAH - TECHNOBRIDGE E1S04 STATION 02
+                    (PREMIER ETAGE ) RAHMANIA -ALGER
+                </small>
+            </p>
+        </div>
+    </div>
+</div>
+<script src='{% static "js/printThis.js" %}'></script>
+<script>
+    function printInvoice() {
+        console.log("print");
+        $('#invoice').printThis({
+            pageTitle: "{{invoice_title}} {% trans 'N°' %}: {{invoice_number}}",
+            beforePrint : function() {
+                $(".hide-print").hide();
+            },
+            afterPrint : function() {
+                $(".hide-print").show();
+            }
+        });
+     }
+$(document).ready(function() {
+    var coupon = null;
+{% if show_coupon %}
+    $("#coupon").click(function() {
+        var code = $("#coupon-code").val();
+        console.log(code);
+        var that = $(this);
+        $.ajax({
+            url: "{% url 'validate-coupon' %}",
+            dataType: 'json',
+            method: 'POST',
+            data: {
+                'csrfmiddlewaretoken': '{{ csrf_token }}',
+                'code': code,
+                'total': {{total}}
+            },
+            beforeSend: function() {
+                that.find('i').removeClass("fa fa-check").addClass("fa fa-spinner fa-spin");
+            },
+            success: function(response) {
+                coupon = response.id;
+                $('#coupon-value').text("{% trans 'Coupon valide! remise' %}:" + response.value + "%")
+                $('#total-without-coupon').html(
+                    "<del>" + $('#total-without-coupon').text() + "</del>"
+                );
+                $('#total-with-coupon').text(response.total + " DA");
+                $('#total2words').text(response.total2words);
+            },
+            error: function(jqXHR, textStatus, errorThrown) {
+                if (jqXHR.status == 401 || jqXHR.status == 404) {
+                    Lobibox.notify("warning", {
+                        msg: "{% trans "Le coupon utilisé n'est pas valide." %}",
+                        size: "mini",
+                        position: "bottom left"
+                    });
+                }
+                else {
+                    Lobibox.notify("error", {
+                        msg: "{% trans "Error." %}",
+                        size: "mini",
+                        position: "bottom left"
+                    });
+                }
+            },
+            complete: function() {
+                 that.find('i').removeClass("fa fa-spinner fa-spin").addClass("fa fa-check");
+            }
+        });
+    });
+{% endif %}
+{% if show_order_btn %}
+    $("#order").click(function() {
+        console.log("order");
+        if (coupon) {
+            var url = "/doctor/order/offer/{{offre.id}}/" + coupon;
+        } else {
+            var url = "/doctor/order/offer/{{offre.id}}";
+        }
+        window.location.href = url;
+    });
+{% endif %}
+});
+</script>

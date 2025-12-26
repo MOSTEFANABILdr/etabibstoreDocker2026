@@ -1,0 +1,100 @@
+{% load i18n %}
+{% load static %}
+<div class="traffic-analysis-area">
+    <div class="container-fluid">
+        <div class="row">
+            <div class="col-lg-3 col-md-6 col-sm-6 col-xs-12">
+                <div class="social-media-edu">
+                    <i class="fa fa-bell"></i>
+                    <div class="social-edu-ctn">
+                        <h3>{{tasks_count}} {% trans 'taches' %}</h3>
+                        <p><a id="tasks" href="#">Voir plus</a></p>
+                    </div>
+                </div>
+            </div>
+            <div class="col-lg-3 col-md-6 col-sm-6 col-xs-12">
+                <div class="social-media-edu youtube-cl res-mg-t-30 res-tablet-mg-t-30 dk-res-t-pro-30">
+                    <i class="fa fa-calendar"></i>
+                    <div class="social-edu-ctn">
+                        <h3>{{actions_count}} {% trans 'Suivi ponctuel obsolète' %}</h3>
+                        <p><a id="actions" href="#">Voir plus</a></p>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+<div class="product-sales-area mg-tb-30">
+    <div class="container-fluid">
+        <div class="row">
+            <div class="col-lg-12 col-md-12 col-sm-12 col-xs-12">
+                <div class="product-sales-chart">
+                    <div class="portlet-title">
+                        <b>{% trans 'Suivis ponctuels obsolètes' %}</b>
+                        <br>
+                        <br>
+                    </div>
+                    <div id="actions-datatable" class="table-responsive">
+                        {{ datatable1 }}
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+<div class="product-sales-area mg-tb-30">
+    <div class="container-fluid">
+        <div class="row">
+            <div class="col-lg-12 col-md-12 col-sm-12 col-xs-12">
+                <div class="product-sales-chart">
+                    <div class="portlet-title">
+                        <b>{% trans 'Mes taches' %}</b>
+                        <br>
+                        <br>
+                    </div>
+                    <div id="tasks-datatable" class="table-responsive">
+                        {{ datatable2 }}
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+<script>
+	$(function () {
+        //scroll to element
+        $("#tasks").click(function(e) {
+            e.preventDefault();
+            $([document.documentElement, document.body]).animate({
+                scrollTop: $("#tasks-datatable").offset().top
+            }, 2000);
+        });
+        $("#actions").click(function(e) {
+            e.preventDefault();
+            $([document.documentElement, document.body]).animate({
+                scrollTop: $("#actions-datatable").offset().top
+            }, 2000);
+        });
+
+        $(document).on("click", ".task-list", function () {
+          var task_id = $(this).val();
+          if($(this).is(':checked')){
+              var elm = $(this);
+              $.ajax({
+                method: "POST",
+                url: "{% url 'operator-task-done' %}",
+                data: {
+                  'task_id': task_id,
+                   'csrfmiddlewaretoken': '{{ csrf_token }}'
+                },
+                dataType: 'json',
+                success: function (data) {
+                    tables.forEach(table => {
+                        table.clear().draw();
+                    });
+                }
+              });
+          }
+        });
+	});
+</script>

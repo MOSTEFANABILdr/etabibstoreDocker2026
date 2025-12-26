@@ -1,0 +1,26 @@
+{% extends "base.html" %}
+{% load i18n %}
+{% load static %}
+
+{% block title %} {% trans 'eTabib Workspace' %} {% endblock %}
+
+{% block style %}
+
+{% endblock %}
+
+{% block content %}
+<div class="container">
+    <div class="row">
+        {% include 'partial/messages-alerts.html' %}
+    </div>
+    <h1 class="page-header">{% trans 'eTabib Workspace' %}</h1>
+    <a class="text-center" target="_blank"
+       href="https://drive.google.com/drive/folders/1opj6EChQucjFz2AlYkN4Z4NghRt2-lCZ">
+        {% trans 'Lien de téléchargement' %}
+    </a>
+</div>
+{% endblock %}
+
+{% block js %}
+
+{% endblock %}

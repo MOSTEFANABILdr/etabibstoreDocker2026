@@ -1,0 +1,30 @@
+{% load i18n utils_tags %}
+{% random_int 1 100000 as randint %}
+<form id="language-form-{{randint}}" action="{% url 'set_language' %}" method="post">{% csrf_token %}
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/flag-icon-css/0.8.2/css/flag-icon.min.css"
+          rel="stylesheet"/>
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/bootstrap-select/1.6.2/css/bootstrap-select.min.css"
+          rel="stylesheet"/>
+    <input name="next" type="hidden" value="">
+    {% get_current_language as LANGUAGE_CODE %}
+    {% get_available_languages as LANGUAGES %}
+    {% get_language_info_list for LANGUAGES as languages %}
+    <select name="language" class="langselectpicker{{randint}}" data-width="fit" data-size="4">
+        {% for language in languages %}
+        <option value="{{language.code}}"
+                data-content='<span class="flag-icon flag-icon-{% country_code language.code %}"></span>
+                {% if show_language_name %}<span class="language-name">{{ language.name_local }}</span>{% endif %}'
+                {% if language.code == LANGUAGE_CODE %} selected{% endif %}>
+        </option>
+        {% endfor %}
+    </select>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/bootstrap-select/1.6.2/js/bootstrap-select.min.js"></script>
+    <script>
+        $(function(){
+            $('.langselectpicker{{randint}}').selectpicker();
+            $('.langselectpicker{{randint}}').change(function(e) {
+                $("#language-form-{{randint}}").submit();
+            });
+        });
+    </script>
+</form>

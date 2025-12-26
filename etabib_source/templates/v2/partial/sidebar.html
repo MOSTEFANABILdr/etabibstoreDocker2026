@@ -1,0 +1,262 @@
+{% load avatar_tags i18n role_tags offer_tags utils_tags static %}
+<div dir="ltr" id="sidebar" class="sidebar">
+    <!-- begin sidebar scrollbar -->
+    <div data-scrollbar="true" data-height="100%">
+        <!-- begin sidebar user -->
+        <ul class="nav">
+            <li class="nav-profile text-center">
+                <a href="javascript:;">
+                    <div class="image text-center mx-auto">
+                        {% avatar user %}
+                    </div>
+                    <div class="info">
+                        {{user.get_full_name}}
+                        <small></small>
+                    </div>
+                </a>
+            </li>
+        </ul>
+        <!-- end sidebar user -->
+        <!-- begin sidebar nav -->
+        <ul class="nav">
+            {% with is_doctor=user|is_doctor is_professionnal=user|is_professionnal %}
+            {% if user.is_authenticated %}
+            {% if user|is_patient %}
+            <li>
+                <a class="text-right" href="{% url 'patient-dashboard' %}">
+                    <span>{% trans " الصفحة الرئيسية " %}</span>
+                    <img src="{% static 'v2/icons/rounded/41.svg' %}">
+                </a>
+            </li>
+            <li>
+                <a class="text-right" href="{% url 'list-virtual-offices' %}">
+                    <span>{% trans "دليل العيادات والأطباء" %}</span>
+                    <img src="{% static 'v2/icons/rounded/41.svg' %}">
+                </a>
+            </li>
+            <li class="has-sub">
+                <a class="text-right" href="javascript:;">
+                    <b class="caret"></b>
+                    <span>{% trans "ملفي الطبي" %}</span>
+                    <img src="{% static 'v2/icons/rounded/15.svg' %}">
+                </a>
+                <ul class="sub-menu">
+                    <li>
+                        <a class="text-right" href="{% url 'patient-profile' %}">
+                            {% trans 'بروفايلي' %}
+                            <img src="{% static 'v2/icons/rounded/17.svg' %}">
+                        </a>
+                    </li>
+                    <li>
+                        <a class="text-right" href="{% url 'patient-care-path' %}">
+                            {% trans 'مشواري الصحي' %}
+                            <img src="{% static 'v2/icons/rounded/19.svg' %}">
+                        </a>
+                    </li>
+                    <li>
+                        <a class="text-right" href="{% url 'patient-care-team' %}">
+                            {% trans 'فريق العناية' %}
+                            <img src="{% static 'v2/icons/rounded/13.svg' %}">
+                        </a>
+                    </li>
+                </ul>
+            </li>
+            <li>
+                <a class="text-right" href="{% url 'patient-appointments' %}">
+                    <span>{% trans "مواعيدي" %}</span>
+                    <img src="{% static 'v2/icons/rounded/21.svg' %}">
+                </a>
+            </li>
+            <li>
+                <a class="text-right" href="{% url 'patient-teleconsultation' %}">
+                    <span>{% trans "Video-Consultation" %}</span>
+                    <img src="{% static 'v2/icons/rounded/21.svg' %}">
+                </a>
+            </li>
+            {% elif is_doctor or is_professionnal %}
+            {% if perms.core.care_can_view_dashboard %}
+            <li>
+                <a class="text-right"
+                   href="{% if is_doctor %} {% url 'doctor-dashboard' %} {% else %} {% url 'professional-dashboard' %} {% endif %}">
+                    <span>{% trans "الصفحة الرئيسية" %}</span>
+                    <img src="{% static 'v2/icons/rounded/27.svg' %}">
+                </a>
+            </li>
+            {% endif %}
+            {% if perms.core.care_can_view_profile %}
+            <li>
+                <a class="text-right"
+                   href="{% if is_doctor %} {% url 'doctor-profile' %} {% else %} {% url 'professional-profile' %} {% endif %}">
+                    <span>{% trans "ملفي الشخصي" %}</span>
+                    <img src="{% static 'v2/icons/rounded/17.svg' %}">
+                </a>
+            </li>
+            {% endif %}
+            {% if perms.core.care_can_view_profile %}
+            <li>
+                <a class="text-right" href="{% url 'doctor-virtual-office' %}">
+                    {% if not user.medecin.current_services|is_including_virtual_clinic %}
+                    <span class="pull-left">
+                            <i class="fa fa-lock fa-2x mt-2"></i>
+                        </span>
+                    {% else %}
+                    <span class="label label-warning pull-left mt-2">Bêta</span>
+                    {% endif %}
+                    <span>{% trans "العيادة الإفتراضية" %}</span>
+                    <img src="{% static 'v2/icons/rounded/43.svg' %}">
+                </a>
+            </li>
+            {% get_clinique_virtuelle request.user as clinique_virtuelle %}
+            {% if clinique_virtuelle %}
+            <li>
+                <a class="text-right" href="{% url 'v-secretary' clinique_virtuelle.pk %}">
+                    {% if not user.medecin.current_services|is_including_virtual_clinic %}
+                    <span class="pull-left">
+                                <i class="fa fa-lock fa-2x mt-2"></i>
+                            </span>
+                    {% else %}
+                    <span class="label label-warning pull-left mt-2">Bêta</span>
+                    {% endif %}
+                    <span>{% trans "مكتب الاستقبال" %}</span>
+                    <img src="{% static 'v2/icons/rounded/11.svg' %}">
+                </a>
+            </li>
+            {% endif %}
+            {% endif %}
+            {% if perms.core.can_view_etabib_expos %}
+            <li class="has-sub">
+                <a class="text-right" href="javascript:;">
+                    <span class="label label-warning pull-left mt-2">Bêta</span>
+                    <span>{% trans 'eTabib expo' %}</span>
+                    <img src="{% static 'v2/icons/rounded/50.svg' %}">
+                </a>
+                <ul class="sub-menu">
+                    <li>
+                        <a class="text-right" href="{% url 'etabib-expo' %}">
+                            {% trans 'eTabib expo' %}
+                            <img src="{% static 'v2/icons/rounded/50.svg' %}">
+                        </a>
+                    </li>
+                    <li>
+                        <a class="text-right" href="{% url 'expo-list-partenaire' %}">
+                            {% trans 'Liste des Exposants' %}
+                            <img src="{% static 'v2/icons/rounded/50.svg' %}">
+                        </a>
+                    </li>
+                    <li>
+                        <a class="text-right" target="_blank" href="{% url 'expo-list-marque' %}">
+                            {% trans 'Liste des Firmes' %}
+                            <img src="{% static 'v2/icons/rounded/50.svg' %}">
+                        </a>
+                    </li>
+                </ul>
+            </li>
+            {% endif %}
+            {% if perms.core.can_veiw_agenda %}
+            <li>
+                <a class="text-right" href="{% url 'appointments-agenda' %}">
+                    {% if not user.medecin.current_services|is_including_online_agenda %}
+                    <span class="pull-left">
+                            <i class="fa fa-lock fa-2x mt-2"></i>
+                        </span>
+                    {% endif %}
+                    <span>{% trans "الرزنامة" %}</span>
+                    <img src="{% static 'v2/icons/rounded/21.svg' %}">
+                </a>
+            </li>
+            {% endif %}
+            <li class="has-sub">
+                <a class="text-right" href="javascript:;">
+                    <b class="caret"></b>
+                    <span>{% trans "المتجر" %}</span>
+                    <img src="{% static 'v2/icons/rounded/25.svg' %}">
+                </a>
+                <ul class="sub-menu">
+                    <li>
+                        <a class="text-right" href="{% url 'etabib-store' %}">
+                            {% trans 'متجر التطبيقات' %}
+                            <img src="{% static 'v2/icons/rounded/25.svg' %}">
+                        </a>
+                    </li>
+                    <li>
+                        <a class="text-right" href="{% url 'etabib-store-my-apps' %}">
+                            {% trans 'تطبيقاتي السابقة' %}
+                            <img src="{% static 'v2/icons/rounded/47.svg' %}">
+                        </a>
+                    </li>
+                    <li>
+                        <a class="text-right" target="_blank" href="{% url 'etabib-workspace' %}">
+                            {% trans 'eTabib Workspace تحميل' %}
+                            <img src="{% static 'v2/icons/rounded/49.svg' %}">
+                        </a>
+                    </li>
+                </ul>
+            </li>
+            {% if perms.core.can_veiw_teleconsultation %}
+            <li>
+                <a class="text-right" href="{% url 'doctor-appointments' %}">
+                    {% if not user.medecin.current_services|is_including_etabib_care %}
+                    <span class="pull-left">
+                            <i class="fa fa-lock fa-2x mt-2"></i>
+                        </span>
+                    {% endif %}
+                    <span>{% trans "الإستشارات" %}</span>
+                    <img src="{% static 'v2/icons/rounded/29.svg' %}">
+                </a>
+            </li>
+            {% endif %}
+            {% if perms.core.can_veiw_e_prescription %}
+            <li>
+                <a class="text-right" href="{% url 'prescription' %}">
+                    {% if not user.medecin.current_services|is_including_e_prescription %}
+                    <span class="pull-left">
+                            <i class="fa fa-lock fa-2x mt-2"></i>
+                        </span>
+                    {% endif %}
+                    <span>{% trans 'E-Prescription' %}</span>
+                    <img src="{% static 'v2/icons/rounded/19.svg' %}">
+                </a>
+            </li>
+            {% endif %}
+            {% if perms.core.can_veiw_teleconsultation %}
+            <li>
+                <a class="text-right" href="{% url 'doctor-contact' %}">
+                    {% if not user.medecin.current_services|is_including_etabib_care %}
+                    <span class="pull-left">
+                            <i class="fa fa-lock fa-2x mt-2"></i>
+                        </span>
+                    {% endif %}
+                    <span>{% trans "قائمة المرضى" %}</span>
+                    <img src="{% static 'v2/icons/rounded/41.svg' %}">
+                </a>
+            </li>
+            {% endif %}
+            {% if perms.core.can_view_etabib_econgre %}
+            <li>
+                <a class="text-right" href="{% url 'doctor-congress-list' %}">
+                    <span>{% trans "المؤتمرات" %}</span>
+                    <img src="{% static 'v2/icons/rounded/31.svg' %}">
+                </a>
+            </li>
+            {% endif %}
+            {% endif %}
+            <li>
+                <a class="text-right" href="/logout">
+                    <span>{% trans "خروج" %}</span>
+                    <img src="{% static 'v2/icons/rounded/53.svg' %}">
+                </a>
+            </li>
+            {% endif %}
+            {% if is_doctor or is_professionnal %}
+            <li class="bg-light pt-0 pb-0 mr-1 ml-1">
+                <a href="{% url 'change-template' %}">
+                    {% trans "العودة إلى الواجهة القديمة" %}
+                </a>
+            </li>
+            {% endif %}
+            {% endwith %}
+        </ul>
+        <!-- end sidebar nav -->
+    </div>
+    <!-- end sidebar scrollbar -->
+</div>

@@ -1,0 +1,16 @@
+{% load i18n %}
+{% load el_pagination_tags teleconsultation_tags %}
+{% paginate 12 medecins %}
+{% has_discount request.user.patient as discount %}
+<div class="row mg-t-15">
+{% for medecin in medecins %}
+    {% include 'partial/teleconsultation_doctor_item.html' with medecin=medecin discount=discount %}
+{% endfor %}
+</div>
+{% get_pages %}
+{% if pages.paginated %}
+<div class="row text-center">
+	{% show_current_number as page_number %}
+	{% include 'partial/pagination.html' with pages=pages current_page_number=page_number extra=extra_args %}
+</div>
+{% endif %}

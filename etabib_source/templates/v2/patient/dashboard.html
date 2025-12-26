@@ -1,0 +1,56 @@
+{% extends "base.html" %}
+{% load i18n %}
+{% load static utils_tags %}
+{% block title %} {% trans 'Dashboard' %} {% endblock %}
+{% block style %}
+<!-- jquery.dataTables CSS ============================================ -->
+<link rel="stylesheet" href='{% static "js/data-table/jquery.dataTables.min.css" %}'>
+<link rel="stylesheet" type="text/css"
+      href="https://cdn.datatables.net/responsive/2.2.3/css/responsive.bootstrap.min.css">
+{% endblock %}
+
+{% block content %}
+{% get_current_language as LANGUAGE_CODE %}
+<div class="container">
+    <div class="row text-center">
+        <div class="col-lg-6 col-md-6 col-sm-6">
+            <a href="{% url 'list-virtual-offices' %}"><img src="/static/img/4-min-2.jpg"></a>
+        </div>
+        <div class="col-lg-6 col-md-6 col-sm-6">
+            <a href="https://etabib.dz/#mazaya">
+                {% if LANGUAGE_CODE == 'ar' %}
+                <img src="/static/img/10.png">
+                {% else %}
+                <img src="/static/img/9.png">
+                {% endif %}
+            </a>
+        </div>
+    </div>
+    <br>
+    <div class="row text-center">
+        <div class="col-lg-6 col-md-6 col-sm-6">
+            <a href="{% url 'patient-care-path' %}"><img src="/static/img/1-min.jpg"></a>
+        </div>
+        <div class="col-lg-6 col-md-6 col-sm-6">
+            <a href="{% url 'epayment-recharge' %}?u={% user_id_hash user %}">
+                {% if LANGUAGE_CODE == 'ar' %}
+                <img src="/static/img/11.png">
+                {% else %}
+                <img src="/static/img/12.png">
+                {% endif %}
+            </a>
+        </div>
+    </div>
+</div>
+{% endblock %}
+
+{% block js %}
+<!-- dataTables ============================================ -->
+<script type="text/javascript" charset="utf8" src='{% static "js/data-table/jquery.dataTables.min.js" %}'></script>
+<script type="text/javascript" charset="utf8" src="{% static 'js/data-table/datatableview.js' %}?v=1.0"></script>
+<script type="text/javascript" charset="utf8"
+        src="https://cdn.datatables.net/responsive/2.2.3/js/dataTables.responsive.js"></script>
+<script>
+
+</script>
+{% endblock %}

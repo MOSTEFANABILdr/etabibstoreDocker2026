@@ -1,0 +1,25 @@
+{% load i18n utils_tags %}
+{% random_int 1 10000 as randint %}
+<div id="banner_{{randint}}">
+    <div class="row">
+        <div class="col-lg-12">
+            <div class="big-annonce">
+                <a href="{{annonce.annonce_url}}">
+                    <img class="img-responsive" src="{{annonce.image_url}}">
+                    <span class="bdge">{% trans 'annonce' %}</span>
+                </a>
+                <a href="{% url 'doctor-ad-feedback' %}?annonce_id={{annonce.annonce_id}}" class="fm-create close"
+               data-fm-head="Why don't you want to see this" data-fm-callback="remove"
+                data-fm-target='#banner_{{randint}}'>
+                <span aria-hidden="true">&times;</span>
+                </a>
+            </div>
+        </div>
+    </div>
+    <script>
+         $(function () {
+             $.get( "/api/annonce/impression/" + "{{annonce.campagne_id}}" + "/" + "{{annonce.annonce_id}}" + "/" + {{request.user.id}} + "/" + "1", function( data ) {});
+
+         });
+    </script>
+</div>

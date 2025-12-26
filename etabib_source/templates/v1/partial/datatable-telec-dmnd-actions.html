@@ -1,0 +1,37 @@
+{% load i18n role_tags %}
+{% if demand.facturee %}
+    {% if demand.treclamation %}
+        {% if user|is_patient %}
+        <a href="{% url 'patient-teleconsultation-update-claim' demand.treclamation.pk demand.pk %}"
+           title="{% trans 'Réclamation' %}"
+           class="btn btn-etabib fm-create"
+           data-fm-head="{% trans 'Réclamation' %}"
+           data-fm-callback="redirect" data-fm-target="{% url 'patient-teleconsultation-journal' %}">
+            <i class="fa fa-exclamation-triangle" aria-hidden="true"></i>
+        </a>
+        {% else %}
+        <a href="{% url 'doctor-teleconsultation-update-claim' demand.treclamation.pk demand.pk %}"
+           title="{% trans 'Traiter réclamation' %}"
+           class="btn btn-etabib fm-create"
+           data-fm-head="{% trans 'Traiter la réclamation' %}"
+           data-fm-callback="redirect" data-fm-target="{% url 'doctor-teleconsultation-journal' %}">
+            <i class="fa fa-exclamation-triangle" aria-hidden="true"></i>
+        </a>
+        {% endif %}
+    {% else %}
+        {% if user|is_patient %}
+        <a href="{% url 'patient-teleconsultation-create-claim' demand.pk %}"
+           class="btn btn-etabib fm-create"
+           title="{% trans 'Réclamation' %}"
+           data-fm-head="{% trans 'Réclamation' %}"
+           data-fm-callback="redirect" data-fm-target="{% url 'patient-teleconsultation-journal' %}">
+            <i class="fa fa-exclamation-triangle" aria-hidden="true"></i>
+        </a>
+        {% endif %}
+    {% endif %}
+{% endif %}
+{% if demand.sessions.all %}
+<a title="{% trans 'Statistiques' %}" class="btn btn-etabib sessions" data-id ='{{demand.pk}}' href='#'>
+    <i class="fa fa-bar-chart"></i>
+</a>
+{% endif %}

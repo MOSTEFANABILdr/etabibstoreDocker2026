@@ -1,0 +1,517 @@
+from django.db.models.signals import pre_save
+from django.dispatch.dispatcher import receiver
+
+from drugs.models import Medicament, NomCommercial, DciAtc, MapAutorise, MapCnas, ChangeDrugs, Amm, \
+    MapAutorise, Laboratoire, MapCnas, MedicCategorie, MedicamentCnasForme, MedicamentCnas, CodeAtc, FormeHomogene
+
+
+
+from django.utils import timezone
+from datetime import timedelta
+
+
+def ensure_dependency_in_sync(model_class, unique_id, generate_query_func):
+    """
+    Ensure a dependency has a recent ChangeDrugs entry.
+    If not, create one using the provided query generation function.
+    
+    Args:
+        model_class: The model class (DciAtc, NomCommercial, etc.)
+        unique_id: The unique_id of the dependency
+        generate_query_func: Function that takes an instance and returns SQL query
+    """
+    if not unique_id:
+        return
+    
+    # Check if this dependency has a ChangeDrugs entry in the last 24 hours
+    # This prevents duplicate entries during bulk imports
+    recent_entry = ChangeDrugs.objects.filter(
+        query__contains=f"unique_id='{unique_id}'",
+        date_mise_a_jour__gte=timezone.now() - timedelta(hours=24)
+    ).exists()
+    
+    if not recent_entry:
+        # Fetch the dependency and create a ChangeDrugs entry
+        instance = model_class.objects.filter(unique_id=unique_id).first()
+        if instance:
+            query = generate_query_func(instance)
+            ChangeDrugs.objects.create(query=query)
+
+
+def generate_dci_query(dci):
+    """Generate INSERT...ON DUPLICATE KEY UPDATE query for DciAtc"""
+    fields = []
+    
+    if dci.unique_id:
+        fields.append(f"unique_id='{dci.unique_id}'")
+    if dci.designation_fr:
+        fixed = dci.designation_fr.replace("'", "''")
+        fields.append(f"designation_fr='{fixed}'")
+    if dci.designation_en:
+        fixed = dci.designation_en.replace("'", "''")
+        fields.append(f"designation_en='{fixed}'")
+    if dci.designation_ar:
+        fixed = dci.designation_ar.replace("'", "''")
+        fields.append(f"designation_ar='{fixed}'")
+    if dci.designation_sp:
+        fixed = dci.designation_sp.replace("'", "''")
+        fields.append(f"designation_sp='{fixed}'")
+    if dci.designation_ch:
+        fixed = dci.designation_ch.replace("'", "''")
+        fields.append(f"designation_ch='{fixed}'")
+    if dci.designation_de:
+        fixed = dci.designation_de.replace("'", "''")
+        fields.append(f"designation_de='{fixed}'")
+    if dci.designation_nl:
+        fixed = dci.designation_nl.replace("'", "''")
+        fields.append(f"designation__nl='{fixed}'")
+    if dci.mpgrp:
+        fixed = dci.mpgrp.replace("'", "''")
+        fields.append(f"MPGRP='{fixed}'")
+    if dci.ti:
+        fixed = dci.ti.replace("'", "''")
+        fields.append(f"TI='{fixed}'")
+    if dci.intro:
+        fixed = dci.intro.replace("'", "''")
+        fields.append(f"INTRO='{fixed}'")
+    if dci.posol:
+        fixed = dci.posol.replace("'", "''")
+        fields.append(f"POSOL='{fixed}'")
+    if dci.narcotic:
+        fixed = dci.narcotic.replace("'", "''")
+        fields.append(f"Narcotic='{fixed}'")
+    fields.append(f"deleted={int(dci.deleted)}")
+    
+    field_str = ', '.join(fields)
+    return f"INSERT INTO `dci_atc` SET {field_str} ON DUPLICATE KEY UPDATE {field_str};"
+
+
+def generate_nom_commercial_query(nc):
+    """Generate INSERT...ON DUPLICATE KEY UPDATE query for NomCommercial"""
+    fields = []
+    
+    if nc.unique_id:
+        fields.append(f"unique_id='{nc.unique_id}'")
+    if nc.nom_fr:
+        fixed = nc.nom_fr.replace("'", "''")
+        fields.append(f"nom_fr='{fixed}'")
+    if nc.nom_ar:
+        fixed = nc.nom_ar.replace("'", "''")
+        fields.append(f"nom_ar='{fixed}'")
+    if nc.nom_en:
+        fixed = nc.nom_en.replace("'", "''")
+        fields.append(f"nom_en='{fixed}'")
+    if nc.nom_sp:
+        fixed = nc.nom_sp.replace("'", "''")
+        fields.append(f"nom_sp='{fixed}'")
+    if nc.nom_de:
+        fixed = nc.nom_de.replace("'", "''")
+        fields.append(f"nom_de='{fixed}'")
+    if nc.nom_ch:
+        fixed = nc.nom_ch.replace("'", "''")
+        fields.append(f"nom_ch='{fixed}'")
+    fields.append(f"deleted={int(nc.deleted)}")
+    
+    field_str = ', '.join(fields)
+    return f"INSERT INTO `nom_commercial` SET {field_str} ON DUPLICATE KEY UPDATE {field_str};"
+
+
+def generate_laboratoire_query(labo):
+    """Generate INSERT...ON DUPLICATE KEY UPDATE query for Laboratoire"""
+    fields = []
+    
+    if labo.unique_id:
+        fields.append(f"unique_id='{labo.unique_id}'")
+    if labo.designation:
+        fixed = labo.designation.replace("'", "''")
+        fields.append(f"designation='{fixed}'")
+    if labo.pays:
+        fixed = labo.pays.replace("'", "''")
+        fields.append(f"pays='{fixed}'")
+    
+    field_str = ', '.join(fields)
+    return f"INSERT INTO `laboratoire` SET {field_str} ON DUPLICATE KEY UPDATE {field_str};"
+
+
+def generate_forme_homogene_query(forme):
+    """Generate INSERT...ON DUPLICATE KEY UPDATE query for FormeHomogene"""
+    fields = []
+    
+    if forme.unique_id:
+        fields.append(f"unique_id='{forme.unique_id}'")
+    if forme.designation:
+        fixed = forme.designation.replace("'", "''")
+        fields.append(f"designation='{fixed}'")
+    
+    field_str = ', '.join(fields)
+    return f"INSERT INTO `forme_homogene` SET {field_str} ON DUPLICATE KEY UPDATE {field_str};"
+
+
+def generate_categorie_query(cat):
+    """Generate INSERT...ON DUPLICATE KEY UPDATE query for MedicCategorie"""
+    fields = []
+    
+    if cat.unique_id:
+        fields.append(f"unique_id='{cat.unique_id}'")
+    if cat.designation:
+        fixed = cat.designation.replace("'", "''")
+        fields.append(f"designation='{fixed}'")
+    
+    field_str = ', '.join(fields)
+    return f"INSERT INTO `medic_categorie` SET {field_str} ON DUPLICATE KEY UPDATE {field_str};"
+
+
+@receiver(pre_save, sender=DciAtc)
+def pre_save_dciatc(sender, instance, **kwargs):
+    table_name = "dci_atc"
+    fields = [
+        ("designation_en", instance.designation_en),
+        ("designation_ar", instance.designation_ar),
+        ("designation_sp", instance.designation_sp),
+        ("designation_ch", instance.designation_ch),
+        ("designation_de", instance.designation_de),
+        ("designation__nl", instance.designation_nl),
+        ("designation_fr", instance.designation_fr),
+        ("MPGRP", instance.mpgrp),
+        ("TI", instance.ti),
+        ("INTRO", instance.intro),
+        ("POSOL", instance.posol),
+        ("Narcotic", instance.narcotic),
+        ("deleted", instance.deleted),
+        ("unique_id", instance.unique_id)
+    ]
+    qr = ""
+    for field_name, field_value in fields:
+        if field_value is not None and field_value != '':
+            if isinstance(field_value, bool):
+                qr += f"{field_name}={int(field_value)}, "
+            elif isinstance(field_value, str):
+                fixed_string = field_value.replace("'", "''")
+                qr += f"{field_name}='{fixed_string}', "
+            else:
+                qr += f"{field_name}={field_value}, "
+        if field_name == 'unique_id':
+            unique_id = field_value
+
+    query = f"INSERT INTO `{table_name}` SET {qr[:-2]} ON DUPLICATE KEY UPDATE {qr[:-2]};"
+
+    ChangeDrugs.objects.create(query=query)
+
+
+@receiver(pre_save, sender=CodeAtc)
+def pre_save_code_atc(sender, instance, **kwargs):
+    table_name = "code_atc"
+    fields = [
+        ("designation", instance.designation),
+        ("dci_atc_id", instance.dciAtc.unique_id),
+        ("ddd", instance.ddd),
+        ("ddu", instance.ddu),
+        ("ti", instance.ti),
+        ("intro", instance.intro),
+        ("narcotic", instance.narcotic),
+        ("unique_id", instance.unique_id),
+        ("link", instance.link),
+        ("deleted", instance.deleted),
+    ]
+    qr = ""
+    for field_name, field_value in fields:
+        if field_value is not None and field_value != '':
+            if isinstance(field_value, bool):
+                qr += f"{field_name}={int(field_value)}, "
+            elif isinstance(field_value, str):
+                fixed_string = field_value.replace("'", "''")
+                qr += f"{field_name}='{fixed_string}', "
+            else:
+                qr += f"{field_name}={field_value}, "
+        if field_name == 'unique_id':
+            unique_id = field_value
+
+    query = f"INSERT INTO `{table_name}` SET {qr[:-2]} ON DUPLICATE KEY UPDATE {qr[:-2]};"
+    ChangeDrugs.objects.create(query=query)
+
+
+@receiver(pre_save, sender=FormeHomogene)
+def pre_save_form_homogene(sender, instance, **kwargs):
+    table_name = "forme_homogene"
+    fields = [
+        ("unique_id", instance.unique_id),
+        ("designation", instance.designation),
+    ]
+    qr = ""
+    for field_name, field_value in fields:
+        if field_value is not None and field_value != '':
+            if isinstance(field_value, bool):
+                qr += f"{field_name}={int(field_value)}, "
+            elif isinstance(field_value, str):
+                fixed_string = field_value.replace("'", "''")
+                qr += f"{field_name}='{fixed_string}', "
+            else:
+                qr += f"{field_name}={field_value}, "
+        if field_name == 'unique_id':
+            unique_id = field_value
+
+    query = f"INSERT INTO `{table_name}` SET {qr[:-2]} ON DUPLICATE KEY UPDATE {qr[:-2]};"
+    ChangeDrugs.objects.create(query=query)
+
+
+@receiver(pre_save, sender=Laboratoire)
+def pre_save_laboratoire(sender, instance, **kwargs):
+    table_name = "laboratoire"
+    fields = [
+        ("designation", instance.designation),
+        ("pays", instance.pays),
+        ("unique_id", instance.unique_id),
+    ]
+    qr = ""
+    for field_name, field_value in fields:
+        if field_value is not None and field_value != '':
+            if isinstance(field_value, bool):
+                qr += f"{field_name}`={int(field_value)}, "
+            elif isinstance(field_value, str):
+                fixed_string = field_value.replace("'", "''")
+                qr += f"{field_name}='{fixed_string}', "
+            else:
+                qr += f"{field_name}={field_value}, "
+        if field_name == 'unique_id':
+            unique_id = field_value
+    query = f"INSERT INTO `{table_name}` SET {qr[:-2]} ON DUPLICATE KEY UPDATE {qr[:-2]};"
+    ChangeDrugs.objects.create(query=query)
+
+
+@receiver(pre_save, sender=MapAutorise)
+def pre_save_mapautorise(sender, instance, **kwargs):
+    table_name = "map_autorise"
+    fields = [
+        ("medicament_id", instance.medicament.unique_id),
+        ("autorise", instance.autorise),
+    ]
+    qr = ""
+    for field_name, field_value in fields:
+        if field_value is not None and field_value != '':
+            if isinstance(field_value, str):
+                fixed_string = field_value.replace("'", "''")
+                qr += f"{field_name}='{fixed_string}', "
+            else:
+                qr += f"{field_name}={field_value}, "
+        if field_name == 'medicament_id':
+            medicament_id = field_value
+    query = f"INSERT INTO `{table_name}` SET {qr[:-2]} ON DUPLICATE KEY UPDATE {qr[:-2]};"
+    ChangeDrugs.objects.create(query=query)
+
+
+@receiver(pre_save, sender=MapCnas)
+def pre_save_mapcnas(sender, instance, **kwargs):
+    table_name = "map_cnas"
+    fields = [
+        ("cnas_id", instance.medicamentcnas.n_enregistrement if instance.medicamentcnas else None),
+        ("medicament_id", instance.medicament.unique_id),
+        ("remborsable", instance.remborsable),
+    ]
+    qr = ""
+    for field_name, field_value in fields:
+        if field_value is not None and field_value != '':
+            if isinstance(field_value, str):
+                fixed_string = field_value.replace("'", "''")
+                qr += f"{field_name}='{fixed_string}', "
+            else:
+                qr += f"{field_name}={field_value}, "
+        if field_name == 'medicament_id':
+            medicament_id = field_value
+
+    query = f"INSERT INTO `{table_name}` SET {qr[:-2]} ON DUPLICATE KEY UPDATE {qr[:-2]};"
+    ChangeDrugs.objects.create(query=query)
+
+
+@receiver(pre_save, sender=MedicCategorie)
+def poste_save_medic_categorie(sender, instance, **kwargs):
+    table_name = "medic_categorie"
+    fields = [
+        ("unique_id", instance.unique_id),
+        ("designation", instance.designation),
+    ]
+    qr = ""
+    for field_name, field_value in fields:
+        if field_value is not None and field_value != '':
+            if isinstance(field_value, bool):
+                qr += f"{field_name}={int(field_value)}, "
+            elif isinstance(field_value, str):
+                fixed_string = field_value.replace("'", "''")
+                qr += f"{field_name}='{fixed_string}', "
+            else:
+                qr += f"{field_name}={field_value}, "
+        if field_name == 'unique_id':
+            unique_id = field_value
+    query = f"INSERT INTO `{table_name}` SET {qr[:-2]} ON DUPLICATE KEY UPDATE {qr[:-2]};"
+    ChangeDrugs.objects.create(query=query)
+
+
+@receiver(pre_save, sender=MedicamentCnasForme)
+def pre_save_medicament_cnas_forme(sender, instance, **kwargs):
+    table_name = "medicament_cnas_forme"
+    fields = [
+        ("code", instance.code),
+        ("libelle", instance.libelle),
+        ("libelle_court", instance.libelle_court),
+    ]
+    qr = ""
+    for field_name, field_value in fields:
+        if field_value is not None and field_value != '':
+            if isinstance(field_value, str):
+                fixed_string = field_value.replace("'", "''")
+                qr += f"{field_name}='{fixed_string}', "
+            else:
+                qr += f"{field_name}={field_value}, "
+        if field_name == 'code':
+            code = field_value
+    query = f"INSERT INTO `{table_name}` SET {qr[:-2]} ON DUPLICATE KEY UPDATE {qr[:-2]};"
+    ChangeDrugs.objects.create(query=query)
+
+
+@receiver(pre_save, sender=MedicamentCnas)
+def pre_save_medicament_cnas(sender, instance, **kwargs):
+    table_name = "medicament_cnas"
+    fields = [
+        ("n_enregistrement", instance.n_enregistrement),
+        ("nom_commercial", instance.nom_commercial),
+        ("nom_dci", instance.nom_dci),
+        ("dosage", instance.dosage),
+        ("unite", instance.unite),
+        ("conditionnement", instance.conditionnement),
+        ("convention", instance.convention),
+        ("remboursable", instance.remboursable),
+        ("date_remboursement", instance.date_remboursement),
+        ("date_arret_remboursement", instance.date_arret_remboursement),
+        ("date_decision", instance.date_decision),
+        ("tarif_de_reference", instance.tarif_de_reference),
+        ("taux", instance.taux),
+        ("forme", instance.forme),
+        ("tableau", instance.tableau),
+        ("hopital", instance.hopital),
+        ("secteur_sanitaire", instance.secteur_sanitaire),
+        ("officine", instance.officine),
+        ("pays", instance.pays),
+        ("laboratoire", instance.laboratoire),
+        ("cm", instance.cm,),
+        ("code_medic", instance.code_medic),
+        ("date_tr", instance.date_tr),
+        ("observation", instance.observation),
+        ("code_dci", instance.code_dci),
+        ("inf_tr", instance.inf_tr),
+        ("generic", instance.generic)
+    ]
+    # Create the query
+    qr = ""
+    for field_name, field_value in fields:
+        if field_value is not None and field_value != '':
+            if isinstance(field_value, bool):
+                qr += f"{field_name}={int(field_value)}, "
+            elif isinstance(field_value, str):
+                fixed_string = field_value.replace("'", "''")
+                qr += f"{field_name}='{fixed_string}', "
+            else:
+                qr += f"{field_name}={field_value}, "
+        if field_name == 'n_enregistrement':
+            n_enregistrement = field_value
+
+    query = f"INSERT INTO `{table_name}` SET {qr[:-2]} ON DUPLICATE KEY UPDATE {qr[:-2]};"
+    # Create a ChangeDrugs object for logging purposes
+    ChangeDrugs.objects.create(query=query)
+
+
+@receiver(pre_save, sender=Medicament)
+def pre_save_medicament(sender, instance, **kwargs):
+    # FIRST: Ensure all dependencies have ChangeDrugs entries
+    if instance.dci_atc:
+        ensure_dependency_in_sync(DciAtc, instance.dci_atc.unique_id, generate_dci_query)
+    
+    if instance.nom_commercial:
+        ensure_dependency_in_sync(NomCommercial, instance.nom_commercial.unique_id, generate_nom_commercial_query)
+    
+    if instance.labo:
+        ensure_dependency_in_sync(Laboratoire, instance.labo.unique_id, generate_laboratoire_query)
+    
+    if instance.forme_homogene:
+        ensure_dependency_in_sync(FormeHomogene, instance.forme_homogene.unique_id, generate_forme_homogene_query)
+    
+    if instance.categorie:
+        ensure_dependency_in_sync(MedicCategorie, instance.categorie.unique_id, generate_categorie_query)
+    
+    # THEN: Create the medicament ChangeDrugs entry
+    table_name = "medicament"
+    fields = [
+        ("unique_id", instance.unique_id),
+        ("pays_marche", instance.pays_marche.pk if instance.pays_marche else None),
+        ("dci_pays", instance.dci_pays),
+        ("dci_atc_id", instance.dci_atc.unique_id if instance.dci_atc else None),
+        ("nom_commercial_id", instance.nom_commercial.unique_id if instance.nom_commercial else None),
+        ("num_enregistrement", instance.num_enregistrement),
+        ("code", instance.code),
+        ("forme", instance.forme),
+        ("dosage", instance.dosage),
+        ("cond", instance.cond),
+        ("liste", instance.liste),
+        ("p1", instance.p1),
+        ("p2", instance.p2),
+        ("obs", instance.obs),
+        ("laboratoire", instance.laboratoire),
+        ("note_medecin", instance.note_medecin),
+        ("observation", instance.observation),
+        ("type", instance.type),
+        ("status", instance.status),
+        ("duree_stabilitee", instance.duree_stabilitee),
+        ("remboursable", instance.remboursable),
+        ("forme_homogene_id", instance.forme_homogene.unique_id if instance.forme_homogene else None),
+        ("etat", instance.etat),
+        ("autorise", instance.autorise),
+        ("date_retrait", instance.date_retrait),
+        ("motif_retrait", instance.motif_retrait),
+        ("categorie_id", instance.categorie.unique_id if instance.categorie else None),
+        ("pays_labo", instance.pays_labo),
+        ("labo_id", instance.labo.unique_id if instance.labo else None),
+        ("deleted", instance.deleted)
+    ]
+
+    qr = ""
+    for field_name, field_value in fields:
+        if field_value is not None and field_value != '':
+            if isinstance(field_value, bool):
+                qr += f"{field_name}={int(field_value)}, "
+            elif isinstance(field_value, str):
+                fixed_string = field_value.replace("'", "''")
+                qr += f"{field_name}='{fixed_string}', "
+            else:
+                qr += f"{field_name}={field_value}, "
+        if field_name == 'unique_id':
+            unique_id = f"{field_value}"
+
+    query = f"INSERT INTO `{table_name}` SET {qr[:-2]} ON DUPLICATE KEY UPDATE {qr[:-2]};"
+    ChangeDrugs.objects.create(query=query)
+
+
+@receiver(pre_save, sender=NomCommercial)
+def pre_save_nom_commercial(sender, instance, **kwargs):
+    table_name = "nom_commercial"
+    fields = [
+        ("unique_id", instance.unique_id),
+        ("nom_fr", instance.nom_fr),
+        ("nom_ar", instance.nom_ar),
+        ("nom_en", instance.nom_en),
+        ("nom_sp", instance.nom_sp),
+        ("nom_de", instance.nom_de),
+        ("nom_ch", instance.nom_ch),
+        ("deleted", instance.deleted),
+    ]
+    qr = ""
+    for field_name, field_value in fields:
+        if field_value is not None and field_value != '':
+            if isinstance(field_value, bool):
+                qr += f"{field_name}={int(field_value)}, "
+            elif isinstance(field_value, str):
+                fixed_string = field_value.replace("'", "''")
+                qr += f"{field_name}='{fixed_string}', "
+            else:
+                qr += f"{field_name}={field_value}, "
+        if field_name == 'unique_id':
+            unique_id = field_value
+    query = f"INSERT INTO `{table_name}` SET {qr[:-2]} ON DUPLICATE KEY UPDATE {qr[:-2]};"
+    ChangeDrugs.objects.create(query=query)

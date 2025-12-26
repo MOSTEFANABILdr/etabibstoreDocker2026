@@ -1,0 +1,84 @@
+{% load i18n %}
+{% load role_tags %}
+<a title="{% trans 'Modifier' %}"
+   href="{% url 'listenvoi-statique-update' listenvoi.pk %}"
+   class="btn btn-etabib fm-update"
+   data-fm-head=""
+   data-fm-callback="reload">
+    <i class="fa fa-edit" aria-hidden="true"></i>
+    {% trans 'Modifier' %}
+</a>
+<a title="{% trans 'detail' %}"
+   href="{% url 'listenvoi-statique-detail' listenvoi.pk %}"
+   class="btn btn-etabib"
+   data-fm-head=""
+   data-fm-callback="reload">
+    <i class="fa fa-file" aria-hidden="true"></i>
+    {% trans 'detail' %}
+</a>
+{% comment %}
+<span class="dropdown">
+    <button class="btn btn-etabib dropdown-toggle"
+            title="{% trans 'SMS' %}"
+            type="button" id="dropdownMenu1" data-toggle="dropdown"
+            aria-haspopup="true" aria-expanded="true">
+        <i class="fa fa-life-ring"></i>
+        {% trans 'SMS' %}
+        <span class="caret"></span>
+    </button>
+     <ul class="dropdown-menu dropdown-menu-right" aria-labelledby="dropdownMenu1">
+        <li>
+           <a title="{% trans 'Envoyer un SMS Modèle' %}"
+              href="{% url 'listenvoi-statique-send-sms-model' listenvoi.pk %}"
+              class="fm-create"
+              data-fm-head=""
+              data-fm-callback="reload">
+              <i class="fa fa-envelope" aria-hidden="true"></i>
+               {% trans 'Envoyer un SMS Modèle' %}
+           </a>
+        </li>
+        <li>
+            <a title="{% trans 'Envoyer un SMS' %}"
+               href="{% url 'listenvoi-statique-send-sms' listenvoi.pk %}"
+               class="fm-create"
+               data-fm-head=""
+               data-fm-callback="reload">
+                <i class="fa fa-envelope-square" aria-hidden="true"></i>
+                {% trans 'Envoyer un SMS' %}
+            </a>
+        </li>
+     </ul>
+</span>
+{% endcomment %}
+<span class="dropdown">
+    <button class="btn btn-etabib dropdown-toggle"
+            title="{% trans 'Email' %}"
+            type="button" id="dropdownMenu2" data-toggle="dropdown"
+            aria-haspopup="true" aria-expanded="true">
+        <i class="fa fa-paper-plane"></i>
+        {% trans 'Email' %}
+        <span class="caret"></span>
+    </button>
+     <ul class="dropdown-menu dropdown-menu-right" aria-labelledby="dropdownMenu2">
+        <li>
+          <a title="{% trans 'Envoyer un Email Modèle' %}"
+             href="{% url 'listenvoi-statique-send-email-model' listenvoi.pk %}"
+             class="fm-create"
+             data-fm-head=""
+             data-fm-callback="reload">
+             <i class="fa fa-envelope" aria-hidden="true"></i>
+              {% trans 'Envoyer un Email Modèle' %}
+             </a>
+        </li>
+        <li>
+            <a title="{% trans 'Envoyer un Email' %}"
+               href="{% url 'listenvoi-statique-send-email' listenvoi.pk %}"
+               class="fm-create"
+               data-fm-head=""
+               data-fm-callback="reload">
+               <i class="fa fa-envelope-square" aria-hidden="true"></i>
+                {% trans 'Envoyer un Email' %}
+            </a>
+        </li>
+     </ul>
+</span>

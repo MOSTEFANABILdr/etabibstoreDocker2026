@@ -1,0 +1,40 @@
+{% load i18n %}
+{% load avatar_tags %}
+{% load teleconsultation_tags %}
+<div class="col-lg-3 col-md-4 col-sm-6">
+    <div class="panel panel-default">
+        <div class="panel-body text-center">
+            <div class="doctor-profile-telec">
+                <div class="userpic">
+                    {% render_status patient as PATIENT_STATUS %}
+                    <div class="bubble {{PATIENT_STATUS}}"
+                         title="{% ifequal PATIENT_STATUS 'online' %} {% trans 'En Ligne' %}
+                     {% else %} {% trans 'hors ligne' %} {% endifequal %}">
+                        <span class="bubble-outer-dot">
+                            <span class="bubble-inner-dot"></span>
+                        </span>
+                    </div>
+                    {% avatar patient.user class="userpicimg" %}
+                </div>
+                <h3 title="{{patient.full_name|upper}}" class="username">
+                    {{patient.full_name|upper}}
+                </h3>
+                <p>{{patient.full_address}}</p>
+            </div>
+        </div>
+        <div class="panel-footer ">
+            <div class="center-block">
+                {% if patient|is_online %}
+                    <a data-patient-id="{{patient.id}}"
+                       title="  {% trans 'Appeler' %}"
+                       data-patient-name="{{patient.full_name}}"
+                       class="btn btn-etabib teleconsultation-call btn-block">
+                        <i class="fa fa-phone fa-lg"></i>
+                           {% trans 'Appeler' %}
+                    </a>
+                {% endif %}
+            </div>
+        </div>
+    </div>
+</div>
+

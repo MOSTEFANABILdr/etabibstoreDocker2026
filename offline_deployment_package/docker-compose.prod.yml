@@ -1,0 +1,147 @@
+version: '3.8'
+
+services:
+  db:
+    image: mysql:5.7
+    container_name: etabib_db
+    restart: always
+    volumes:
+      - /mnt/live_data/etabib_project/mysql_data:/var/lib/mysql
+      # - /mnt/live_data/etabib_project/mysql_tuning.cnf:/etc/mysql/conf.d/tuning.cnf:ro  <-- Ignored as per user request
+    environment:
+      MYSQL_ROOT_PASSWORD: ${MYSQL_ROOT_PASSWORD:-root}
+      MYSQL_DATABASE: ${DB_NAME:-etabibstore}
+      MYSQL_USER: ${DB_USER:-etabib}
+      MYSQL_PASSWORD: ${DB_PASSWORD:-etabib}
+    deploy:
+      resources:
+        limits:
+          memory: 6G
+    networks:
+      - etabib_network
+    logging:
+      driver: "json-file"
+      options:
+        max-size: "10m"
+        max-file: "3"
+
+  redis:
+    image: redis:6.2
+    container_name: etabib_redis
+    restart: always
+    networks:
+      - etabib_network
+    logging:
+      driver: "json-file"
+      options:
+        max-size: "10m"
+        max-file: "3"
+
+  web:
+    image: etabibstore_docker_web:latest
+    container_name: etabib_web
+    restart: always
+    command: bash -c "daphne -b 0.0.0.0 -p 8000 etabibWebsite.asgi:application"
+    volumes:
+      - /mnt/live_data/etabib_project/static:/app/static
+      - /mnt/live_data/etabib_project/media:/app/media
+      - /mnt/live_data/etabib_project/offline_deployment_package/.env.prod:/app/.env:ro
+      - /mnt/live_data/etabib_project/offline_deployment_package/settings.py:/app/etabibWebsite/settings.py
+    env_file:
+      - .env.prod
+    deploy:
+      resources:
+        limits:
+          memory: 4G
+    depends_on:
+      - db
+      - redis
+    networks:
+      - etabib_network
+    logging:
+      driver: "json-file"
+      options:
+        max-size: "10m"
+        max-file: "3"
+
+  celery:
+    image: etabibstore_docker_web:latest
+    container_name: etabib_celery
+    restart: always
+    command: celery -A etabibWebsite worker --loglevel=info
+    env_file:
+      - .env.prod
+    volumes:
+      - /mnt/live_data/etabib_project/media:/app/media
+      - /mnt/live_data/etabib_project/offline_deployment_package/.env.prod:/app/.env:ro
+    depends_on:
+      - redis
+      - web
+    networks:
+      - etabib_network
+    logging:
+      driver: "json-file"
+      options:
+        max-size: "10m"
+        max-file: "3"
+
+  celery-beat:
+    image: etabibstore_docker_web:latest
+    container_name: etabib_celery_beat
+    restart: always
+    command: celery -A etabibWebsite beat --loglevel=info
+    env_file:
+      - .env.prod
+    volumes:
+      - /mnt/live_data/etabib_project/offline_deployment_package/.env.prod:/app/.env:ro
+    depends_on:
+      - redis
+      - web
+    networks:
+      - etabib_network
+    logging:
+      driver: "json-file"
+      options:
+        max-size: "10m"
+        max-file: "3"
+
+  nginx:
+    image: etabibstore_docker_nginx:latest
+    container_name: etabib_nginx
+    restart: always
+    volumes:
+      - /mnt/live_data/etabib_project/static:/app/static
+      - /mnt/live_data/etabib_project/media:/app/media
+    ports:
+      - "8080:80"
+    depends_on:
+      - web
+    networks:
+      - etabib_network
+    logging:
+      driver: "json-file"
+      options:
+        max-size: "10m"
+        max-file: "3"
+
+  ollama:
+    image: ollama/ollama:latest
+    container_name: etabib_ollama
+    restart: always
+    volumes:
+      - /mnt/live_data/etabib_project/ollama_data:/root/.ollama
+    deploy:
+      resources:
+        limits:
+          memory: 8G
+    networks:
+      - etabib_network
+    logging:
+      driver: "json-file"
+      options:
+        max-size: "10m"
+        max-file: "3"
+
+networks:
+  etabib_network:
+    driver: bridge

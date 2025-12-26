@@ -1,0 +1,35 @@
+{% load el_pagination_tags %}
+{% load operator_tags %}
+{% paginate 12 offres %}
+    {% for offre in offres %}
+    {% if forloop.first %}<div class="row">{% endif %}
+    <div class="col-lg-4 col-md-4 col-sm-4 col-xs-12">
+        <div class="offer-card mx-auto mb-3">
+            <div class="offer-head d-flex justify-content-between align-items-center">
+                {{offre|renderStatus|safe}}
+            </div>
+            <div class="offer-card-body">
+                <h5 class="offer-title">
+                    <a href="{{offre|getUrl}}">
+                        {{offre.libelle}}
+                    </a>
+                </h5>
+                <span class="offer-price">
+                            {{offre.prix}} DA
+                        </span>
+                <p>
+                    {{offre.description|linebreaks|truncatewords:20}}
+                </p>
+            </div>
+        </div>
+    </div>
+    {% if forloop.counter|divisibleby:3 %}</div><div class="row">{% endif %}
+    {% if forloop.last %}</div>{% endif %}
+    {% endfor %}
+{% get_pages %}
+{% if pages.paginated %}
+<div class="row text-center">
+    {% show_current_number as page_number %}
+    {% include 'partial/pagination.html' with pages=pages current_page_number=page_number %}
+</div>
+{% endif %}

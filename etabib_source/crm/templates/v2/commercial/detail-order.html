@@ -1,0 +1,258 @@
+{% extends "base.html" %}
+{% load i18n %}
+{% load static %}
+
+{% block title %} {{title}} {% endblock %}
+
+{% block style %}
+
+{% endblock %}
+
+{% block content %}
+<div class="container">
+    <div class="row">
+        {% include 'partial/messages-alerts.html' %}
+        <div class="col-lg-12">
+            <div class="m-b-md">
+                {% if not request.user.medecin %}
+                <div class="button-style-four btn-mg-b-10 pull-right">
+                    <button type="button" onclick="loadInvoice(this, '1');"
+                            class="btn btn-custon-four btn-default">
+                        <i class="fa fa-print" aria-hidden="true"></i>
+                        {% trans 'Imprimer le bon de commande' %}
+                    </button>
+                    <button type="button" onclick="loadInvoice(this, '2');"
+                            class="btn btn-custon-four btn-default">
+                        <i class="fa fa-print" aria-hidden="true"></i>
+                        {% trans 'Imprimer le bon de livraison' %}
+                    </button>
+                </div>
+                {% endif %}
+                <h2>{% trans 'Commande N°' %}: {{facture.id}}</h2>
+            </div>
+            <dl class="dl-horizontal">
+                <dt>{% trans 'Contact' %}:</dt>
+                <dd>
+                    {% if request.user.medecin or request.user.partenaire %}
+                    {{facture.medecin.full_name}}
+                    {% else %}
+                    {% if facture.medecin %}
+                    <a href="{% url 'operator-detail-contact' facture.medecin.contact.id %}">
+                        {{facture.medecin.full_name}}
+                    </a>
+                    {% elif facture.partenaire %}
+                    <a href="{% url 'operator-detail-contact' facture.partenaire.contact.id %}">
+                        {{facture.partenaire.full_name}}
+                    </a>
+                    {% endif %}
+                    {% endif %}
+                </dd>
+            </dl>
+        </div>
+    </div>
+    <div class="row">
+        <div class="col-lg-5">
+            <dl class="dl-horizontal">
+                <dt>{% trans 'Date de création' %}:</dt>
+                <dd>
+                    <i class="fa fa-clock-o"></i>
+                    {{facture.date_creation|date:"d M, Y h:i"}}
+                </dd>
+                {% if facture.offre_prepa %}
+                <dt>{% trans "Offre" %}:</dt>
+                <dd>
+                    <a href="{% url 'detail-offer' facture.offre_prepa.id facture.offre_prepa.slug %}">
+                        {{facture.offre_prepa.libelle}}
+                    </a>
+                </dd>
+                {% endif %}
+                <dt>{% trans 'Total HT' %}:</dt>
+                <dd>
+                    {{facture.total}} DA
+                </dd>
+                {% if facture.reduction_type %}
+                <dt>{% trans 'Type de Réduction' %}:</dt>
+                <dd>
+                    {{facture.get_reduction_type_display}}
+                </dd>
+                <dt>{% trans 'Réduction' %}:</dt>
+                <dd>
+                    {{facture.reduction}}
+                </dd>
+                {% endif %}
+                {% if facture.coupon %}
+                <dt>{% trans 'Coupon' %}:</dt>
+                <dd>
+                    {{facture.coupon.renderValue}}
+                </dd>
+                {% endif %}
+                <dt>{% trans 'TVA' %}:</dt>
+                <dd>
+                    {{facture.tva}} %
+                </dd>
+                <dt>{% trans 'Total' %}:</dt>
+                <dd>
+                    {{facture.total_prix}} DA
+                </dd>
+                {% if facture.ordre_paiement %}
+                <dt>{% trans 'Payé par' %}:</dt>
+                <dd>
+                    {{facture.ordre_paiement.get_moyen_paiement_display}}
+                </dd>
+                {% endif %}
+            </dl>
+            {% if not request.user.medecin %}
+            <dl class="dl-horizontal">
+                {% if facture.medecin.user %}
+                <dt>{% trans 'Compte' %}:</dt>
+                <dd>
+                    {{facture.medecin.user.username}}
+                </dd>
+                {% endif %}
+                {% if generated_password %}
+                <dt>{% trans 'Mot de passe' %}:</dt>
+                <dd>
+                    {{generated_password}}
+                    <br>
+                    <small>
+                        {% blocktrans %}
+                        le mot de passe est généré automatiquement l'utilisateur peut le
+                        modifier
+                        {% endblocktrans %}
+                    </small>
+                </dd>
+                {% endif %}
+            </dl>
+            {% endif %}
+        </div>
+        <div class="col-lg-7">
+            <dl class="dl-horizontal">
+                <dt>{% trans 'Commercial' %}:</dt>
+                <dd>
+                    {{facture.commercial.get_full_name}}
+                </dd>
+                {% if avantages %}
+                <dt>{% trans "Services de fidélité" %}:</dt>
+                <dd>
+                    {% for av in avantages.all %}
+                    <span class="badge badge-primary">{{av.libelle}}</span>
+                    {% endfor %}
+                </dd>
+                {% endif %}
+            </dl>
+        </div>
+    </div>
+    {% if offre_perso_services %}
+    <div class="row">
+        <table class="table table-bordered">
+            <thead>
+            <tr>
+                <th></th>
+                <th>{% trans 'Service' %}</th>
+                <th>{% trans 'Quantité' %}</th>
+                <th>{% trans 'Licence' %}</th>
+                <th>{% trans 'Tarif' %}</th>
+            </tr>
+            </thead>
+            <tbody>
+            {% for os in offre_perso_services %}
+            <tr>
+                <td>{{forloop.counter}}</td>
+                <td>{{os.service.designation}}</td>
+                <td>{{os.quantite}}</td>
+                <td>
+                    {% if os.service.creer_licence %}
+                    {{os.licence}}
+                    {% else %}
+                    /
+                    {% endif %}
+                </td>
+                <td>{{os.service.tarif}} DA</td>
+            </tr>
+            {% endfor %}
+            </tbody>
+        </table>
+    </div>
+    {% endif %}
+    {% if facture.fol_facture_set.count > 0 %}
+    <div class="row">
+        <table class="table table-bordered">
+            <thead>
+            <tr>
+                <th></th>
+                <th>{% trans 'Offre' %}</th>
+                <th>{% trans 'Licence' %}</th>
+                <th>{% trans 'Tarif' %}</th>
+            </tr>
+            </thead>
+            <tbody>
+            {% for fol in facture.fol_facture_set.all %}
+            <tr>
+                <td>{{forloop.counter}}</td>
+                <td>{{fol.offre.libelle}}</td>
+                <td>{{fol.licence.clef}}</td>
+                <td>{{fol.offre.prix}} DA</td>
+            </tr>
+            {% endfor %}
+            </tbody>
+        </table>
+    </div>
+    {% endif %}
+    {% if facture.fop_facture_set.count > 0 %}
+    <div class="row">
+        <table class="table table-bordered">
+            <thead>
+            <tr>
+                <th></th>
+                <th>{% trans 'Offre' %}</th>
+                <th>{% trans 'Tarif' %}</th>
+            </tr>
+            </thead>
+            <tbody>
+            {% for fop in facture.fop_facture_set.all %}
+            <tr>
+                <td>{{forloop.counter}}</td>
+                <td>{{fop.offre.libelle}}</td>
+                <td>{{fop.offre.prix}}</td>
+            </tr>
+            {% endfor %}
+            </tbody>
+        </table>
+    </div>
+    {% endif %}
+    {% if facture.virement_set.all %}
+    <div class="row">
+        <table class="table table-bordered">
+            <thead>
+            <tr>
+                <th>{% trans 'Virement N°' %}</th>
+                <th>{% trans 'Montant' %}</th>
+                <th>{% trans 'Date de création' %}</th>
+                <th>{% trans 'image' %}</th>
+            </tr>
+            </thead>
+            <tbody>
+            {% for virement in facture.virement_set.all %}
+            <tr>
+                <td>{{forloop.counter}}</td>
+                <td>{{virement.montant}}</td>
+                <td>{{virement.date_creation|date:"d M, Y h:i"}}</td>
+                <td>
+                    {% if virement.image %}
+                    <a href="{{virement.image.url}}">
+                        {% trans 'Afficher' %}
+                    </a>
+                    {% endif %}
+                </td>
+            </tr>
+            {% endfor %}
+            </tbody>
+        </table>
+    </div>
+</div>
+{% endif %}
+{% endblock %}
+
+{% block js %}
+
+{% endblock %}

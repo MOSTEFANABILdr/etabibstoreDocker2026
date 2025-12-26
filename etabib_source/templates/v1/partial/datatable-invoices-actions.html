@@ -1,0 +1,20 @@
+{% load i18n %}
+{% load role_tags %}
+
+{% if invoice.commercial == user %}
+<a title="{% trans 'Annuler' %}"
+   href="{% url 'invoice-annuler' invoice.pk %}"
+   class="btn btn-etabib fm-update"
+   data-fm-head="{% trans 'Annuler' %}"
+   data-fm-callback="reload">
+    <i class="fa fa-edit" aria-hidden="true"></i>
+    {% trans 'Annuler' %}
+</a>
+<a title="{% trans 'detail' %}"
+   href="{% url 'invoice-detail' invoice.pk %}"
+   class="btn btn-etabib"
+   data-fm-callback="reload">
+    <i class="fa fa-file" aria-hidden="true"></i>
+    {% trans 'detail' %}
+</a>
+{% endif %}

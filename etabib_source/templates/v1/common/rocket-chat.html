@@ -1,0 +1,59 @@
+<!DOCTYPE html>
+{% load i18n %}
+{% load static %}
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>{% trans 'eTabib Chat' %}</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <link rel="shortcut icon" type="image/x-icon" href='{% static "img/logo/logdo.png" %}'>
+    <!-- notifications CSS ============================================ -->
+    <link rel="stylesheet" href='{% static "css/notifications/Lobibox.min.css" %}'>
+    <link rel="stylesheet" href='{% static "css/notifications/notifications.css" %}'>
+    <style>
+        *       {margin:0;padding:0;}
+        html,
+        body    {height:100%;  width:100%; overflow:hidden;}
+        table   {height:100%;  width:100%; table-layout:static; border-collapse:collapse;}
+        iframe  {float:left; height:100%; width:100%;}
+    </style>
+    <!-- jquery ============================================ -->
+    <script src='{% static "js/vendor/jquery-1.12.4.min.js" %}'></script>
+</head>
+<body>
+<iframe id="rcChannel" width='100%;' height='100%' allow="camera *;microphone *"
+        sandbox="allow-forms allow-downloads allow-scripts allow-same-origin"
+        src="https://etabibchat.tk/group/alf-ryq" frameborder="0">
+</iframe>
+<script src='{% static "js/notifications/Lobibox.js" %}'></script>
+<script>
+        Lobibox.notify.DEFAULTS = $.extend({}, Lobibox.notify.DEFAULTS, {
+            soundPath: "{% static 'js/notifications/sounds/' %}",
+        });
+
+</script>
+{% include "partial/websocket-script.html" %}
+<script>
+    function authenticateIFrame() {
+        document.getElementById('rcChannel').contentWindow.postMessage({
+            externalCommand: 'login-with-token',
+            token: '{{authToken}}'
+        }, '*');
+    }
+
+    window.onload = function () {
+        authenticateIFrame();
+    };
+
+    window.addEventListener('message', function(e) {
+        if (e.data.eventName === "notification" && !e.data.data.fromOpenedRoom) {
+            notifSocket.send(JSON.stringify({
+                'command': "NEW_ROCKCHAT_MESSAGE",
+                title: e.data.data.notification.title,
+                text: e.data.data.notification.text,
+            }));
+        }
+    });
+</script>
+</body>
+</html>

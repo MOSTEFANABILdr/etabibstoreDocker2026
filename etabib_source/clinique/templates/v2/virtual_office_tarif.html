@@ -1,0 +1,30 @@
+{% extends "base.html" %}
+{% load i18n static embed_video_tags teleconsultation_tags avatar_tags utils_tags %}
+
+{% block title %} {{clinique.titre}} {% endblock %}
+
+{% block style %}
+{% endblock %}
+{% block content %}
+{% include 'partial/virtual_office_header.html' %}
+<div class="container mt-2">
+    <div class="row">
+        <div class="col-lg-8 col-md-12 col-sm-12">
+            <div class="panel panel-etabib" data-sortable="false">
+                <div class="panel-heading">
+                    <h4 class="panel-title">
+                    </h4>
+                </div>
+                <div class="panel-body service-list">
+                    {{clinique.prestations|safe}}
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}
+{% block js %}
+<script>
+</script>
+{% endblock %}
+

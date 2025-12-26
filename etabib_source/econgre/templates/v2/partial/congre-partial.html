@@ -1,0 +1,107 @@
+{% load el_pagination_tags %}
+{% load utils_tags congre_tags %}
+{% load avatar_tags i18n %}
+{% paginate 3 congres %}
+{% for c in congres %}
+<div class="panel panel-default border" data-sortable="false">
+    <div class="panel-heading">
+        <h4 class="d-block mx-auto">
+            {{c.nom|upper}}
+        </h4>
+    </div>
+    <div class="panel-body">
+        <div class="row">
+            <div class="col-lg-3 congress-banner">
+                <img class="img-responsive center-block"
+                     src="{{c.getBanner}}">
+            </div>
+            <div class="col-lg-9 congress-body">
+                <div class="row">
+                    <div class="col-lg-8 congress-description">
+                        <p>{{c.description|truncatewords:" 25"}}</p>
+                        <h4>Organisé par:</h4>
+                        <p>
+                            {{ c.organisateur.get_full_name }}
+                        </p>
+                        <p>
+                            {{c.organisateur.profession}}
+                        </p>
+                        {% avatar c.organisateur.user class="rounded-circle img-circle" width='160' height='160'%}
+                    </div>
+                    <div class="col-lg-4 congress-status">
+                        <dl>
+                            <dt >Etat</dt>
+                            <dd class="">
+                                {{c|renderStatus}}
+                            </dd>
+                        </dl>
+                        <dl>
+                            <dt >{% trans 'Type' %}:</dt>
+                            <dd >
+                                {{c|renderType}}
+                            </dd>
+                            {% if c|is_presentiel or c|is_presentiel_and_distanciel %}
+                            <dt >{% trans 'Lieu' %}:</dt>
+                            <dd >
+                                {% if c.adresse %}
+                                {{c.adresse}},
+                                {% endif %}
+                                {% if c.etablissement %}
+                                {{c.etablissement}}
+                                {% endif %}
+                            </dd>
+                            <dd >
+                                {% if c.emplacement %}
+                                <a target="_blank" href=" https://maps.google.com/?q={{c.emplacement}}">
+                                    <i class="fa fa-map-marker"></i> {% trans 'Emplacement GPS' %}
+                                </a>
+                                {% endif %}
+                            </dd>
+                            {% endif %}
+                        </dl>
+                        <dl>
+                            <dt >Date debut:</dt>
+                            <dd >
+                                {{c.date_debut| date:"d/m/Y H:i"}}
+                            </dd>
+                            <dt >Date fin:</dt>
+                            <dd >
+                                {{c.date_fin| date:"d/m/Y H:i"}}
+                            </dd>
+                        </dl>
+                    </div>
+                </div>
+                <div class="row">
+                    <div class="col-lg-3">
+                        {% if c.sponsor_gold_logo %}
+                        <h4>{% trans 'Partenaire GOLD' %}:</h4>
+                        <img src="{{c.sponsor_gold_logo.image.url}}" alt="" height="120" width="120">
+                        {% endif %}
+                    </div>
+                    <div class="col-lg-7">
+                        {% if c.autre_sponsors.all %}
+                        <p class="text-center dark-blue">
+                            <small>{% trans 'Avec le soutien de' %}:</small>
+                        </p>
+                        {% include 'partial/carousel-sponsors.html' with sponsors=c.autre_sponsors.all counter=forloop.counter %}
+                        {% endif %}
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+    <div class="panel-footer text-center">
+        <button type="button" onclick="location.href='{% url 'doctor-congress-detail' c.id %}'"
+                class="btn btn-etabib">
+            <i class="fa fa-file-text-o"></i> {% trans 'Plus de détail' %}
+        </button>
+    </div>
+</div>
+{% endfor %}
+{% get_pages %}
+{% if pages.paginated %}
+<div class="row text-center">
+    {% show_current_number as page_number %}
+    {% include 'partial/pagination.html' with pages=pages current_page_number=page_number %}
+</div>
+{% endif %}

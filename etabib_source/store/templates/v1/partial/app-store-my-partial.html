@@ -1,0 +1,25 @@
+{% load el_pagination_tags utils_tags %}
+{% paginate 12 apps %}
+{% random_int 1 apps|length as randint %}
+{% with cols=4  %}
+	<div class="row">
+	{% for app in apps %}
+		{% if apps|length != 1 and forloop.counter == randint %}
+			{% include 'partial/app-store-item.html' with app=app ad=True %}
+		{% else %}
+			{% include 'partial/app-store-item.html' with app=app %}
+		{% endif %}
+		{% if forloop.counter|divisibleby:cols %}
+			</div>
+			<div class="row">
+		{% endif %}
+	{% endfor %}
+	</div>
+{% endwith %}
+{% get_pages %}
+{% if pages.paginated %}
+<div class="row text-center">
+	{% show_current_number as page_number %}
+	{% include 'partial/pagination.html' with pages=pages current_page_number=page_number extra=extra_args %}
+</div>
+{% endif %}

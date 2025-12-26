@@ -1,0 +1,25 @@
+{% load static %}
+
+<div id='id_{{ upload_name }}_dropzone' class='dropzone' name="{{ upload_name }}"
+     data-acceptedFiles="{{ acceptedFiles }}"
+     data-maxFilesize="{{ maxFilesize }}"
+     data-upload-path="{{ upload_path }}"
+     data-paramName="{{ paramName }}"
+     data-width="{{ width }}"
+     data-height="{{ height }}"
+     data-maxFiles="{{ maxFiles }}"
+     data-maxDuration="{{ maxDuration }}"
+     data-preview="{{ preview }}">
+    <div class="vertical-align">
+
+        <div class='dz-message text-center text-muted'>
+            <span class="glyphicon {{ upload_glyphicon }}"></span>
+            <p>{{ placeholder|safe }}</p>
+        </div>
+
+    </div>
+
+</div>
+
+<input for='id_{{ upload_name }}_dropzone' id='id_{{ upload_name }}' style="position:absolute;opacity:0;height:0;"
+       type="text" name="{{ upload_name }}" value="{{ value }}" {{ attrs }}/>

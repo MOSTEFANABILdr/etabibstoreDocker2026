@@ -1,0 +1,28 @@
+{% load i18n el_pagination_tags avatar_tags %}
+{% paginate 5 care_team_requests %}
+	{% for r in care_team_requests %}
+		<div class="single-review-st-text">
+            {% avatar user=r.patient.user %}
+            <div class="review-ctn-hf">
+                <h3>{{r.patient}}</h3>
+                <p>{{r.patient.get_sexe_display}}</p>
+            </div>
+            <div class="review-item-rating">
+                <div class="btn-group-vertical" role="group">
+                    <a data-id="{{r.id}}" href="#" class="btn btn-sm btn-success ct-request-accepte">
+                        {% trans 'Accepter' %}
+                    </a>
+                    <a data-id="{{r.id}}" href="#" class="btn btn-sm btn-danger bg-red ct-request-delete">
+                        {% trans 'Supprimer' %}
+                    </a>
+                </div>
+            </div>
+        </div>
+	{% endfor %}
+{% get_pages %}
+{% if pages.paginated %}
+<div class="row text-center">
+	{% show_current_number as page_number %}
+	{% include 'partial/pagination.html' with pages=pages current_page_number=page_number %}
+</div>
+{% endif %}

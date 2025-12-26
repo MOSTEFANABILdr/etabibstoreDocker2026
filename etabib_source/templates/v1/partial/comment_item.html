@@ -1,0 +1,18 @@
+{% load i18n %}
+{% load avatar_tags %}
+<div class="chat-message">
+	<div class="profile-hdtc">
+		{% avatar user class="message-avatar"  %}
+	</div>
+	<div class="message">
+		<a class="message-author" href="#"> {{comment.medecin.full_name}} </a> 
+		<span class="message-date"> {{comment.date_ajout|timesince}} </span>
+		<span class="message-content">{{comment.texte}} </span>
+		{% if user == comment.medecin.user %}
+		<div class="m-t-md mg-t-10">
+			<button onclick="deleteComment({{comment.id}}, this);" class="btn btn-xs btn-default removeComment"><i class="fa fa-close"></i>
+				{% trans 'Remove' %} </button>
+		</div>
+		{% endif %}
+	</div>
+</div>

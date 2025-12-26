@@ -1,0 +1,20 @@
+{% load el_pagination_tags teleconsultation_tags %}
+{% paginate 12 patients %}
+{% with cols=4  %}
+	<div class="row mg-tb-30">
+	{% for patient in patients %}
+		{% include 'contact_tile.html' with patient=patient  %}
+		{% if forloop.counter|divisibleby:cols %}
+			</div>
+			<div class="row mg-tb-30">
+		{% endif %}
+	{% endfor %}
+	</div>
+{% endwith %}
+{% get_pages %}
+{% if pages.paginated %}
+<div class="row text-center">
+	{% show_current_number as page_number %}
+	{% include 'partial/pagination.html' with pages=pages current_page_number=page_number extra=extra_args %}
+</div>
+{% endif %}

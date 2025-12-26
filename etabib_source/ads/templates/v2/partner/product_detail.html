@@ -1,0 +1,280 @@
+{% extends "base.html" %}
+{% load i18n %}
+{% load static %}
+
+{% load partner_tags %}
+{% block title %} {% trans 'Détail du produit' %} {% endblock %}
+
+{% block style %}
+<link rel="stylesheet" type="text/css" href="//cdn.jsdelivr.net/npm/slick-carousel@1.8.1/slick/slick.css"/>
+<link rel="stylesheet" type="text/css" href="https://cdnjs.cloudflare.com/ajax/libs/slick-carousel/1.8.1/slick-theme.css"/>
+{% endblock %}
+
+{% block content %}
+<div class="container">
+    <div class="row">
+        <div class="col-lg-12">
+            <div class="ibox product-detail">
+                <div class="ibox-content">
+                    <div class="row">
+                        {% if messages %}
+                        <ul>
+                            {% for message in messages %}
+                            <div class="alert alert-{{ message.tags }}">
+                                <button type="button" class="close" data-dismiss="alert" aria-label="Close">
+                                    <span aria-hidden="true">&times;</span>
+                                </button>
+                                <p>{{message}}</p>
+                            </div>
+                            {% endfor %}
+                        </ul>
+                        {% endif %}
+                        <div class="col-md-5">
+                            <div class="product-images slick-slider" role="toolbar">
+                                {% for image in images %}
+                                <div>
+                                    <img class="img-responsive" src="{{image.image.url}}">
+                                </div>
+                                {% endfor %}
+                            </div>
+                        </div>
+                        <div class="col-md-7">
+                            <h2 class="product-title">
+                                {{product.libelle}}
+                            </h2>
+                            <hr>
+                            <div class="m-t-md">
+                                <h2 class="product-main-price">
+                                    {% with discount=product.prix_promotion %}
+                                    {% if not discount or discount == product.prix %}
+                                    {{product.prix}}
+                                    {% else %}
+                                    <del>
+                                        <span class="amount">{{product.prix}}</span>
+                                    </del>
+                                    {{discount}}
+                                    {% endif %}
+                                    {% endwith %}
+                                </h2>
+                            </div>
+                            <hr>
+                            {% if product.description %}
+                            <h4>{% trans 'Description' %}</h4>
+                            <div class="small">
+                                {{product.description|linebreaks}}
+                            </div>
+                            {% endif %}
+                            <dl class="row m-t-md small">
+                                {% if product.n_enregistrement %}
+                                <dt class="col-md-3">{% trans "N° d'enregistrement" %}</dt>
+                                <dd class="col-md-9">{{product.n_enregistrement}}</dd>
+                                {% endif %}
+                                {% if product.reference %}
+                                <dt class="col-md-3">{% trans "Référence" %}</dt>
+                                <dd class="col-md-9">{{product.reference}}</dd>
+                                {% endif %}
+                                {% if product.categorie %}
+                                <dt class="col-md-3">{% trans 'Catégorie' %}</dt>
+                                <dd class="col-md-9">{{product.categorie}}</dd>
+                                {% endif %}
+                                {% if product.marque %}
+                                <dt class="col-md-3">{% trans 'Marque' %}</dt>
+                                <dd class="col-md-9">{{product.marque}}</dd>
+                                {% endif %}
+                                {% if product.origine %}
+                                <dt class="col-md-3">{% trans 'Origine' %}</dt>
+                                <dd class="col-md-9">{{product.origine}}</dd>
+                                {% endif %}
+                                {% if product.document_hom %}
+                                <dt class="col-md-3">{% trans "Document pour l'homologation" %}</dt>
+                                <dd class="col-md-9">
+                                    <div class="file-box">
+                                        <div class="file">
+                                            <a href="{{product.document_hom.document.url}}">
+                                                <span class="corner"></span>
+                                                <div class="icon">
+                                                    <i class="fa fa-file"></i>
+                                                </div>
+                                                <div class="file-name">
+                                                    {{product.document_hom.filename}}
+                                                    <br>
+                                                    <small>{% trans 'Ajouté' %}:
+                                                        {{product.document_hom.date_creation}}</small>
+                                                </div>
+                                            </a>
+                                        </div>
+                                    </div>
+                                </dd>
+                                {% endif %}
+                                {% if product.document_aut %}
+                                <dt class="col-md-3">{% trans "Document pour l'autorisation" %}</dt>
+                                <dd class="col-md-9">
+                                    <div class="file-box">
+                                        <div class="file">
+                                            <a href="{{product.document_aut.document.url}}">
+                                                <span class="corner"></span>
+                                                <div class="icon">
+                                                    <i class="fa fa-file"></i>
+                                                </div>
+                                                <div class="file-name">
+                                                    {{product.document_aut.filename}}
+                                                    <br>
+                                                    <small>{% trans 'Ajouté' %}:
+                                                        {{product.document_aut.date_creation}}</small>
+                                                </div>
+                                            </a>
+                                        </div>
+                                    </div>
+                                </dd>
+                                {% endif %}
+                                {% if product.dci %}
+                                <dt class="col-md-3">{% trans 'Dci' %}</dt>
+                                <dd class="col-md-9">{{product.dci}}</dd>
+                                {% endif %}
+                                {% if product.type %}
+                                <dt class="col-md-3">{% trans 'Type' %}</dt>
+                                <dd class="col-md-9">{{product.type}}</dd>
+                                {% endif %}
+                                {% if product.fabriquant %}
+                                <dt class="col-md-3">{% trans 'Fabriquant' %}</dt>
+                                <dd class="col-md-9">{{product.fabriquant}}</dd>
+                                {% endif %}
+                                {% if product.exploitant %}
+                                <dt class="col-md-3">{% trans 'Exploitant' %}</dt>
+                                <dd class="col-md-9">{{product.exploitant}}</dd>
+                                {% endif %}
+                                {% if product.remboursement %}
+                                <dt class="col-md-3">{% trans 'Remboursable' %}</dt>
+                                <dd class="col-md-9">{{product.remboursement}}</dd>
+                                {% endif %}
+                                {% if product.indications %}
+                                <dt class="col-md-3">{% trans 'Indications' %}</dt>
+                                <dd class="col-md-9">{{product.indications}}</dd>
+                                {% endif %}
+                                {% if product.interactions.all %}
+                                <dt class="col-md-3">{% trans 'Interactions' %}</dt>
+                                <dd class="col-md-9">
+                                    {% for inter in product.interactions.all %}
+                                    {{inter}},
+                                    {% endfor %}
+                                </dd>
+                                {% endif %}
+                                {% if product.ref_etude %}
+                                <dt class="col-md-3">{% trans 'Étude de référence' %}</dt>
+                                <dd class="col-md-9">
+                                    <a href="{{product.ref_etude}}">
+                                        {{product.ref_etude}}
+                                    </a>
+                                </dd>
+                                {% endif %}
+                                {% if product.document_aut_amm %}
+                                <dt class="col-md-3">{% trans "Document attestant l'autorisation AMM" %}</dt>
+                                <dd class="col-md-9">
+                                    <div class="file-box">
+                                        <div class="file">
+                                            <a href="{{product.document_aut_amm.document.url}}">
+                                                <span class="corner"></span>
+                                                <div class="icon">
+                                                    <i class="fa fa-file"></i>
+                                                </div>
+                                                <div class="file-name">
+                                                    {{product.document_aut_amm.filename}}
+                                                    <br>
+                                                    <small>{% trans 'Ajouté' %}:
+                                                        {{product.document_aut_amm.date_creation}}</small>
+                                                </div>
+                                            </a>
+                                        </div>
+                                    </div>
+                                </dd>
+                                {% endif %}
+                                {% if product.rcp %}
+                                <dt class="col-md-3">{% trans "RCP" %}</dt>
+                                <dd class="col-md-9">
+                                    <div class="file-box">
+                                        <div class="file">
+                                            <a href="{{product.rcp.document.url}}">
+                                                <span class="corner"></span>
+                                                <div class="icon">
+                                                    <i class="fa fa-file"></i>
+                                                </div>
+                                                <div class="file-name">
+                                                    {{product.rcp.filename}}
+                                                    <br>
+                                                    <small>{% trans 'Ajouté' %}:
+                                                        {{product.rcp.date_creation}}</small>
+                                                </div>
+                                            </a>
+                                        </div>
+                                    </div>
+                                </dd>
+                                {% endif %}
+                            </dl>
+                            <hr>
+                            <div>
+                                {% if product.partenaire.user == request.user %}
+                                <div class="btn-group">
+                                    {% if product|isMedicalDevice %}
+                                    <a title="{% trans 'Mettre à jour' %}"
+                                       href="{% url 'partner-update-product' product.id %}"
+                                       class="btn btn-etabib btn-sm fm-update"
+                                       data-fm-head="{% trans 'Mise à jour du produit' %} "
+                                       data-fm-callback="reload">
+                                        <i class="fa fa-pencil-square-o" aria-hidden="true"></i>
+                                        {% trans 'Mettre à jour' %}
+                                    </a>
+                                    {% elif product|isDrug %}
+                                    <a title="{% trans 'Mettre à jour' %}"
+                                       href="{% url 'partner-update-drug' product.id %}"
+                                       class="btn btn-etabib btn-sm fm-update"
+                                       data-fm-head="{% trans 'Mise à jour du Médicament/Parapharmacie' %} "
+                                       data-fm-callback="reload">
+                                        <i class="fa fa-pencil-square-o" aria-hidden="true"></i>
+                                        {% trans 'Mettre à jour' %}
+                                    </a>
+                                    {% elif product|isAutre %}
+                                    <a title="{% trans 'Mettre à jour' %}"
+                                       href="{% url 'partner-update-other-product' product.id %}"
+                                       class="btn btn-etabib btn-sm fm-update"
+                                       data-fm-head="{% trans 'Mise à jour du Produit' %} "
+                                       data-fm-callback="reload">
+                                        <i class="fa fa-pencil-square-o" aria-hidden="true"></i>
+                                        {% trans 'Mettre à jour' %}
+                                    </a>
+                                    {% endif %}
+                                    <a title="{% trans 'Supprimer' %}"
+                                       href="{% url 'partner-delete-product' product.id %}"
+                                       class="btn btn-default fm-delete btn-sm"
+                                       data-fm-head="{% trans 'Supprimer le produit' %}: "
+                                       data-fm-callback="redirect"
+                                       data-fm-target="{% url 'partner-list-catalogue' %}">
+                                        <i class="fa fa-trash" aria-hidden="true"></i>
+                                        {% trans 'Supprimer' %}
+                                    </a>
+                                </div>
+                                {% endif %}
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}
+
+{% block js %}
+<script type="text/javascript" src="//cdn.jsdelivr.net/npm/slick-carousel@1.8.1/slick/slick.min.js"></script>
+<script>
+    $(document).ready(function(){
+        $('.product-images').slick({
+            dots: true,
+            autoplay: true,
+            infinite: true,
+            speed: 500,
+            fade: true,
+            cssEase: 'linear'
+        });
+    });
+</script>
+{% endblock %}

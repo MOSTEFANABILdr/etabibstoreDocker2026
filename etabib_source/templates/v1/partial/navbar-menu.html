@@ -1,0 +1,378 @@
+{% load role_tags %}
+{% load utils_tags %}
+{% load i18n %}
+<div class="col-lg-7 col-md-7 col-sm-4 col-xs-12">
+    <div class="header-top-menu tabl-d-n">
+        <ul class="nav navbar-nav mai-top-nav">
+            {% if request.user|is_doctor %}
+            <li id="nav-doc" class="nav-item">
+                <a target="_blank" href="https://etabib-support.tawk.help/">
+                    {% trans 'DOCUMENTATION ET SUPPORT' %}
+                </a>
+            </li>
+            <li id="nav-offers" class="nav-item" style="animation: heartbeat 1s infinite;">
+                <a class="red" href="{% url 'doctor-offers' %}">
+                    {% trans 'PROMOTIONS DU MOMENT' %}
+                </a>
+            </li>
+            {% if not request.user|has_license %}
+            <li class="nav-item">
+                <a class="blue fm-update" href="{% url 'doctor-demo-request' request.user.medecin.contact.id %}"
+                   data-fm-head="{% trans 'Veuillez remplir ce formulaire' %}" data-fm-callback="reload" data-fm-default-ok="dd">
+                    {% trans 'TESTEZ LE LOGICIEL' %}
+                </a>
+            </li>
+            {% endif %}
+            {% endif %}
+            {% if request.user|is_patient or request.user|is_doctor or request.user|is_partner %}
+            <li id="nav-popinfo" class="nav-item">
+                <a href="#" onclick="tour.restart();">
+                    {% trans 'VISITE GUIDÉE' %}
+                </a>
+            </li>
+            {% endif %}
+            <li id="nav-mobapp" class="nav-item hidden-md">
+                <a href="{% url 'mobile-app' %}">
+                    {% trans 'APPLI MOBILE' %}
+                </a>
+            </li>
+        </ul>
+    </div>
+</div>
+{% if request.user|is_complete_profil %}
+{% if request.user|is_patient or request.user|is_doctor or request.user|is_partner %}
+<script>
+    // Instance the tour
+    function renderTour() {
+        return `<div class='popover tour' style='max-width:500px'>
+                  <div class='arrow'></div>
+                  <h3 class='popover-title'></h3>
+                  <div class='popover-content'></div>
+                  <div class='popover-navigation'>
+                    <button class='btn btn-default' data-role='prev'>« {% trans 'Précédent' %}</button>
+                    <span data-role='separator'>|</span>
+                    <button class='btn btn-etabib' data-role='next'>{% trans 'Suivant' %} »</button>
+                    <button class='btn btn-danger' data-role='end'>{% trans 'Quitter' %}</button>
+                  </div>
+                </div>`;
+    }
+    function renderFirstPopup() {
+        return `<div class='popover tour' >
+                  <div class='arrow'></div>
+                  <h3 class='popover-title'></h3>
+                  <div class='popover-content'></div>
+                  <div class='popover-navigation'>
+                    <button class='btn btn-etabib' data-role='next'>{% trans 'Oui, bien sure !' %}</button>
+                    <button class='btn btn-danger' data-role='end'>{% trans 'Non, merçi' %}</button>
+                  </div>
+                </div>`;
+    }
+    var tour;
+    $(function () {
+        {% if request.user|is_doctor %}
+        tour = new Tour({
+          name: "doctor_tour",
+          template: renderTour(),
+          backdrop: true,
+          orphan: true,
+          storage: window.localStorage,
+          steps: [
+          {
+            orphan: true,
+            title: "{% trans 'Présentation de la plateforme' %}",
+            content: "{% trans 'Je vous invite à une présentation de votre espace etabibstore?' %}",
+            template: renderFirstPopup(),
+          },
+          {
+            element: "#li-dashboard",
+            prev: -1,
+            title: "{% trans 'Dashboard' %}",
+            {% if LANGUAGE_CODE == 'ar' %}
+            placement: 'left',
+            {% endif %}
+            content: "{% trans 'Le <b>Tableau de bord</b> contient un résumé de votre activité journalière et mensuel.' %}"
+          },
+          {
+            element: "#li-profil",
+            title: "{% trans 'Mon Profil' %}",
+            placement: 'bottom',
+            content: "{% trans "ici vous pouvez mettre à jour vos informations,  par exemple : vos tarif de téléconsultation, l'adresse de votre cabinet, ..." %}"
+          },
+          {
+            element: "#li-vc",
+            title: "{% trans 'Video-Consultation' %}",
+            {% if LANGUAGE_CODE == 'ar' %}
+            placement: 'left',
+            {% endif %}
+            content: "{% trans "accédez ici à l'interface des appels vidéo et traiter les demandes de rendez-vous de vos patients" %}"
+          },
+          {
+            element: "#li-contacts",
+            title: "{% trans 'Mes Contacts' %}",
+            {% if LANGUAGE_CODE == 'ar' %}
+            placement: 'left',
+            {% endif %}
+            content: "{% trans 'Dans le menu <b>Mes Contacts</b> vous trouverez la liste de vos patients. Vous pouvez faire une recherche d&#39;un contact puis l&#39;appeler.' %}"
+          },
+          {
+            element: "#li-agenda",
+            title: "{% trans 'Mon Agenda' %}",
+            {% if LANGUAGE_CODE == 'ar' %}
+            placement: 'left',
+            {% endif %}
+            content: "{% trans "Organisez ici votre planning d'activité." %}"
+          },
+          {
+            element: "#li-journal",
+            title: "{% trans 'Mon Journal' %}",
+            {% if LANGUAGE_CODE == 'ar' %}
+            placement: 'left',
+            {% endif %}
+            content: "{% trans '<b>Mon Journal</b> Ce menu liste toutes vos téléconsultations, ça vous permettera de garder trace de toute votre activité.' %}"
+          },
+          {
+            element: "#li-dossier",
+            title: "{% trans 'Mes dossiers' %}",
+            {% if LANGUAGE_CODE == 'ar' %}
+            placement: 'left',
+            {% endif %}
+            content: "{% trans 'Gardez ici vos dossiers  en toute sécurité. et partagez les avec vos patients' %}"
+          },
+          {
+            element: "#li-formation",
+            title: "{% trans 'Mes formations' %}",
+            {% if LANGUAGE_CODE == 'ar' %}
+            placement: 'left',
+            {% endif %}
+            content: "{% trans 'Restez à jour sans bouger de votre salon ! participez aux différent e-congrès organisés sur eTabib par nos partenaires . Revenez ici souvent pour découvrir les derniers eCongrés et les formations  programmés.' %}"
+          },
+          {
+            element: "#li-appstore",
+            title: "{% trans 'Mon AppStore' %}",
+            {% if LANGUAGE_CODE == 'ar' %}
+            placement: 'left',
+            {% endif %}
+            content: "{% trans 'Explorer sur Mon AppStore toutes les applications de votre spécialité  et ajoutez les à votre espace de Travail médical eTabib®workspace .' %}"
+          },
+          {
+            element: "#nav-doc",
+            placement:'bottom',
+            title: "{% trans 'Documentations' %}",
+            content: "{% trans "Découvrez nos produits En Vidéo- tuto - votre espace  Documentation est l'outil indispensable pour bien maitriser eTabib®." %}"
+          },
+          {
+            element: "#nav-offers",
+            placement:'bottom',
+            title: "{% trans 'Nos offres' %}",
+            content: "{% trans 'Intéressé par la plateforme eTabib®? consultez Nos offres, vous serez très bien surpris !' %}"
+          },
+          {
+            element: "#nav-mobapp",
+            placement:'bottom',
+            title: "{% trans 'TÉLÉCHARGER APPLICATION MOBILE' %}",
+            content: "{% trans 'accédez à tout eTabib® depuis votre smartphone' %}"
+          },
+          {
+            element: "#bubble-decoy",
+            placement:'top',
+            title: "{% trans 'Bulle de discussion' %}",
+            content: "{% trans 'Vous rencontrez des difficultés? Vous avez une question ou besoin de support ? Connectez vous via cette bulle avec notre service Support, un De nos agent vous servira avec plaisir.' %}"
+          },
+          {
+            element: "#nav-doc-credit",
+            placement:'bottom',
+            title: "{% trans 'Nombre de point' %}",
+            content: "{% trans "Voici votre Solde Point de Fidélité 'Racid', utiliser ces points pour télécharger les applications du Appstore" %}"
+          },
+          {
+            element: "#nav-doc-recharge",
+            placement:'bottom',
+            title: "{% trans 'Solde' %}",
+            content: "{% trans 'Voici le montant que vous devez des transactions de téléconsultation honoré par vos patients.' %}"
+          },
+          {
+            element: "#nav-basket",
+            placement:'bottom',
+            title: "{% trans 'Panier' %}",
+            content: "{% trans 'Voici le panier des applications que vous avez précommandé sur votre Appstore, accédez ici pour valider votre commande.' %}"
+          },
+          {
+            element: "#nav-alarm",
+            placement:'bottom',
+            title: "{% trans 'Notifications' %}",
+            content: "{% trans 'dans cette zone vous recevez toute les notifications de eTabib, cliquez dessus pour voir un historique complet.' %}"
+          },
+          {
+            element: "#nav-exit",
+            placement:'bottom',
+            title: "{% trans 'Sortie' %}",
+            content: "{% trans '<b>Sortie</b> pour fermer votre session.' %}"
+          }
+        ]});
+        {% elif request.user|is_patient %}
+        tour = new Tour({
+           name: "patient_tour",
+          template: renderTour(),
+          backdrop: true,
+          orphan: true,
+          storage: window.localStorage,
+          steps: [
+          {
+            orphan: true,
+            title: "{% trans 'Présentation de la plateforme' %}",
+            content: "{% trans 'Je vous invite à une présentation de votre espace etabibstore?' %}",
+            template: renderFirstPopup(),
+          },
+          {
+            element: "#li-patient-profil",
+            title: "{% trans 'Mon Profil' %}",
+            {% if LANGUAGE_CODE == 'ar' %}
+            placement: 'left',
+            {% endif %}
+            content: "{% trans '<b>Mon Profil</b>, ici vous pouvez mettre à jour vos informations' %}"
+          },
+          {
+            element: "#li-patient-teleconsultation",
+            title: "{% trans 'Video-Consultation' %}",
+            {% if LANGUAGE_CODE == 'ar' %}
+            placement: 'left',
+            {% endif %}
+            content: "{% trans 'Le menu <b>Video-Consultation</b> vous permet de voir la liste des médecins, demander un rendez-vous, appeler ou ajouter à votre équipe de soins.' %}"
+          },
+          {
+            element: "#li-patient-appointments",
+            title: "{% trans 'Mes rendez-vous' %}",
+            {% if LANGUAGE_CODE == 'ar' %}
+            placement: 'left',
+            {% endif %}
+            content: "{% trans 'Le menu <b>Mes rendez-vous</b> vous permet de voir vos demandes de Rendez-vous.' %}"
+          },
+          {
+            element: "#li-patient-journal",
+            title: "{% trans 'Réclamations' %}",
+            {% if LANGUAGE_CODE == 'ar' %}
+            placement: 'left',
+            {% endif %}
+            content: "{% trans '<b>Réclamations</b> Ce menu liste toutes vos téléconsultations, ça vous permettera de garder trace de toute votre activité.' %}"
+          },
+          {
+            element: "#li-patient-files",
+            title: "{% trans 'Mon dossier' %}",
+            {% if LANGUAGE_CODE == 'ar' %}
+            placement: 'left',
+            {% endif %}
+            content: "{% trans '<b>Mon dossier</b> est un espace de partage de fichiers avec votre équipe de soins.' %}"
+          },
+          {
+            element: "#nav-patient-recharge",
+            placement:'bottom',
+            title: "{% trans 'Solde' %}",
+            content: "{% trans 'Votre solde d&#39;argent s&#39;affiche ici.' %}"
+          },
+          {
+            element: "#nav-alarm",
+            placement:'bottom',
+            title: "{% trans 'Notifications' %}",
+            content: "{% trans 'Voici votre zone de <b>Notifications</b>.' %}"
+          },
+          {
+            element: "#nav-exit",
+            placement:'bottom',
+            title: "{% trans 'Sortie' %}",
+            content: "{% trans '<b>Sortie</b> pour fermer votre session.' %}"
+          },
+          {
+            element: "#bubble-decoy",
+            placement:'top',
+            title: "{% trans 'Bulle de discussion' %}",
+            content: "{% trans 'Si vous rencontrer des difficultés ou des problèmes avec votre plateforme eTabib® cliquez sur cette bulle et laissez votre message, patientez le temps que l&#39;un de nos agents de communication soit notifiés et vous répond.' %}"
+          }
+        ]});
+        {% elif request.user|is_partner %}
+        tour = new Tour({
+           name: "partner_tour",
+          template: renderTour(),
+          backdrop: true,
+          orphan: true,
+          storage: window.localStorage,
+          steps: [
+          {
+            orphan: true,
+            title: "{% trans 'Présentation de la plateforme' %}",
+            content: "{% trans 'Je vous invite à une présentation de votre espace etabibstore?' %}",
+            template: renderFirstPopup(),
+          },
+          {
+            element: "#li-par-profile",
+            title: "{% trans 'Mon Profile' %}",
+            {% if LANGUAGE_CODE == 'ar' %}
+            placement: 'left',
+            {% endif %}
+            content: "{% trans 'Renseignez ici les informations propres à votre entreprise, ses contacts , Les Marques qu’elle représente et ses représentants, et fournissez les Visuels/Images constituant sa charte graphique. Ces Informations apparaîtront à vos clients dans la page à <b>Propos de l’Entreprise</b> du stand Virtuel.' %}"
+          },
+          {
+            element: "#li-par-products",
+            title: "{% trans 'Mes Produits' %}",
+            {% if LANGUAGE_CODE == 'ar' %}
+            placement: 'left',
+            {% endif %}
+            content: "{% trans 'Remplissez Les fiches de Vos Produits, tel que vous voulez qu’elle apparaisse chez vos clients, et précisez leurs catégories et leurs différents attributs. Ces Fiches seront Visionnées par les clients dans la page <b>Produits</b> et quand ils cliquent sur les annonces qui lui sont liées. Vous pouvez accéder à tout moment à la liste complète des produits depuis cet onglet.' %}"
+          },
+          {
+            element: "#li-par-annonces",
+            {% if LANGUAGE_CODE == 'ar' %}
+            placement: 'left',
+            {% endif %}
+            title: "{% trans 'Mes Annonces' %}",
+            content: "{% trans 'Depuis cet Onglet Concevez les Annonces (Textuelles et Multimédias) que vous voulez Diffuser auprès de vos clients. Ces Annonces seront utilisées depuis l’Onglet <b>Campagne</b>.' %}"
+          },
+          {
+            element: "#li-par-campaign",
+            {% if LANGUAGE_CODE == 'ar' %}
+            placement: 'left',
+            {% endif %}
+            title: "{% trans 'Mes Campagnes' %}",
+            content: "{% trans 'Réalisez des Campagnes publicitaires efficaces et ciblées, en diffusant vos Annonces déjà créées sur le Réseau d’affichage qu’offre la plateforme <b>eTabib®</b>️. Les annonces apparaîtront chez vos cibles suivant les critères que vous définissez dans la campagne.' %}"
+          },
+          {
+            element: "#li-par-appointments",
+            title: "{% trans 'Mon Agenda' %}",
+            {% if LANGUAGE_CODE == 'ar' %}
+            placement: 'left',
+            {% endif %}
+            content: "{% trans 'Organisez dans cet onglet les demandes de Rendez-Vous de présentation émisent par vos clients et répondez -y.' %}"
+          },
+          {
+            element: "#li-par-catalogue",
+            title: "{% trans 'Mes Catalogues' %}",
+            {% if LANGUAGE_CODE == 'ar' %}
+            placement: 'left',
+            {% endif %}
+            content: "{% trans 'Ajouter Vos catalogues Produits/Services depuis cet espace. Les Clients peuvent y accéder  depuis la page <b>Catalogue</b>.' %}"
+          },
+          {
+            element: "#li-par-stand",
+            title: "{% trans 'Mon Stand' %}",
+            {% if LANGUAGE_CODE == 'ar' %}
+            placement: 'left',
+            {% endif %}
+            content: "{% trans 'Aménager Votre stand Virtuel depuis cet Onglet, Ainsi Habillez le par le Visuel que vous souhaitez, Définissez la signalétique et Ajouter une Vidéo  en guise  de Présentation du Stand. Le Client Accédera à votre Stand depuis l’interface <b>Expo</b> de son profile.' %}"
+          },
+          {
+            element: "#nav-par-credit",
+            placement:'bottom',
+            title: "{% trans 'Mon Crédit eTabib®️ ads' %}",
+            content: "{% trans 'Ici Vous retrouvez le solde de point-affichage qui vous est alloué par Le Plan/L’offre Publicitaire pour laquelle vous avez opté. Les affichages des annonces consomment de ce solde pour exécuter vos campagnes publicitaires.' %}"
+          }
+        ]});
+        {% endif %}
+
+        // Initialize the tour
+        tour.init();
+
+        // Start the tour
+        tour.start();
+   })
+</script>
+{% endif %}
+{% endif %}

@@ -1,0 +1,155 @@
+{% load i18n %}
+{% load static %}
+{% if UserExist %}
+<div class="error-pagewrap">
+    <div class="error-page-int panel-body text-center">
+        <div class="hpanel ">
+            <div class="panel-body text-center login-body">
+                <h2 class="form-title text-center" style="font-size:30px!important;">أنت مسجل من قبل !! </h2>
+                <p style="font-size: 15px;">
+                    {% blocktrans %}
+                    انت مسجل من قبل. يرجى الدخول الى فضاءك  باستخدام كلمة المرور التي ارسلت لك عبر هذا البريد.
+                    {% endblocktrans %}
+                </p>
+                <div class="card card-body" style="text-align:center">
+                    <form>
+                        <a style="background-color:#e6faff !important;" title="{% trans 'فضاء الزبون' %}" target="_blank"
+                           href="https://store.etabib.dz/" class="btn btn-etabib">
+                            <img width="36px" src='{% static "img/logo/logdo.png" %}'/>
+                            {% trans 'فضاء الزبون' %}
+                        </a>
+                    </form>
+                    <br>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+{% elif Steptwo %}
+<div class="error-pagewrap">
+    <div class="error-page-int panel-body text-center login-body">
+        <div class="hpanel">
+            <div class="panel-body text-center login-body">
+                <p style="font-size:18px;">
+                    {% trans 'أين نُرسل لك المواعيد الخاصة بك ؟' %}
+                </p>
+                <h2 class="form-title text-center" style="font-size:30px!important;">
+                    {% trans 'أدخل بريدك الإلكتروني' %}
+                </h2>
+                <form>
+                    <div class="form-group">
+                        <p class="error" id="error-text">
+
+                        </p>
+                    </div>
+                    <div class="form-group">
+                        <input type="email" class="form-control" id="inputemail"
+                               placeholder="يرجى اعطاء عنوان الكتروني مفعل">
+                    </div>
+                    <input type="hidden" id="inputfirstname" value="{{firstname}}">
+                    <input type="hidden" id="inputlastname" value="{{lastname}}">
+                    <input type="hidden" id="inputphone" value="{{phone}}">
+                    <input type="hidden" id="inputchoice" value="{{choice}}">
+                    <input type="hidden" id="contact" value="{{contact}}">
+                    <button style="width: 135px;height: 43px;" class="btn btn-etabib steptwo">
+                        {% trans 'إرسال الطلب' %}
+                    </button>
+                    <p style="margin-top: 20px!important;font-size:18px;">
+                        طلبك للموعد مقترن بوافقتك على شروط
+                        <a target="_blank" style="font-size:18px;color:#2ad4ff !important"
+                           href="https://etabib.dz/%D8%A7%D9%84%D8%B4%D8%B1%D9%88%D8%B7-%D8%A7%D9%84%D8%B9%D8%A7%D9%85%D8%A9-%D9%84%D8%A7%D8%B3%D8%AA%D8%AE%D8%AF%D8%A7%D9%85-%D8%AE%D8%AF%D9%85%D8%A7%D8%AA-%D9%85%D9%86%D8%B5%D8%A9-etabib%E2%93%87/">
+                            الخدمة
+                        </a>
+                    </p>
+                </form>
+            </div>
+        </div>
+    </div>
+</div>
+{% else %}
+<div class="error-page-int panel-body text-center login-body">
+    <div class="content-error">
+        <div class="hpanel">
+            <div class="panel-body text-center login-body">
+                <h2 class="form-title">{% trans 'تم ارسال طلبك الى مهني الصحة' %}</h2>
+                <p>
+                    <strong class="text-danger red">
+                        {% blocktrans %}
+                        يتم إرسال الطلب بصفة فورية، لكن سرعة الرد مُرتبطة باستجابة مهني
+                        الصحة، في حالة عدم الرد يُرجى فتح شكوى على الرابط التالي.
+                        {% endblocktrans %}
+                    </strong>
+                </p>
+                <button formtarget="_blank" class="btn btn-link"
+                        onclick="window.open('https://tawk.to/chat/5f6f3fd3f0e7167d0013fc96/default')">
+                    <strong>{% trans "فتح شكوى" %}</strong>
+                </button>
+                <p>
+                    <strong class="text-danger red">
+                        {% blocktrans %}
+                        سيتم إغلاق الطلب آليا إذا لم يتم الرد بعد 48 ساعة. لمتابعة المواعيد يُرجى الدخول إلى
+                        فضائكم الخاص في eTabib
+                        {% endblocktrans %}
+                    </strong>
+                </p>
+                <p style="font-size: 18px;">
+                    {% blocktrans %}
+                    يرجى الوصول إلى صندوق البريد الخاص بك والتحقق من الرسائل المستلمة
+                    {% endblocktrans %}
+                </p>
+
+                <div class="card card-body" style="text-align:center">
+                    <form>
+                        <a style="background-color:#e6faff !important;" title="{% trans 'تابع مواعيدك من هنا' %}"
+                           target="_blank" href="https://store.etabib.dz/" class="btn btn-etabib">
+                            <img width="36px" src='{% static "img/logo/logdo.png" %}'/>
+                            {% trans 'تابع مواعيدك من هنا' %}
+                        </a>
+                    </form>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+{% endif %}
+<script>
+$(function () {
+    function isEmail(email) {
+        var EmailRegex = /^([a-zA-Z0-9_.+-])+\@(([a-zA-Z0-9-])+\.)+([a-zA-Z0-9]{2,4})+$/;
+        return EmailRegex.test(email);
+    }
+
+    $(document).on('click', '.steptwo', function(e){
+        e.preventDefault();
+
+        var Email =isEmail($('#inputemail').val());
+        if(Email){
+            var that = $(this);
+            console.log($(that));
+            $(that).find("i").addClass("fa fa-spinner fa-spin");
+            $(that).attr("disabled", true);
+            $('#dmd_rdv').load('{% url 'signup-directory-stp-two' %}', {
+                'contact': $('#contact').val(),
+		        'inputemail': $('#inputemail').val(),
+		        'inputfirstname': $('#inputfirstname').val(),
+		        'inputlastname': $('#inputlastname').val(),
+		        'inputphone': $('#inputphone').val(),
+		        'choice': $('#inputchoice').val(),
+		        'csrfmiddlewaretoken': '{{csrf_token}}'
+		        },
+                function() {
+                    $(that).closest("i").removeClass("fa fa-spinner fa-spin");
+                }
+            );
+        }else{
+           $("#error-text").html('{% trans "يُرجى إدخال بريد إلكتروني صحيح" %}');
+        }
+    });
+});
+
+
+
+
+
+
+</script>

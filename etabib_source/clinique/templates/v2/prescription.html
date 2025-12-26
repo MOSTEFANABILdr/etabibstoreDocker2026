@@ -1,0 +1,259 @@
+{% extends "base.html" %}
+{% load i18n %}
+{% load static el_pagination_tags crispy_forms_tags prescription_tags role_tags %}
+
+{% block title %} {% trans 'e-Prescription' %} {% endblock %}
+
+{% block style %}
+<link href="{% static 'v2/plugins/datatables.net-bs4/css/dataTables.bootstrap4.min.css' %}" rel="stylesheet"/>
+<link href="{% static 'v2/plugins/datatables.net-responsive-bs4/css/responsive.bootstrap4.min.css' %}"
+      rel="stylesheet"/>
+<style>
+.dropdown-menu {
+    min-width: 120px;
+}
+.dropdown-menu>li>a {
+    padding: 3px 4px;
+    max-width: 300px;
+    white-space: normal;
+}
+.dropdown-submenu {
+    position: relative;
+}
+.dropdown-submenu>.dropdown-menu {
+    top: 0;
+    left: 100%;
+    margin-top: -6px;
+    margin-left: -1px;
+    -webkit-border-radius: 0 6px 6px 6px;
+    -moz-border-radius: 0 6px 6px;
+    border-radius: 0 6px 6px 6px;
+}
+.dropdown-submenu:hover>.dropdown-menu {
+    display: block;
+}
+.dropdown-submenu > a:after {
+    display: block;
+    content: " ";
+    float: right;
+    width: 0;
+    height: 0;
+    border-color: transparent;
+    border-style: solid;
+    border-width: 5px 0 5px 5px;
+    border-left-color: #ccc;
+    margin-top: 5px;
+    margin-right: -10px;
+}
+.dropdown-submenu:hover > a:after {
+    border-left-color: #fff;
+}
+.dropdown-submenu.pull-left {
+    float: none;
+}
+.dropdown-submenu.pull-left>.dropdown-menu {
+    left: -100%;
+    margin-left: 10px;
+    -webkit-border-radius: 6px 0 6px 6px;
+    -moz-border-radius: 6px 0 6px 6px;
+    border-radius: 6px 0 6px 6px;
+}
+
+</style>
+{% endblock %}
+
+{% block content %}
+<div class="container">
+    <h1 class="page-header">
+        <i class="icon-note"></i>
+        {% trans 'e-Prescription' %}
+    </h1>
+    <div class="row">
+        <div class="col-lg-4 col-md-6 col-sm-4 col-xs-12">
+            <div class="panel panel-default" data-sortable="false">
+                <div class="panel-heading">
+                    <h4 class="panel-title">
+                        {% trans 'Base de données des médicaments' %}
+                    </h4>
+                </div>
+                <div class="panel-body">
+                    <div class="row">
+                        <div class="col-lg-12">
+                            {% csrf_token %}
+                            {% crispy form %}
+                            {{ form.media }}
+                        </div>
+                    </div>
+                    <div id="drugs-list" class="endless_page_template">
+                        {% if nom_commerciaux %}
+                        {% include page_template %}
+                        {% endif %}
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div class="col-lg-8 col-md-6 col-sm-8 col-xs-12">
+            <div class="panel panel-default" data-sortable="false">
+                <div class="panel-heading">
+                    <h4 class="panel-title">
+                        {% trans 'Ordonnance' %}
+                    </h4>
+                </div>
+                <div class="panel-body">
+                    <form class="form-inline">
+                        <input id="patient-name" placeholder="{% trans 'Nom du patient' %}" type="text"
+                               class="form-control mb-2 mr-sm-2">
+                        <input id="patient-age" placeholder="{% trans 'Age du patient' %}" type="text"
+                               class="form-control mb-2 mr-sm-2">
+                        <button class="btn btn-etabib mb-2" onclick="print_ordonnance()">
+                            <i class="fa fa-print"></i>
+                            {% trans 'Imprimer A5' %}
+                        </button>
+                    </form>
+                </div>
+                <div class="">
+                    <table width="100%" id="table-ordonnance"
+                           class="table table-striped table-bordered table-td-valign-middle dt-responsive">
+                    </table>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}
+
+{% block js %}
+<script type="text/javascript" src="{% static 'ajax_datatable/js/utils.js' %}"></script>
+<script src="{% static 'v2/plugins/datatables.net/js/jquery.dataTables.min.js' %}"></script>
+<script src="{% static 'v2/plugins/datatables.net-bs4/js/dataTables.bootstrap4.min.js' %}"></script>
+<script src="{% static 'v2/plugins/datatables.net-responsive/js/dataTables.responsive.min.js' %}"></script>
+<script src="{% static 'v2/plugins/datatables.net-responsive-bs4/js/responsive.bootstrap4.min.js' %}"></script>
+<script src='{% static "el-pagination/js/el-pagination.js" %}'></script>
+<script>
+ $(function () {
+	$.endlessPaginate({
+	});
+    document.querySelector('select[name="dci"]').onchange=function() {
+        dci_id = $(this).val();
+        //clearing detail
+        $('#drug-detail').html("");
+        //showing spinner
+        $("#drugs-list").html("<div class='text-center'><i class='fa fa-spinner fa-spin fa-2x dark-blue'></i></div>")
+        //loading list
+        $('#drugs-list').load('{% url 'prescription' %}', {
+		    'dci_id': dci_id,
+		    'csrfmiddlewaretoken': '{{csrf_token}}'
+		    },
+            function() {
+            }
+        );
+    };
+
+    // Init table-ordonnance
+    AjaxDatatableViewUtils.initialize_table( $("#table-ordonnance"), "{% url 'ordonnance' %}",
+        {
+            "bLengthChange": false,
+            "searching": false,
+            "ordering":  false,
+            "autoWidth": false,
+            "language": {
+                "url": "//cdn.datatables.net/plug-ins/1.10.21/i18n/French.json"
+            },
+            responsive: {
+                details: {
+                    display: $.fn.dataTable.Responsive.display.childRowImmediate,
+                    type: 'none',
+                    target: ''
+                }
+            }
+        },
+        { 'ordonnance_pk': {{ ordonnance_pk }} }
+    );
+
+    $(document).on("click", ".medicament", function(e) {
+        e.preventDefault();
+        //get data id
+        var medicament_id = $(this).data("med-id");
+        //showing spinner
+        $("#drug-detail").html("<div class='text-center'><i class='fa fa-spinner fa-spin fa-2x dark-blue'></i></div>")
+        //load detail
+        $('#drug-detail').load('{% url 'professional-drugs-detail' %}', {
+		    'medicament_id': medicament_id,
+		    'csrfmiddlewaretoken': '{{csrf_token}}'
+		    },
+            function() {
+                $('input[type=checkbox][data-toggle^=toggle]').bootstrapToggle();
+                 $([document.documentElement, document.body]).animate({
+                    scrollTop: $("#drug-detail").offset().top
+                }, 1000);
+            }
+        );
+    });
+
+ });
+
+function action(details) {
+    // Action triggered when clicking on the forme button
+    $('.mnmedic').html('');
+    $('.mnmedic').html("<div class='text-center'><i class='fa fa-spinner fa-spin fa-2x'></i></div>")
+    $('.mnmedic').load("{% url 'ordonnance-menu-detail' %}", {
+        'details': details,
+        'csrfmiddlewaretoken': '{{ csrf_token }}',
+    }, function(data) {
+    });
+}
+
+function addToOrdonnance(elt, ps ,pk){
+    var data = {
+        'medic_pk': pk,
+        'medic_ps':ps,
+        'ordonnance_pk': '{{ordonnance_pk}}',
+        'csrfmiddlewaretoken': '{{ csrf_token }}',
+    };
+    $.post("{% url 'ordonnance-add' %}", data, function(){
+        $('#table-ordonnance').DataTable().ajax.reload();
+    });
+}
+
+// Ordonnance row Action
+function removeFromOrdonnance(id_row){
+    var data = {
+        'id': id_row,
+        'csrfmiddlewaretoken': '{{ csrf_token }}',
+    };
+    $.ajax({
+        type: "POST",
+        url: "{% url 'ordonnance-remove' %}",
+        data: data,
+        statusCode: {
+            200: function() {
+                 $('#table-ordonnance').DataTable().ajax.reload();
+            },
+            400: function() {
+                console.log("400");
+            },
+        },
+    });
+
+}
+
+function print_ordonnance(){
+    var patient_name = $('#patient-name').val();
+    var patient_age = $('#patient-age').val();
+    window.open(`{% url 'ordonnance-pdf' ordonnance_pk %}?patient=${patient_name}&age=${patient_age}`);
+}
+
+function update_poso(elt) {
+    $.post("{% url 'ordonnance-update' %}",
+    {
+        'id': $(elt).data('id'),
+        'poso':$(elt).val(),
+        'csrfmiddlewaretoken': '{{ csrf_token }}',
+    },
+    function(){
+    });
+}
+
+
+</script>
+{% endblock %}

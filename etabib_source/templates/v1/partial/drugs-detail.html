@@ -1,0 +1,91 @@
+{% load i18n %}
+{% load static %}
+{% load role_tags %}
+{% load drugs_tags %}
+{% load crispy_forms_tags %}
+{% load el_pagination_tags %}
+
+<div class="hpanel shadow-inner responsive-mg-b-30">
+    <div class="ibox-content">
+        <h1 class="text-center">{{ medicament.nom_commercial }}</h1>
+        <h3 class="text-center">{{ medicament.dci_atc }}</h3>
+        {% if medicament.laboratoire %}
+        <h3 class="text-center">{{ medicament.laboratoire }}</h3>
+        {% endif %}
+        <div class="row">
+            <div class="col-sm-6 col-lg-3 mb-1-9 mb-lg-0 text-center">
+                <strong>{% trans 'Type' %}</strong>
+                <br>
+                {% if cnas %}
+                <img src='{% renderType cnas %}' width="48" height="48" alt=""/>
+                {% else %}
+                <img src='{% renderType medicament %}' width="48" height="48" alt=""/>
+                {% endif %}
+            </div>
+            <div class="col-sm-6 col-lg-3 mb-1-9 mb-lg-0 text-center">
+                <strong>{% trans 'Remboursable' %}</strong>
+                <br>
+                <img src='{% renderCnasRemboursable cnas %}' width="48" height="48" alt=""/>
+            </div>
+            <div class="col-sm-6 col-lg-3 mb-1-9 mb-lg-0 text-center">
+                <strong>{% trans 'Pays Labo' %}</strong>
+                <br>
+                <img src='https://www.countryflags.io/{{ medicament.country }}/flat/48.png' alt=""/>
+            </div>
+            <div class="col-sm-6 col-lg-3 mb-1-9 mb-lg-0 text-center">
+                <strong>{% trans 'AMM' %}</strong>
+                <br>
+                <img title="" src='{% renderAmm medicament %}' width="48" height="48" alt=""/>
+            </div>
+        </div>
+        <div class="panel mb-3">
+            <div class="row">
+                <div class="col-md-4">
+                    <div class="panel-body">
+                        <h4 class="panel-title text-center">{% trans 'Dosage' %}</h4>
+                        {% if cnas %}
+                        <h6 class="panel-text text-center">{{ cnas.dosage }}</h6>
+                        {% else %}
+                        <h6 class="panel-text text-center">{{ medicament.dosage }}</h6>
+                        {% endif %}
+                    </div>
+                </div>
+                <div class="col-md-8">
+                    <div class="panel-body">
+                        <h5 class="panel-title text-center">{% trans 'Tarif de référence:' %} </h5>
+                        <h1 class="panel-text text-center"> {% renderCnasTarif cnas %}</h1>
+                        <p class="panel-text text-center"> {% renderDateTr cnas %}</p>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div class="row">
+            <div class="col-lg-12">
+                {% getAmmObservation medicament as amm %}
+                {% if amm %}
+                <p><strong>{% trans "Motif AMM" %}:</strong> {{amm}}</p>
+                {% endif %}
+                {% getObservationCnas medicament as obs %}
+                {% if obs %}
+                <p><strong>{% trans "Observation CNAS" %}:</strong> {{obs}}</p>
+                {% endif %}
+                <hr>
+            </div>
+        </div>
+        <div class="row">
+            <div class="alert alert-info" role="alert">
+                {% trans 'Informer les Médecins de voisinage de la Disponibilité de Vos Produits' %}
+            </div>
+        </div>
+        <div class="row">
+            <div class="col-md-12 text-center">
+                <span>{% renderHaveInStock stk medicament %}</span>
+                <span class="stock-date">
+                {% if stk.date_update %}
+                    {% trans 'Indiqué le' %}: {{stk.date_update|date:'Y-m-d H:i'}}
+                {% endif %}
+                </span>
+            </div>
+        </div>
+    </div>
+</div>

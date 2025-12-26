@@ -1,0 +1,182 @@
+groups:
+- name: administration
+  permissions:
+    core:
+    - rightssupport.can_view_etabib_expos
+    - rightssupport.can_view_etabib_store
+    - rightssupport.care_can_view_dashboard
+    - rightssupport.care_can_view_profile
+- name: agent de saisie
+  permissions:
+    core:
+    - contact.add_contact
+    - contact.change_contact
+    - contact.view_contact
+- name: auxiliare
+  permissions:
+    core:
+    - rightssupport.can_view_etabib_expos
+    - rightssupport.can_view_etabib_store
+    - rightssupport.care_can_view_dashboard
+    - rightssupport.care_can_view_profile
+- name: biologiste
+  permissions:
+    core:
+    - rightssupport.can_view_etabib_expos
+    - rightssupport.can_view_etabib_store
+    - rightssupport.care_can_view_dashboard
+    - rightssupport.care_can_view_profile
+- name: ch.dentiste
+  permissions:
+    core:
+    - rightssupport.can_view_etabib_expos
+    - rightssupport.can_view_etabib_store
+    - rightssupport.care_can_view_dashboard
+    - rightssupport.care_can_view_profile
+- name: "chef entreprise m\xE9dical"
+  permissions:
+    core:
+    - rightssupport.can_view_etabib_expos
+    - rightssupport.can_view_etabib_store
+    - rightssupport.care_can_view_dashboard
+    - rightssupport.care_can_view_profile
+- name: chercheur
+  permissions:
+    core:
+    - rightssupport.can_view_etabib_expos
+    - rightssupport.can_view_etabib_store
+    - rightssupport.care_can_view_dashboard
+    - rightssupport.care_can_view_profile
+- name: comm/marketing
+  permissions:
+    core:
+    - rightssupport.can_view_etabib_expos
+    - rightssupport.can_view_etabib_store
+    - rightssupport.care_can_view_dashboard
+    - rightssupport.care_can_view_profile
+- name: commercial
+  permissions:
+    core:
+    - rightssupport.crm_can_create_command
+    - rightssupport.crm_can_view_command_list
+    - rightssupport.crm_can_view_comm_agenda
+    - rightssupport.crm_can_view_comm_dashboard
+    - rightssupport.crm_can_view_contact_list
+    - rightssupport.crm_can_view_follow_up_list
+    - rightssupport.crm_can_view_invoice_list
+    - rightssupport.crm_can_view_offer_list
+    - rightssupport.crm_can_view_pin_boards
+    - rightssupport.crm_can_view_prospect_list
+    - rightssupport.crm_can_view_sms_email
+    - rightssupport.crm_can_view_viement_list
+    - rightssupport.crm_timeline_can_add_detail
+    - rightssupport.crm_timeline_can_close_piste
+    - rightssupport.crm_timeline_crm_can_add_next_meeting
+- name: communication
+  permissions:
+    core:
+    - rightssupport.crm_can_create_action_punctual_follow_up
+    - rightssupport.crm_can_create_demand
+    - rightssupport.crm_can_view_comn_agenda
+    - rightssupport.crm_can_view_comn_dashboard
+    - rightssupport.crm_can_view_contact_list
+    - rightssupport.crm_can_view_expired_ponctual_events
+    - rightssupport.crm_can_view_follow_up_list
+    - rightssupport.crm_can_view_offer_list
+    - rightssupport.crm_can_view_pin_boards
+    - rightssupport.crm_can_view_sms_email
+    - rightssupport.crm_timeline_can_add_detail
+- name: enseignant
+  permissions:
+    core:
+    - rightssupport.can_view_etabib_expos
+    - rightssupport.can_view_etabib_store
+    - rightssupport.care_can_view_dashboard
+    - rightssupport.care_can_view_profile
+- name: "\xE9tudiant"
+  permissions:
+    core:
+    - rightssupport.can_view_etabib_expos
+    - rightssupport.can_view_etabib_store
+    - rightssupport.care_can_view_dashboard
+    - rightssupport.care_can_view_profile
+- name: medecin
+  permissions:
+    core:
+    - rightssupport.can_veiw_agenda
+    - rightssupport.can_veiw_etabib_file_sharing
+    - rightssupport.can_veiw_e_prescription
+    - rightssupport.can_veiw_teleconsultation
+    - rightssupport.can_view_etabib_econgre
+    - rightssupport.can_view_etabib_expos
+    - rightssupport.can_view_etabib_store
+    - rightssupport.care_can_view_dashboard
+    - rightssupport.care_can_view_profile
+- name: "minist\xE8re"
+  permissions:
+    core:
+    - rightssupport.can_view_etabib_expos
+    - rightssupport.can_view_etabib_store
+    - rightssupport.care_can_view_dashboard
+    - rightssupport.care_can_view_profile
+- name: moderateur
+- name: organisateur
+- name: "param\xE9dical"
+  permissions:
+    core:
+    - rightssupport.can_view_etabib_expos
+    - rightssupport.can_view_etabib_store
+    - rightssupport.care_can_view_dashboard
+    - rightssupport.care_can_view_profile
+- name: partenaire
+  permissions:
+    core:
+    - categorieproduit.add_categorieproduit
+- name: patient
+- name: pharmacien
+  permissions:
+    core:
+    - rightssupport.can_view_drugs_list
+    - rightssupport.can_view_etabib_expos
+    - rightssupport.can_view_etabib_store
+    - rightssupport.care_can_view_dashboard
+    - rightssupport.care_can_view_profile
+- name: psychologue
+  permissions:
+    core:
+    - rightssupport.can_view_etabib_expos
+    - rightssupport.can_view_etabib_store
+    - rightssupport.care_can_view_dashboard
+    - rightssupport.care_can_view_profile
+- name: "responsable achat m\xE9dical"
+  permissions:
+    core:
+    - rightssupport.can_view_etabib_expos
+    - rightssupport.can_view_etabib_store
+    - rightssupport.care_can_view_dashboard
+    - rightssupport.care_can_view_profile
+- name: responsable commercial
+  permissions:
+    core:
+    - rightssupport.crm_can_manage_pistes
+    - rightssupport.crm_can_manage_prospect_list
+    - rightssupport.manage_tasks
+- name: speaker
+- name: technicien
+  permissions:
+    core:
+    - rightssupport.crm_can_view_contact_list
+    - rightssupport.crm_can_view_offer_list
+    - rightssupport.crm_can_view_pin_boards
+    - rightssupport.crm_can_view_problem_list
+    - rightssupport.crm_can_view_tech_agenda
+    - rightssupport.crm_can_view_tech_dashboard
+    - rightssupport.crm_timeline_can_add_technical_detail
+    - rightssupport.crm_timeline_can_set_demand_as_done
+- name: visiteur
+  permissions:
+    core:
+    - rightssupport.can_view_etabib_expos
+    - rightssupport.can_view_etabib_store
+    - rightssupport.care_can_view_dashboard
+    - rightssupport.care_can_view_profile

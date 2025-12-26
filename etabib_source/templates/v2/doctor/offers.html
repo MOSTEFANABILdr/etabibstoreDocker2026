@@ -1,0 +1,476 @@
+{% extends "base.html" %}
+{% load i18n static  ads_tags utils_tags role_tags offer_tags %}
+
+{% block title %} {% trans 'Mes offres' %} {% endblock %}
+
+{% block style %}
+<style>
+.pricing-table-box {
+    padding: 0px;
+    margin: 0px;
+    margin-top: 10px;
+	width: 100%;
+    max-width: 100%;
+}
+
+.pricing-table-box td {
+    padding: 0px;
+    border-left: 1px solid transparent;
+}
+
+.pricing-table-box .pricing-table-box-list td {
+    padding: 10px 8px;
+    font-weight: 500;
+    text-align: center;
+    font-size: 14px;
+    background: #F9F9F9;
+}
+
+
+.pricing-table-box .pricing-table-box-list td:first-child {
+    font-weight: 400;
+    text-align: left;
+    border-left: 0px;
+    font-size: 14px;
+    color: #060606;
+}
+
+.pricing-table-box .pricing-table-box-list:nth-child(2n) td {
+    background: #F2F2F2;
+}
+
+.pricing-table-box .pricing-table-box-text h2 {
+    font-size: 25px;
+    font-weight: 300;
+    line-height: 30px;
+    margin: 0px;
+    padding: 0px;
+    text-align: center;
+    color: #8a8a8a;
+}
+
+.pricing-table-box .pricing-table-box-text p {
+    font-size: 12px;
+    font-weight: 400;
+    text-align: center;
+    color: #666;
+    margin-top: 10px;
+}
+
+.pricing-table-box .pricing-table-box-item {
+    color: #FFF;
+}
+
+.pricing-table-box .pricing-table-box-item .pricing-table-box-item-head {
+    padding: 10px 5px;
+    text-align: center;
+    background-color: #009DD2!important;
+    box-shadow: 0 -2px rgba(0, 0, 0, .1) inset;
+    -moz-box-shadow: 0 -2px rgba(0, 0, 0, .1) inset;
+    -webkit-box-shadow: 0 -2px rgba(0, 0, 0, .1) inset;
+    -o-box-shadow: 0 -2px rgba(0, 0, 0, .1) inset;
+}
+
+.pricing-table-box .pricing-table-box-item .pricing-table-box-item-head p {
+    font-size: 17px;
+    font-weight: 600;
+    line-height: 21px;
+    text-transform: uppercase;
+    margin-bottom: 0px;
+}
+
+.pricing-table-box .pricing-table-box-item .pricing-table-box-item-price {
+    padding: 15px 10px;
+    text-align: center;
+    color: #009AD7;
+    background: #F9F9F9;
+    min-height: 180px;
+}
+
+.pricing-table-box .pricing-table-box-item .pricing-table-box-item-price p {
+    font-size: 31px;
+    font-weight: 600;
+    line-height: 36px;
+    margin-bottom: 0px;
+}
+
+.pricing-table-box .pricing-table-box-item .pricing-table-box-item-price p span {
+    font-size: 12px;
+    font-weight: 300;
+}
+
+.pricing-table-box .pricing-table-box-item .pricing-table-box-item-price > span {
+    font-size: 12px;
+    font-weight: 400;
+    color: #009AD7
+}
+
+.pricing-table-box .pricing-table-box-item .pricing-table-box-item-purchase {
+    padding: 10px 5px;
+    background: #FFF;
+}
+
+.pricing-table-box-item-purchase .btn {
+    text-transform: uppercase;
+    margin-bottom: 0px;
+    background-color: #009DD2;
+    box-shadow: 0 -2px rgba(0, 0, 0, .1) inset;
+    -moz-box-shadow: 0 -2px rgba(0, 0, 0, .1) inset;
+    -webkit-box-shadow: 0 -2px rgba(0, 0, 0, .1) inset;
+    -o-box-shadow: 0 -2px rgba(0, 0, 0, .1) inset;
+    border: none;
+    padding: 11px 0;
+}
+
+.pricing-table-box .pricing-table-box-list:nth-child(1n) td.second-row {
+    background: #F2F2F2;
+}
+
+.pricing-table-box .pricing-table-box-list:nth-child(2n) td.second-row {
+    background: #dedede;
+}
+
+.pricing-table-box .pricing-table-box-list:nth-child(1n) td.fourth-row {
+    background: #F2F2F2;
+}
+
+.pricing-table-box .pricing-table-box-list:nth-child(2n) td.fourth-row {
+    background: #dedede;
+}
+
+
+/* Color Version 2*/
+.pricing-table-box .pricing-table-box-item .pricing-table-box-item-head.color1 {
+    background-color: #F7B403!important;
+}
+
+.pricing-table-box-item-purchase .btn.color1 {
+    background-color: #F7B403!important;
+}
+
+.pricing-table-box .pricing-table-box-item .pricing-table-box-item-price.color1 {
+    color: #F7B403!important;
+}
+/* Color Version 3*/
+.pricing-table-box .pricing-table-box-item .pricing-table-box-item-head.color2 {
+    background-color: #EA003F!important;
+}
+
+.pricing-table-box-item-purchase .btn.color2 {
+    background-color: #EA003F!important;
+}
+
+.pricing-table-box .pricing-table-box-item .pricing-table-box-item-price.color2 {
+    color: #EA003F!important;
+}
+/* Color Version 4*/
+.pricing-table-box .pricing-table-box-item .pricing-table-box-item-head.color3 {
+    background-color: #450090!important;
+}
+
+.pricing-table-box-item-purchase .btn.color3 {
+    background-color: #450090!important;
+}
+
+.pricing-table-box .pricing-table-box-item .pricing-table-box-item-price.color3 {
+    color: #450090!important;
+}
+
+
+
+</style>
+{% endblock %}
+
+{% block content %}
+<div class="container">
+    <div class="row">
+        {% include 'partial/messages-alerts.html' %}
+    </div>
+    <div class="text-center">
+        <img class="img-responsive d-none d-sm-block mb-2" src="{% static 'img/banner-offre-md-p.png' %}"/>
+        <img class="img-responsive d-block d-sm-none mb-2" src="{% static 'img/banner-offre-xs-p.png' %}"/>
+    </div>
+    <div class="row">
+        <div class="col-lg-12">
+            <div class="col-md-12">
+                <div class="table-responsive">
+                    <table class="pricing-table-box">
+                        <tbody>
+                        <tr>
+                            <td width="20%" class="pricing-table-box-text">
+                                <h2>{% trans 'NOS OFFRES' %}</h2>
+                            </td>
+                            {% for offer in offers_active %}
+                            <td width="20%">
+                                <div class="pricing-table-box-item">
+                                    <div class="pricing-table-box-item-head color{{forloop.counter}}">
+                                        <p title="{{offer.libelle}}">{{offer.libelle}}</p>
+                                    </div>
+                                    <div class="pricing-table-box-item-price color{{forloop.counter}}">
+                                        {% reduction_status offer request.user as red_status %}
+                                        {% if red_status.has_reduction %}
+                                        <p>
+                                            {{offer.prix_mensuel_reduit}} {% trans "Da" %}
+                                            <small class="f-s-10">/ {% trans "Mois" %}</small>
+                                        </p>
+                                        <p class="del">
+                                            <del style="font-size: 22px;color: black;">
+                                                {{offer.prix_mensuel}} {% trans "Da" %}
+                                            </del>
+                                        </p>
+                                        <small>
+                                            {% blocktrans with days=red_status.days %}
+                                            OFFRE EXPIRE DANS {{days}} JOURS
+                                            {% endblocktrans %}
+                                        </small>
+                                        {% else %}
+                                        <p>
+                                            {{offer.prix_mensuel}} {% trans "Da" %}
+                                            <small class="f-s-10">/ {% trans "Mois" %}</small>
+                                        </p>
+                                        {% endif %}
+                                        <br>
+                                        <small>* {% trans 'LES PRIX SONT HORS TAXE' %}</small>
+                                    </div>
+                                </div>
+                            </td>
+                            {% endfor %}
+                        </tr>
+
+                        <tr class="pricing-table-box-list">
+                            <td>{% trans 'Durée Abonnement' %}</td>
+                            {% for offer in offers_active %}
+                            <td>{{offer.licences_nbjours_desc|default_if_none:""}}</td>
+                            {% endfor %}
+                        </tr>
+                        <tr class="pricing-table-box-list">
+                            <td>
+                                <strong>{% trans 'VOS AVANTAGES' %}</strong>
+                            </td>
+                            <td></td>
+                            {% for offer in offers_active %}
+                            <td></td>
+                            {% endfor %}
+                        </tr>
+                        <tr class="pricing-table-box-list">
+                            <td>{% trans "Prix promo" %}</td>
+                            {% for offer in offers_active %}
+                            {% reduction_status offer request.user as red_status %}
+                            {% if red_status.has_reduction %}
+                            <td>
+                                <p style="font-size: 16px;">
+                                    {{offer.prix_reduit}} {% trans "Da" %}
+                                </p>
+                                <p class="del">
+                                    <del style="font-size: 14px;color: black;">
+                                        {{offer.prix}} {% trans "Da" %}
+                                    </del>
+                                </p>
+                                <small>
+                                    {% blocktrans with days=red_status.days %}
+                                    OFFRE EXPIRE DANS {{days}} JOURS
+                                    {% endblocktrans %}
+                                </small>
+                            </td>
+                            {% else %}
+                            <td>
+                                <p style="font-size: 16px;">
+                                    {{offer.prix}} {% trans "Da" %}
+                                </p>
+                            </td>
+                            {% endif %}
+                            {% endfor %}
+                        </tr>
+                        <tr class="pricing-table-box-list">
+                            <td>{% trans "Intégrer l'Annuaire eTabib®" %}</td>
+                            {% for offer in offers_active %}
+                            {% if offer|is_including_etabib_annuaire %}
+                            <td><span class="fa fa-check text-success"></span></td>
+                            {% else %}
+                            <td><span class="fa fa-times text-danger"></span></td>
+                            {% endif %}
+                            {% endfor %}
+                        </tr>
+                        <tr class="pricing-table-box-list">
+                            <td>{% trans "Accès à l'Agenda en ligne" %}</td>
+                            {% for offer in offers_active %}
+                            {% if offer|is_including_online_agenda %}
+                            <td><span class="fa fa-check text-success"></span></td>
+                            {% else %}
+                            <td><span class="fa fa-times text-danger"></span></td>
+                            {% endif %}
+                            {% endfor %}
+                        </tr>
+                        <tr class="pricing-table-box-list">
+                            <td>{% trans "Accès à eTabib® Visio" %}</td>
+                            {% for offer in offers_active %}
+                            {% if offer|is_including_etabib_visio %}
+                            <td><span class="fa fa-check text-success"></span></td>
+                            {% else %}
+                            <td><span class="fa fa-times text-danger"></span></td>
+                            {% endif %}
+                            {% endfor %}
+                        </tr>
+                        <tr class="pricing-table-box-list">
+                            <td>{% trans "Ordonnancier Digital" %}</td>
+                            {% for offer in offers_active %}
+                            {% if offer|is_including_e_prescription %}
+                            <td><span class="fa fa-check text-success"></span></td>
+                            {% else %}
+                            <td><span class="fa fa-times text-danger"></span></td>
+                            {% endif %}
+                            {% endfor %}
+                        </tr>
+                        <tr class="pricing-table-box-list">
+                            <td>{% trans "Accès à la marketplace" %}</td>
+                            {% for offer in offers_active %}
+                            {% if offer|is_including_etabib_store %}
+                            <td><span class="fa fa-check text-success"></span></td>
+                            {% else %}
+                            <td><span class="fa fa-times text-danger"></span></td>
+                            {% endif %}
+                            {% endfor %}
+                        </tr>
+                        <tr class="pricing-table-box-list">
+                            <td>{% trans "Rémunération des Téléconsultations" %}</td>
+                            {% for offer in offers_active %}
+                            {% if offer|is_including_etabib_care %}
+                            <td><span class="fa fa-check text-success"></span></td>
+                            {% else %}
+                            <td><span class="fa fa-times text-danger"></span></td>
+                            {% endif %}
+                            {% endfor %}
+                        </tr>
+                        <tr class="pricing-table-box-list">
+                            <td>{% trans "Cabinet/Secrétariat Digital" %}</td>
+                            {% for offer in offers_active %}
+                            {% if offer|is_including_virtual_clinic %}
+                            <td><span class="fa fa-check text-success"></span></td>
+                            {% else %}
+                            <td><span class="fa fa-times text-danger"></span></td>
+                            {% endif %}
+                            {% endfor %}
+                        </tr>
+                        <tr class="pricing-table-box-list">
+                            <td>{% trans "Télécharger eTabib® Workspace" %}</td>
+                            {% for offer in offers_active %}
+                            {% if offer|is_including_etabib_workspace %}
+                            <td><span class="fa fa-check text-success"></span></td>
+                            {% else %}
+                            <td><span class="fa fa-times text-danger"></span></td>
+                            {% endif %}
+                            {% endfor %}
+                        </tr>
+                        <tr class="pricing-table-box-list">
+                            <td>{% trans "Télécharger Les Applis eTabib® Store" %}</td>
+                            {% for offer in offers_active %}
+                            {% if offer|is_including_app_downloading %}
+                            <td><span class="fa fa-check text-success"></span></td>
+                            {% else %}
+                            <td><span class="fa fa-times text-danger"></span></td>
+                            {% endif %}
+                            {% endfor %}
+                        </tr>
+                        <tr class="pricing-table-box-list">
+                            <td>{% trans "Support/SAV" %}</td>
+                            {% for offer in offers_active %}
+                            <td>{{offer.get_sav_display|default_if_none:""}}</td>
+                            {% endfor %}
+                        </tr>
+                        <tr class="pricing-table-box-list">
+                            <td></td>
+                            {% for offer in offers_active %}
+                            <td>
+                                <a data-id="{{ offer.id }}" class="read-more-btn" href="#">
+                                    {% trans 'Tous les détails' %}
+                                    <i class="fa fa-chevron-right"></i>
+                                </a>
+                            </td>
+                            {% endfor %}
+                        </tr>
+                        <tr class="pricing-table-box-list">
+                            <td></td>
+                            {% for offer in offers_active %}
+                            <td>
+                                <div class="pricing-table-box-item-purchase">
+                                    <button data-url="{% url 'doctor-subscribe' offer.id offer.slug %}"
+                                            class="btn btn-success btn-block color{{forloop.counter}} subscribe">
+                                        {% trans "COMMANDER" %}
+                                    </button>
+
+                                    <a href="{% url 'doctor-order-offer-sponsorised' %}"
+                                       class="fm-create sponsoried-offer"
+                                       data-fm-ok="ok"
+                                       data-fm-callback="redirect_from_response">
+                                        {% trans "J'ai un sponsor" %}
+                                    </a>
+                                </div>
+                            </td>
+                            {% endfor %}
+                        </tr>
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+        </div>
+    </div>
+
+</div>
+{% endblock %}
+
+{% block js %}
+{% include "fm/modal.html" %}
+<!-- /.modal -->
+<script type="text/javascript">
+    $(function() {
+        $.fm({debug: true});
+    });
+</script>
+<script>
+$(document).ready(function() {
+    $(".subscribe").click(function() {
+        var element = $(this);
+        Lobibox.confirm({
+            title: "{% trans 'Confirmation' %}",
+            msg: "{% trans 'Voulez-vous vous abonner à cette offre?' %}",
+            buttons: {
+                oui: {
+                    'class': 'btn btn-etabib',
+                    text: "{% trans 'Oui' %}",
+                    closeOnClick: true
+                },
+                non: {
+                    'class': 'btn btn-danger',
+                    text: "{% trans 'Non' %}",
+                    closeOnClick: true
+                }
+            },
+            callback: function(lobibox, type){
+                var btnType;
+                if (type === 'oui'){
+                    window.location.href = element.data("url");
+                }
+            }
+        });
+    });
+    $(".read-more-btn").click(function(e) {
+        e.preventDefault();
+        var offer_id = $(this).data('id');
+        var url = "/doctor/offers/" + offer_id;
+        Lobibox.window({
+            title: "{% trans 'Tous les détails' %}",
+            url: url,
+            width: 600,
+            modal: true,
+            buttons: {
+                later: {
+                    'class': 'lobibox-btn lobibox-btn-default',
+                    text: 'Ok',
+                    closeOnClick: true
+                },
+            },
+        });
+    });
+});
+</script>
+{% endblock %}

@@ -1,0 +1,811 @@
+{% extends "base.html" %}
+{% load i18n %}
+{% load static ads_tags avatar_tags congre_tags role_tags utils_tags %}
+{% block title %} {% trans 'Détail' %} {% endblock %}
+{% block style %}
+<!-- Google Fonts
+                    ============================================ -->
+<link
+        href="https://fonts.googleapis.com/css?family=Roboto:100,300,400,700,900"
+        rel="stylesheet">
+
+<!-- tiny-slider
+                    ============================================ -->
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/tiny-slider/2.9.3/tiny-slider.css">
+<!-- Bootstrap CSS
+                    ============================================ -->
+<link rel="stylesheet" href='{% static "css/bootstrap.min.css" %}'>
+<!-- Bootstrap CSS
+                    ============================================ -->
+<link rel="stylesheet" href='{% static "css/font-awesome.min.css" %}'>
+<!-- owl.carousel CSS
+                    ============================================ -->
+<link rel="stylesheet" href='{% static "css/owl.carousel.css" %}'>
+<link rel="stylesheet" href='{% static "css/owl.theme.css" %}'>
+<link rel="stylesheet" href='{% static "css/owl.transitions.css" %}'>
+<!-- animate CSS
+                    ============================================ -->
+<link rel="stylesheet" href='{% static "css/animate.css" %}'>
+<!-- normalize CSS
+                    ============================================ -->
+<link rel="stylesheet" href='{% static "css/normalize.css" %}'>
+<!-- meanmenu icon CSS
+                    ============================================ -->
+<link rel="stylesheet" href='{% static "css/meanmenu.min.css" %}'>
+<!-- main CSS
+                    ============================================ -->
+<link rel="stylesheet" href='{% static "css/main.css" %}'>
+<!-- educate icon CSS
+                    ============================================ -->
+<link rel="stylesheet" href='{% static "css/educate-custon-icon.css" %}'>
+<!-- morrisjs CSS
+                    ============================================ -->
+<link rel="stylesheet" href='{% static "css/morrisjs/morris.css" %}'>
+<!-- mCustomScrollbar CSS
+                    ============================================ -->
+<link rel="stylesheet"
+      href='{% static "css/scrollbar/jquery.mCustomScrollbar.min.css" %}'>
+<!-- metisMenu CSS
+                    ============================================ -->
+<link rel="stylesheet"
+      href='{% static "css/metisMenu/metisMenu.min.css" %}'>
+<link rel="stylesheet"
+      href='{% static "css/metisMenu/metisMenu-vertical.css" %}'>
+<!-- modernizr JS
+                    ============================================ -->
+<script src='{% static "js/vendor/modernizr-2.8.3.min.js" %}'></script>
+<!-- dropzone CSS ============================================ -->
+<link rel="stylesheet" href='{% static "css/dropzone/dropzone.css" %}'>
+<style>
+.tns-outer {
+  position: relative;
+}
+[data-controls] {
+  border: 0;
+  padding: 0;
+  font-size: 30px;
+  position: absolute;
+  top: 50%;
+  margin-top: -18px;
+  z-index: 1;
+  background: transparent;
+}
+[data-controls="prev"] {
+  left: 20px;
+}
+[data-controls="next"] {
+  right: 20px;
+}
+.congre .carousel > div {
+  padding: 20px 0;
+  text-align: center;
+}
+
+.congre .profile .banniere-sponsor {
+	background-size: cover;
+	height:150px;
+	color: #f5f5f5;
+}
+@media only screen and (max-width: 767px) {
+    .congre .profile .banniere-sponsor {
+        background-size: cover;
+        height:100px;
+        color: #f5f5f5;
+    }
+}
+.congre .profile img {
+	width: 180px;
+	height:180px;
+    border-style: dashed;
+    border-width: thin;
+}
+@media only screen and (max-width: 767px) {
+    .congre .profile img {
+        width: 100px;
+        height:100px;
+    }
+}
+
+.congre .profile .tab-content {
+	padding-bottom: 0px;
+}
+
+.congre .grid .banniere-sponsor {
+	position: relative;
+	border-bottom: 1px solid #ddd;
+	padding: 15px 10px 10px 20px;
+}
+.congre .grid .banniere-sponsor:before,
+.congre .grid .banniere-sponsor:after {
+	display: table;
+	content: " ";
+}
+
+.congre .grid .banniere-sponsor:after {
+	clear: both;
+}
+
+.congre .grid .banniere-sponsor span,
+.congre .grid .banniere-sponsor > .fa {
+	display: inline-block;
+	margin: 0;
+	font-weight: 300;
+	font-size: 1.5em;
+	float: left;
+}
+
+.congre .grid .banniere-sponsor span {
+	padding: 0 5px;
+}
+
+.congre .grid .banniere-sponsor > .fa {
+	padding: 5px 10px 0 0;
+}
+
+.congre .grid .banniere-sponsor > .grid-tools {
+	padding: 4px 10px;
+}
+
+.congre .grid .banniere-sponsor > .grid-tools a {
+	color: #000000;
+	padding-left: 10px;
+	cursor: pointer;
+}
+
+.congre .grid .banniere-sponsor > .grid-tools a:hover {
+	color: #666666;
+}
+
+
+/*
+schedule
+*/
+.congre {
+
+}
+.congre .tabs-schedule.nav-tabs {
+    border: 0px;
+    /*border-bottom: 2px solid #f5f5f5;*/
+   /* margin-bottom: 40px; */
+    margin-left: 0px;
+    text-align: center;
+    background-color: #E8E8E8;
+}
+
+.congre .tabs-schedule.nav-tabs > li {
+    padding: 0px;
+}
+
+.congre .tabs-schedule.nav-tabs > li > a {
+    font-size: 20px;
+    display: block;
+    padding: 4px 20px;
+    color: black;
+    font-family: sans-serif, "Open Sans";
+    font-weight: 700;
+    margin-bottom: -2px;
+    position: relative;
+    border: 0px;
+}
+
+.congre .tabs-schedule.nav-tabs > li > a:after {
+    content: "";
+    width: 0;
+    height: 2px;
+    position: absolute;
+    left: 0;
+    bottom: 0;
+    background: #818181;
+    transition: all .3s;
+    -webkit-transition: all .3s;
+}
+
+.congre .tabs-schedule.nav-tabs > li > a span {
+    font-size: 12px;
+    display: block;
+    color: #999;
+    font-family: sans-serif;
+    font-weight: 400;
+
+}
+
+.congre .tabs-schedule.nav-tabs > li.active > a,
+.congre .tabs-schedule.nav-tabs > li > a:hover {
+    color: black;
+    background-color: WhiteSmoke;
+    border-top-right-radius: 15px;
+    border-top-left-radius: 15px;
+}
+.congre .tabs-schedule.nav-tabs > li > a.disable-hover:hover {
+    color: black;
+    background-color: #E8E8E8;
+}
+.congre .tabs-schedule.nav-tabs > li > a.disable-hover:after {
+    background: #E8E8E8;
+}
+
+.congre .tabs-schedule.nav-tabs > li.active > a:after,
+.congre .tabs-schedule.nav-tabs > li > a:hover:after {
+    width: 100%;
+}
+
+.congre .tabs-schedule.title-tab {
+  color:black;
+  font-size: 20px;
+  display: block;
+  padding: 4px 20px;
+  color: black;
+  font-family: sans-serif, "Open Sans";
+  font-weight: 700;
+  margin-bottom: -2px;
+  position: relative;
+  border: 0px;
+}
+.congre .congre-title {
+    margin-bottom: 0px;
+}
+.congre .congre-title h4 {
+    color: black;
+    font-size: 22px;
+    font-weight: 900;
+}
+.congre .congre-title .text-muted {
+    margin-bottom: 0px!important;
+}
+
+.congre .carousel {
+    border-width: thin;
+    border-color: #E8E8E8;
+    border-style: solid;
+    padding: 50px;
+    background-image: linear-gradient(#56dcff2b, #ffffff, #ffffff, #8c928c2b);
+    -moz-box-shadow:    inset 0 0 5px #3EB6D5;
+    -webkit-box-shadow: inset 0 0 5px #3EB6D5;
+    box-shadow:         inset 0 0 5px #3EB6D5;
+}
+.congre .carousel .webinar-title {
+    font-size: 20px;
+    font-weight: 800;
+}
+.congre .carousel .webinar-description {
+    font-size: 16px;
+    color: black
+}
+.congre .autres-sponsor-title {
+    color: #933ec5;
+    padding-left: 10px;
+    font-weight: 800;
+}
+.congre .autres-sponsors {
+    //background-image: linear-gradient(white,  #dfe1e3, #e8e9e7, white);
+    direction: rtl;
+}
+
+.congre .webinar-item {
+    background-color:WhiteSmoke;
+    padding: 20px;
+    border-bottom: 1px solid #E8E8E8;
+}
+.congre .webinar-item .webinar-time > span {
+    font-size: 16px;
+    font-weight: 600;
+}
+
+.congre .webinar-item .webinar-detail .webinar-title {
+    font-size: 20px;
+    font-weight: 800;
+    color: black;
+}
+
+</style>
+{% endblock %}
+{% block content %}
+<div class="product-status mg-b-15">
+    <div class="container-fluid">
+        <div class="row">
+            <div class="col-lg-12">
+                {% include 'partial/messages-alerts.html' %}
+            </div>
+        </div>
+        <div class="row congre">
+            <div class="col-lg-12 col-md-12 col-sm-12 col-xs-12">
+                <div class="grid profile">
+                    <div class="banniere-sponsor"
+                         style="background: url('{{congre.getSponsorGoldBanniere}}') no-repeat center center;">
+                        <img src="{{congre.getsponsorGoldLogo}}" class="img-circle" alt="">
+                    </div>
+                    <div class="text-center congre-title">
+                        <h4>{{congre.nom}}</h4>
+                        <p>
+                            <strong>DE</strong> {{congre.date_debut|date:"Y-m-d H:i"}} <strong>À</strong>
+                            {{congre.date_fin|date:"Y-m-d H:i"}}
+                        </p>
+                        {% if congre|is_presentiel or congre|is_presentiel_and_distanciel %}
+                        <p>
+                            <strong>{% trans 'Lieu' %}:</strong>
+                            {{congre.adresse|default_if_none:""}}, {{congre.etablissement|default_if_none:""}}
+                        </p>
+                        {% endif %}
+                        <p class="text-muted">
+                            {{congre.description}}
+                        </p>
+                    </div>
+                </div>
+                {% if congre.autre_sponsors.all %}
+                <p class="autres-sponsor-title">{% trans 'NOS PARTENAIRES' %}:</p>
+                <div class="autres-sponsors">
+                    <div class="carousel-autres-sponsors text-center">
+                        {% for sponsor in congre.autre_sponsors.all %}
+                        <div>
+                            <img src="{{sponsor.image.url}}" class="img-circle" alt="" width="90" height="90">
+                        </div>
+                        {% endfor %}
+                    </div>
+                </div>
+                {% endif %}
+                <div class="carousel">
+                    {% for wb in webinars %}
+                    <div>
+                        <div class="row">
+                            <div class="col-md-12">
+                                <div class="col-md-2 text-center">
+                                    <img src="{{wb.sponsor.image.url}}"
+                                         class="rounded-circle img-circle" alt=""/>
+                                    <p>{{wb.get_type_display}}</p>
+                                </div>
+                                <div class="col-lg-7 col-md-6 text-center">
+                                    <h4 class="webinar-title">{{wb.nom}}</h4>
+                                    <p class="webinar-description">{{wb.description}}</p>
+                                    <p>
+                                        {{wb.speaker.full_name}}
+                                    </p>
+                                    <p>
+                                        {{wb.speaker.qualification}}
+                                    </p>
+                                </div>
+                                <div class="col-lg-3 col-md-4 text-center" >
+                                    {% if wb.speaker %}
+                                    {% avatar wb.speaker.user class="rounded-circle img-circle text-center" width='230' height='230' %}
+                                    {% endif %}
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    {% endfor %}
+                </div>
+                <div class="row">
+                    <div class="col-lg-12">
+                        {% if user|is_organizer and user == congre.organisateur.user %}
+                        <div class="btn-group floatright" role="group" aria-label="...">
+                            <a href="{% url 'organizer-webinar-create' congre.id %}"
+                               class="btn fm-create btn-etabib"
+                               data-fm-head="{% trans 'Ajouter une session' %}"
+                               data-fm-callback="reload">
+                                {% trans 'Ajouter une session' %}
+                            </a>
+                            <a href="{% url 'organizer-webinar-publish-all' congre.id %}"
+                               class="btn btn-default">
+                                {% trans 'Publier Tout' %}
+                            </a>
+                            <a href="{% url 'organizer-congress-invitations' congre.id %}"
+                               class="btn btn-default">
+                                {% trans 'Invitations' %}
+                            </a>
+                        </div>
+                        {% endif %}
+                    </div>
+                </div>
+                <div class="row">
+                    <div class="col-lg-12">
+                        <ul class="nav tabs-schedule nav-tabs list-inline" role="tablist">
+                            <li class="nav-item">
+                                <a class="nav-link disabled disable-hover">
+                                    {% trans 'PROGRAMME' %}
+                                </a>
+                            </li>
+                            {% regroup webinars by date_debut|date:"Y-m-d" as webinars_by_day %}
+                            {% for wenar in webinars_by_day %}
+                            <li role="presentation"
+                                class="nav-item {% if forloop.first %} active {% endif %}">
+                                <a class="nav-link {% if forloop.first %} active show {% endif %}"
+                                   href="#tab{{ forloop.counter }}"
+                                   aria-controls="{{ forloop.counter }}"
+                                   role="tab" data-toggle="tab"
+                                   aria-selected="{% if forloop.first %} true {% else %}false{% endif %}">JOUR
+                                    {{ forloop.counter}}
+                                    <span> {{ wenar.grouper }}</span></a>
+                            </li>
+                            {% endfor %}
+                        </ul>
+                        <!-- Tab panes -->
+                        {% regroup webinars by date_debut|date:"Y-m-d" as webinars_by_day %}
+                        <div class="tab-content">
+                            {% for wenar in webinars_by_day %}
+                            <div role="tabpanel"
+                                 class="tab-pane fade {% if forloop.first %} active in {% endif %}"
+                                 id="tab{{ forloop.counter }}">
+                                {% for wr in wenar.list %}
+                                <div class="row webinar-item">
+                                    <div class="col-md-12 ">
+                                        <div class="col-md-1 col-sm-2 text-center webinar-time">
+                                            <span>{{wr.heure_debut|date:"H:i" }}</span>
+                                            <br>
+                                            <span>à</span>
+                                            <br>
+                                            <span>{{wr.heure_fin|date:"H:i"}}</span>
+                                        </div>
+                                        <div class="col-md-1 col-sm-2 text-center webinar-sponsor">
+                                            {% if wr.sponsor %}
+                                            <img src="{{wr.sponsor.image.url}}" width="60" height="60"
+                                                 class="rounded-circle img-circle" alt=""/>
+                                            {% endif %}
+                                        </div>
+                                        <div class="col-md-7 col-sm-5 webinar-detail">
+                                            <dl>
+                                                <dd>
+                                                    {{wr|renderStatus}}
+                                                </dd>
+                                            </dl>
+                                            <dl>
+                                                <dd class="badge badge-success">
+                                                    {{wr.get_type_display}}
+                                                </dd>
+                                            </dl>
+                                            <dl>
+                                                <dd>
+                                                    <ul class="list-unstyled small">
+                                                    {% if congre|is_presentiel or congre|is_presentiel_and_distanciel %}
+                                                        <li>
+                                                            <i class="fa fa-map dark-blue"></i>
+                                                            <strong>{% trans 'Lieu' %}: </strong>
+                                                            {{congre.adresse|default_if_none:""}},
+                                                            {{congre.etablissement|default_if_none:""}},
+                                                            {% if wr.salle_physique %}
+                                                            {{wr.salle_physique|default_if_none:""}}
+                                                            {% endif %}
+                                                        </li>
+                                                        {% if congre.emplacement %}
+                                                        <li>
+                                                            <a target="_blank" href=" https://maps.google.com/?q={{congre.emplacement}}">
+                                                                <i class="fa fa-map-marker"></i> {% trans 'Emplacement GPS' %}
+                                                            </a>
+                                                        </li>
+                                                        {% endif %}
+                                                    {% endif %}
+                                                    {% if congre|is_presentiel_and_distanciel %}
+                                                        <li>
+                                                            <i class="fa fa-television dark-blue"></i>
+                                                            <strong>{% trans 'Diffusion en ligne le' %}: </strong>
+                                                            {% if wr.date_diffustion %}
+                                                            {{wr.date_diffustion|date:"Y-m-d"}}
+                                                            {% trans "de" %} {{wr.heure_debut_diffusion|date:"H:i"}}
+                                                            {% trans 'à' %} {{wr.heure_fin_diffusion|date:"H:i"}}
+                                                            {% endif %}
+                                                        </li>
+                                                    {% endif %}
+                                                    {% if wr.urls.all %}
+                                                        <li>
+                                                            <i class="fa fa-link dark-blue"></i>
+                                                            <strong>{% trans 'Liens utiles' %}:</strong>
+                                                            <ul>
+                                                                {% for lien in wr.urls.all %}
+                                                                <li>
+                                                                    <a href="{{ lien.url }}" target="_blank">
+                                                                        {{ lien.libelle }}
+                                                                    </a>
+                                                                    {% if user|is_organizer and user == congre.organisateur.user %}
+                                                                    <a href="{% url 'organizer-webinar-url-cancel' lien.id %}"
+                                                                       class="fm-delete"
+                                                                       title="{% trans 'Supprimer' %}"
+                                                                       data-fm-head="{% trans 'Supprimer' %}"
+                                                                       data-fm-callback="reload"
+                                                                       class="btn btn-default">
+                                                                        <i class="fa fa-remove red"></i>
+                                                                    </a>
+                                                                    {% endif %}
+                                                                </li>
+                                                                {% endfor %}
+                                                            </ul>
+                                                        </li>
+                                                    {% endif %}
+                                                    </ul>
+                                                </dd>
+                                            </dl>
+                                            <h1 class="webinar-title">{{wr.nom}}</h1>
+                                            <dl>
+                                                <dd>
+                                                    {{wr.description}}
+                                                </dd>
+                                            </dl>
+                                            {% if wr.speakers.all %}
+                                            <dl>
+                                                <dt>{% trans 'Speakers:' %}</dt>
+                                                {% for sp in wr.speakers.all %}
+                                                <dd>
+                                                    {{sp.full_name}}, {{sp.qualification}}
+                                                    {% if user|is_organizer and user == congre.organisateur.user %}
+                                                    <a href="{% url 'organizer-speaker-remove' wr.id sp.id %}"
+                                                       class="fm-update btn btn-default"
+                                                       data-fm-head="{% trans 'Retirer le speaker' %}"
+                                                       data-fm-callback="reload"
+                                                       class="btn btn-default">
+                                                        <i class="fa fa-user-times"></i>
+                                                    </a>
+                                                    {% endif %}
+                                                </dd>
+                                                {% endfor %}
+                                            </dl>
+                                            {% endif %}
+                                            {% if wr.moderateurs.all %}
+                                            <dl>
+                                                <dt>{% trans 'Modérateurs:' %}</dt>
+                                                {% for mo in wr.moderateurs.all %}
+                                                <dd>
+                                                    {{mo.full_name}}
+                                                    {% if user|is_organizer and user == congre.organisateur.user %}
+                                                    <a href="{% url 'organizer-moderateur-remove' wr.id mo.id %}"
+                                                       class="fm-update btn btn-default"
+                                                       data-fm-head="{% trans 'Retirer le modérateur' %}"
+                                                       data-fm-callback="reload"
+                                                       class="btn btn-default">
+                                                        <i class="fa fa-user-times"></i>
+                                                    </a>
+                                                    {% endif %}
+                                                </dd>
+                                                {% endfor %}
+                                            </dl>
+                                            {% endif %}
+                                        </div>
+                                        <div class="col-md-3 col-sm-3 webinar-buttons ">
+                                            {% if user|is_organizer and user == congre.organisateur.user %}
+                                            <div class="btn-group btn-group-sm btn-group-vertical" role="group"
+                                                 aria-label="...">
+                                                {% if wr|is_soon or wr|is_active %}
+                                                {% if congre|is_distanciel or congre|is_presentiel_and_distanciel %}
+                                                <a href="{% url 'organizer-webinar-detail' wr.id %}"
+                                                   class="btn btn-default">
+                                                    <i class="fa fa-video-camera"></i>
+                                                    {% trans 'Accéder au webinar' %}
+                                                </a>
+                                                {% endif %}
+                                                {% elif not wr|is_published %}
+                                                <a href="{% url 'organizer-webinar-publish' wr.id %}"
+                                                   class="fm-update btn btn-default"
+                                                   data-fm-head="{% trans 'Publier le webinar' %}"
+                                                   data-fm-callback="reload">
+                                                    <i class="fa fa-globe"></i>
+                                                    {% trans "Publier" %}
+                                                </a>
+                                                {% endif %}
+                                                <a href="{% url 'organizer-webinar-update' wr.id congre.pk %}"
+                                                   class="fm-update btn btn-etabib"
+                                                   data-fm-head="{% trans 'Éditer la session' %}"
+                                                   data-fm-ok="{% trans 'Mettre à jour' %}"
+                                                   data-fm-callback="reload">
+                                                    <i class="fa fa-pencil"></i>
+                                                    {% trans "Éditer la session" %}
+                                                </a>
+                                                <a href="{% url 'organizer-speaker-add' wr.id %}"
+                                                   class="fm-create btn btn-default"
+                                                   data-fm-head="{% trans 'Ajouter un speaker' %}"
+                                                   data-fm-callback="reload">
+                                                    <i class="fa fa-user-md"></i>
+                                                    {% trans 'Ajouter un speaker' %}
+                                                </a>
+                                                <a href="{% url 'organizer-moderateur-add' wr.id %}"
+                                                   class="fm-create btn btn-default"
+                                                   data-fm-head="{% trans 'Ajouter un modérateur' %}"
+                                                   data-fm-callback="reload">
+                                                    <i class="fa fa-user-secret"></i>
+                                                    {% trans 'Ajouter un modérateur' %}
+                                                </a>
+                                                 <a href="{% url 'organizer-webinar-medecinsparticipants' wr.id %}"
+                                                   class="btn btn-default">
+                                                    <i class="fa fa-users"></i>
+                                                    {% trans 'Liste des participants' %}
+                                                </a>
+                                                {% if not wr.video %}
+                                                <a href="{% url 'organizer-webinar-video-create' wr.id %}"
+                                                   data-fm-ok="{% trans 'ok' %}"
+                                                   class="btn btn-success fm-create" data-fm-head="" data-fm-callback="reload">
+                                                    <i class="fa fa-file-video-o" aria-hidden="true"></i>
+                                                    {% trans 'Uploader une annonce video' %}
+                                                </a>
+                                                {% else %}
+                                                <a data-url="{{wr.video.url}}"  href="#" class="webinar-video btn btn-success">
+                                                    {% trans 'Afficher l\'annonce video' %}
+                                                </a>
+                                                <a href="{% url 'organizer-webinar-video-cancel' wr.video.id %}"
+                                                   data-fm-ok="{% trans 'ok' %}"
+                                                   data-fm-head="{% trans 'Supprimer l\'annonce video' %}"
+                                                   class="btn btn-danger fm-update" data-fm-head="" data-fm-callback="reload">
+                                                    <i class="fa fa-remove" aria-hidden="true"></i>
+                                                    {% trans 'Supprimer l\'annonce video' %}
+                                                </a>
+                                                {% endif %}
+                                                <a href="{% url 'organizer-webinar-url-create' wr.id %}"
+                                                   data-fm-ok="{% trans 'ok' %}"
+                                                   class="btn btn-warning fm-create" data-fm-head="" data-fm-callback="reload">
+                                                    <i class="fa fa-link" aria-hidden="true"></i>
+                                                    {% trans 'Ajouter un lien' %}
+                                                </a>
+                                                <a href="{% url 'organizer-webinar-archive' wr.id %}"
+                                                   class="fm-update btn btn-default"
+                                                   data-fm-head="{% trans 'Supprimer la session' %}"
+                                                   data-fm-callback="reload">
+                                                    <i class="fa fa-archive"></i>
+                                                    {% trans 'Supprimer la session' %}
+                                                </a>
+                                            </div>
+                                            {% elif user|is_doctor %}
+                                            <div class="btn-group btn-group-vertical" role="group"
+                                                 aria-label="...">
+                                                {% has_sent_paticipation wr user as participation_sent %}
+                                                {% if not participation_sent and wr|is_participation_opened %}
+                                                <a data-id="{{wr.id}}" class="btn btn-etabib send-paticipation"
+                                                   href="#">
+                                                    {% trans 'PARTICIPER' %}
+                                                </a>
+                                                {% endif %}
+                                                {% if wr|is_soon or wr|is_active %}
+                                                {% if participation_sent %}
+                                                {% if congre|is_distanciel or congre|is_presentiel_and_distanciel %}
+                                                <a href="{% url 'organizer-webinar-detail' wr.id %}"
+                                                   class="btn btn-default">
+                                                    <i class="fa fa-video-camera"></i> {% trans 'Accéder au webinar' %}
+                                                </a>
+                                                {% endif %}
+                                                {% endif %}
+                                                {% endif %}
+                                            </div>
+                                            {% endif %}
+                                        </div>
+                                    </div>
+                                </div>
+                                {% endfor %}
+                            </div>
+                            {% endfor %}
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+{% endblock %}
+{% block js %}
+<script type="text/javascript"
+        src="https://cdnjs.cloudflare.com/ajax/libs/moment.js/2.9.0/moment-with-locales.min.js"></script>
+<script type="text/javascript"
+        src="https://cdnjs.cloudflare.com/ajax/libs/bootstrap-datetimepicker/4.17.47/js/bootstrap-datetimepicker.min.js"></script>
+<!-- bootstrap JS
+                    ============================================ -->
+<script src='{% static "js/bootstrap.min.js" %}'></script>
+<!-- wow JS
+                    ============================================ -->
+<script src='{% static "js/wow.min.js" %}'></script>
+<!-- price-slider JS
+                    ============================================ -->
+<script src='{% static "js/jquery-price-slider.js" %}'></script>
+<!-- meanmenu JS
+                    ============================================ -->
+<script src='{% static "js/jquery.meanmenu.js" %}'></script>
+<!-- owl.carousel JS
+                    ============================================ -->
+<script src='{% static "js/owl.carousel.min.js" %}'></script>
+<!-- sticky JS
+                    ============================================ -->
+<script src='{% static "js/jquery.sticky.js" %}'></script>
+<!-- scrollUp JS
+                    ============================================ -->
+<script src='{% static "js/jquery.scrollUp.min.js" %}'></script>
+<!-- counterup JS
+                    ============================================ -->
+<script src='{% static "js/counterup/jquery.counterup.min.js" %}'></script>
+<script src='{% static "js/counterup/waypoints.min.js" %}'></script>
+<script src='{% static "js/counterup/counterup-active.js" %}'></script>
+<!-- mCustomScrollbar JS
+                    ============================================ -->
+<script
+        src='{% static "js/scrollbar/jquery.mCustomScrollbar.concat.min.js" %}'></script>
+<script src='{% static "js/scrollbar/mCustomScrollbar-active.js" %}'></script>
+<!-- metisMenu JS
+                    ============================================ -->
+<script src='{% static "js/metisMenu/metisMenu.min.js" %}'></script>
+<script src='{% static "js/metisMenu/metisMenu-active.js" %}'></script>
+<!-- plugins JS
+                    ============================================ -->
+<script src='{% static "js/plugins.js" %}'></script>
+<!-- main JS
+                    ============================================ -->
+<script src='{% static "js/main.js" %}'></script>
+
+<!-- tiny-slider
+                    ============================================ -->
+<script src="https://cdnjs.cloudflare.com/ajax/libs/tiny-slider/2.9.2/min/tiny-slider.js"></script>
+<!-- dropzone JS ============================================ -->
+<script src='{% static "js/dropzone/dropzone.js" %}'></script>
+<!-- tawk chat JS
+                    ============================================ -->
+{% include 'partial/tawk-script.html' %}
+<script type="text/javascript">
+    //used in congre.js
+    var content = "{% settings_value 'TOS_ADS' %}";
+</script>
+<script>
+Dropzone.autoDiscover = false;
+$(document).ready(function() {
+    if ( $('.carousel').length > 0 ) {
+        var slider_webinar = tns({
+          container: '.carousel',
+          gutter: 0,
+          controlsText: ['<span class="fa fa-chevron-circle-left orange"></span>', '<span class="fa fa-chevron-circle-right orange"></span>'],
+          autoplay: true,
+          loop: true,
+          items: 1, // default number of items
+          nav: false,
+          autoplayButtonOutput:false
+        });
+    }
+    if ( $('.carousel-autres-sponsors').length > 0 ) {
+        var slider_sponsor = tns({
+          container: '.carousel-autres-sponsors',
+          autoplay: true,
+          controlsText: ['<span class="fa fa-chevron-circle-left orange"></span>',
+           '<span class="fa fa-chevron-circle-right orange"></span>'],
+          loop: true,
+          items:6,
+          nav: false,
+          autoplayButtonOutput:false
+        });
+    }
+
+     $('.send-paticipation').on('click', function(e) {
+        e.preventDefault();
+        var data = {
+             'csrfmiddlewaretoken': '{{ csrf_token }}',
+              'id': $(this).attr("data-id")
+           };
+        $.post( "{% url 'doctor-participate-congre' %}", data, function(response) {
+            var settings = {
+                msg: "Participation envoyée",
+                size: 'mini',
+                position: 'top right',
+                sound: false
+            };
+            Lobibox.notify('success', settings);
+            setTimeout(location.reload() , 4000);
+        }, "json")
+        .fail(function(response) {
+            console.log(response);
+        });
+    });
+
+    {% if user|is_organizer %}
+    $(".webinar-video").click(function(e) {
+        var url = $(this).data("url");
+        e.preventDefault();
+        var l = Lobibox.window({
+            title: "Annonce video",
+            modal: true,
+            width: $(window).width(),
+            buttons: {
+                later: {
+                    'class': 'lobibox-btn lobibox-btn-default',
+                    text: 'Ok',
+                    closeOnClick: true
+                },
+            },
+            content: '<video width="100%" height="100%" controls autoplay>'+
+            '<source src="' + url + '" type="video/ogg"></source>' +
+            'Your browser does not support the video tag.</video>',
+        });
+    });
+    {% endif %}
+});
+
+
+
+</script>
+{% endblock %}

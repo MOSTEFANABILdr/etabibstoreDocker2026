@@ -1,0 +1,57 @@
+{% load i18n %}
+{% load role_tags %}
+<div class="btn-group-vertical" >
+    {% if perms.core.crm_can_create_demand %}
+    <a title="{% trans 'Créer une demande' %}" href="{% url 'create-action-contact' contact.id %}"
+       class="btn btn-etabib fm-create" data-fm-head="{% trans 'Créer une demande pour' %} {{contact.full_name}}"
+       data-fm-callback="redirect_from_response">
+        <i class="fa fa-bullhorn" aria-hidden="true"></i>
+    </a>
+    {% endif %}
+    {% if perms.core.crm_can_create_action_punctual_follow_up %}
+    <a title="{% trans 'Suivi ponctuel' %}"
+       href="{% url 'create-action-contact-type-oper' contact.id '2' request.user.operateur.id %}"
+       class="btn btn-etabib fm-create" data-fm-head="{% trans 'Créer un suivi ponctuel' %} {{contact.full_name}}"
+       data-fm-callback="redirect_from_response">
+        <i class="fa fa-phone" aria-hidden="true"></i>
+    </a>
+    {% endif %}
+    {% if perms.core.crm_can_view_sms_email %}
+    <a title="{% trans 'Historique Message' %}"
+       href="{% url 'sms-history' contact.id %}"
+       class="btn btn-etabib ">
+        <i class="fa fa-envelope" aria-hidden="true"></i>
+    </a>
+    {% endif %}
+    {% if perms.core.crm_can_view_prospect_list %}
+    <a title="{% trans 'Ajouter à la liste des prospects' %}" href="{% url 'commercial-add-prospect' contact.id %}"
+       class="btn btn-etabib fm-create"
+       data-fm-head="{% trans 'Ajouter à la liste des prospects' %} {{contact.full_name}}"
+       data-fm-callback="appendWithAlert">
+        <i class="fa fa-user-plus" aria-hidden="true"></i>
+    </a>
+    {% endif %}
+    {% if perms.core.crm_can_view_contact_list %}
+        {% if not contact.archive %}
+        <a title="{% trans 'Détail' %}" class="btn btn-etabib" href="{% url 'operator-detail-contact' contact.id %}">
+            <i class="fa fa-book" aria-hidden="true"></i>
+        </a>
+        {% endif %}
+    {% endif %}
+
+    {% if perms.core.crm_can_view_contact_list %}
+    {% if not contact.archive %}
+    <a title="{% trans 'Archiver' %}" class="btn btn-danger fm-update" href="{% url 'operator-archive-contact' contact.id %}"
+        data-fm-head="{% trans 'Archiver' %} {{contact.full_name}}"
+       data-fm-callback="reload">
+        <i class="fa fa-trash" aria-hidden="true"></i>
+    </a>
+    {% else %}
+    <a title="{% trans 'Déarchiver' %}" class="btn btn-success fm-update" href="{% url 'operator-archive-contact' contact.id %}"
+        data-fm-head="{% trans 'Déarchiver' %} {{contact.full_name}}"
+        data-fm-callback="reload">
+        <i class="fa fa-undo" aria-hidden="true"></i>
+    </a>
+    {% endif %}
+    {% endif %}
+</div>

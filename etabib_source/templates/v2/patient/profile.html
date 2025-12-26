@@ -1,0 +1,431 @@
+{% extends "base.html" %}
+{% load i18n %}
+{% load static %}
+{% load utils_tags qr_code %}
+
+{% block title %} {{title}} {% endblock %}
+
+{% block style %}
+<link href="{% static 'v2/plugins/x-editable-bs4/dist/bootstrap4-editable/css/bootstrap-editable.css' %}"
+      rel="stylesheet"/>
+<link href="{% static 'v2/plugins/x-editable-bs4/dist/inputs-ext/address/address.css' %}" rel="stylesheet"/>
+<link href="{% static 'v2/plugins/x-editable-bs4/dist/inputs-ext/typeaheadjs/lib/typeahead.js-bootstrap.css' %}"
+      rel="stylesheet"/>
+<link href="{% static 'v2/plugins/bootstrap-datepicker/dist/css/bootstrap-datepicker.min.css' %}" rel="stylesheet"/>
+<link href="{% static 'v2/plugins/bootstrap-datepicker/dist/css/bootstrap-datepicker3.min.css' %}" rel="stylesheet"/>
+<link href="{% static 'v2/plugins/select2/dist/css/select2.min.css' %}" rel="stylesheet"/>
+<style>
+.input-group .select2-container {
+    width: auto;
+    flex: 1 1 auto;
+}
+.input-group .select2-container .select2-selection--single {
+    height: 100%;
+    line-height: inherit;
+    padding: 0.5rem 1rem;
+}
+</style>
+{% endblock %}
+{% block content %}
+<div class="container">
+    <div class="row">
+        {% include 'partial/messages-alerts.html' with disable_slideup=True %}
+    </div>
+    <h1 class="page-header">
+        <i class="fas fa-user"></i>
+        {% trans 'معلوماتي الإدارية' %}
+    </h1>
+    <div class="row patient-profile px-2 py-2">
+        <div class="col-lg-4 col-md-6">
+            <div class="form-group row m-b-15">
+                <label class="col-lg-3 col-form-label">{% trans 'Nom' %}:</label>
+                <div class="col-lg-7">
+                    <label id="nom" data-type="text" data-pk="{{patient.id}}"
+                           data-params="{csrfmiddlewaretoken:'{{csrf_token}}'}"
+                           data-url="{% url 'patient-profile-update' patient.id %}" class="col-form-label">
+                        {{patient.user.first_name|default_if_none:""}}
+                    </label>
+                </div>
+            </div>
+            <div class="form-group row m-b-15">
+                <label class="col-lg-3 col-form-label">{% trans 'Prénom' %}:</label>
+                <div class="col-lg-7">
+                    <label id="prenom" data-type="text" data-params="{csrfmiddlewaretoken:'{{csrf_token}}'}"
+                           data-url="{% url 'patient-profile-update' patient.id %}" data-pk="{{patient.id}}"
+                           class="col-form-label">
+                        {{patient.user.last_name|default_if_none:""}}
+                    </label>
+                </div>
+            </div>
+            <div class="form-group row m-b-15">
+                <label class="col-lg-3 col-form-label">{% trans 'Sexe' %}:</label>
+                <div class="col-lg-8">
+                    <label class="col-form-label" id="sexe" data-params="{csrfmiddlewaretoken:'{{csrf_token}}'}"
+                           data-url="{% url 'patient-profile-update' patient.id %}" data-type="select"
+                           data-pk="{{patient.id}}" data-value="{{patient.sexe}}"
+                           data-title="Select sex">
+                    </label>
+                </div>
+            </div>
+        </div>
+        <div class="col-lg-5 col-md-6">
+            <div class="form-group row m-b-15">
+                <label class="col-lg-5 col-form-label">{% trans 'N° Carte Chifa' %}:</label>
+                <div class="col-lg-7">
+                    <label id="chifa" data-type="text" data-params="{csrfmiddlewaretoken:'{{csrf_token}}'}"
+                           data-url="{% url 'patient-profile-update' patient.id %}" data-pk="1" class="col-form-label">
+                        {{patient.chifa|default_if_none:""}}
+                    </label>
+                </div>
+            </div>
+            <div class="form-group row m-b-15">
+                <label class="col-lg-5 col-form-label">{% trans 'Date de naissance' %}:</label>
+                <div class="col-lg-7">
+                    <label class="col-form-label" id="date-naissance"
+                           data-params="{csrfmiddlewaretoken:'{{csrf_token}}'}"
+                           data-url="{% url 'patient-profile-update' patient.id %}" data-type="combodate"
+                           data-value="{{patient.date_naissance|date:'d-m-Y'}}" data-format="DD-MM-YYYY"
+                           data-viewformat="DD-MM-YYYY"
+                           data-template="DD-MM-YYYY" data-pk="1" data-title="Select Date of birth">
+                        {{patient.date_naissance|date:'d-m-Y'}}
+                    </label>
+                </div>
+            </div>
+            <div class="form-group row m-b-15">
+                <label class="col-lg-5 col-form-label">{% trans 'N° de téléphone' %}:</label>
+                <div class="col-lg-7">
+                    <label id="phone" data-type="text" data-params="{csrfmiddlewaretoken:'{{csrf_token}}'}"
+                           data-url="{% url 'patient-profile-update' patient.id %}" data-pk="1" class="col-form-label">
+                        {{patient.telephone|default_if_none:""}}
+                    </label>
+                </div>
+            </div>
+        </div>
+        <div class="col-lg-3">
+            <div class="form-group row m-b-15">
+                <label class="col-lg-3 col-form-label">{% trans 'Pays' %}:</label>
+                <div class="col-lg-7">
+                    <label id="pays" data-type="select2" data-params="{csrfmiddlewaretoken:'{{csrf_token}}'}"
+                           data-url="{% url 'patient-profile-update' patient.id %}" data-pk="{{patient.id}}"
+                           data-value='{{patient.pays.id|default_if_none:""}}'
+                           data-title="Select country"
+                           class="col-form-label">
+                        {{patient.pays.name}}
+                    </label>
+                </div>
+            </div>
+            <div class="form-group row m-b-15">
+                <label class="col-lg-3 col-form-label">{% trans 'Ville' %}:</label>
+                <div class="col-lg-7">
+                    <label id="ville" data-type="select2" data-params="{csrfmiddlewaretoken:'{{csrf_token}}'}"
+                           data-url="{% url 'patient-profile-update' patient.id %}" data-pk="{{patient.id}}"
+                           data-value='{{patient.ville.id|default_if_none:""}}'
+                           data-title="Select country" class="col-form-label">
+                        {{patient.ville.name}}
+                    </label>
+                </div>
+            </div>
+        </div>
+    </div>
+    <h1 class="page-header mt-4">
+        <i class="fas fa-user"></i>
+        {% trans 'Carte QR' %}:
+    </h1>
+    <div class="row patient-profile px-2 py-2">
+        <div class="col-lg-12 col-md-12 text-center">
+            <img id="qrcode" style="display: block; margin-left: auto; margin-right: auto;"
+                 src="{% qr_url_from_text patient.make_qr_code_text size=6 image_format='png' %}">
+            <button onclick="printQr(); return false;" type="submit" class="btn btn-sm btn-etabib btn-lg mt-2">
+                <i class="fa fa-print"></i>
+                {% trans 'Imprimer' %}
+            </button>
+            <div class="alert alert-primary col-lg-6 mx-auto mt-2" role="alert">
+                <i class="fa fa-info-circle"></i>
+                {% trans 'Utilisez le code QR pour un accès instantané à votre espace.' %}
+            </div>
+            <div dir="ltr" id="qr-card-div" class="hide">
+                <div id="qr-card" class="media border" style="width: 323px; height: 203px">
+                    <img style="display: block; margin-left: auto; margin-right: auto;"
+                         src="{% qr_url_from_text patient.make_qr_code_text size=14 image_format='svg' %}">
+                    <div class="media-body">
+                        <img style="display: block; margin-left: auto; margin-right: auto;"
+                             width="48px" class="mt-2" src="{% static 'img/logo/logdo.png' %}" alt="">
+                        <h4 class="mt-2">eTabib card</h4>
+                        <hr>
+                        <h5 class="text-left">
+                            {{patient.user.get_full_name|default_if_none:""}}
+                        </h5>
+                    </div>
+                </div>
+                <div style="width: 323px;" class="alert alert-primary mx-2 my-2" role="alert">
+                    <i class="fa fa-info-circle"></i>
+                    {% trans 'Utilisez le code QR pour un accès instantané à votre espace dans https://store.etabib.dz .' %}
+                </div>
+            </div>
+        </div>
+    </div>
+    <h1 class="page-header mt-4">
+        <i class="fas fa-user-md"></i>
+        {% trans 'معلوماتي الطبية' %}
+    </h1>
+    <div class="row patient-profile px-2 py-2">
+        <div class="col-md-6 mt-2">
+            <header>
+                <h4>{% trans 'الحساسية' %}</h4>
+            </header>
+            <div class="input-group mb-3">
+                {{dciform.media}}
+                {{dciform.dci}}
+                <div class="input-group-append">
+                    <button id="allergyBtn" class="btn btn-outline-info" type="button">
+                        {% trans 'Ajouter' %}
+                    </button>
+                </div>
+            </div>
+            <ul class="list-group" id="allergyLst">
+                {% for allergie in patient.allergies %}
+                <li class="list-group-item">
+                    {{allergie.value}}
+                    <button data-id="{{allergie.id}}" class="btn btn-default btn-xs pull-right remove-allergie-item">
+                        <i class="fa fa-trash"></i>
+                    </button>
+                </li>
+                {% endfor %}
+            </ul>
+        </div>
+        <div class="col-md-6 mt-2">
+            <header>
+                <h4>{% trans 'الأمراض المزمنة' %}</h4>
+            </header>
+            <div class="input-group mb-3">
+                <input id="mldinput" type="text" class="form-control"
+                       placeholder="{% trans 'Tapez une maladie chronique...' %}">
+                <div class="input-group-append">
+                    <button id="mldBtn" class="btn btn-outline-info" type="button">
+                        {% trans 'Ajouter' %}
+                    </button>
+                </div>
+            </div>
+            <ul class="list-group" id="mldLst">
+                {% for mld in patient.maladies_chroniques %}
+                <li class="list-group-item">
+                    {{mld}}
+                    <button data-id="{{forloop.counter0}}" class="btn btn-default btn-xs pull-right remove-mld-item">
+                        <i class="fa fa-trash"></i>
+                    </button>
+                </li>
+                {% endfor %}
+            </ul>
+        </div>
+    </div>
+    <h1 class="page-header mt-4">
+        <i class="fas fa-credit-card"></i>
+        {% trans 'Mon solde' %}
+    </h1>
+    <div class="row patient-profile px-2 py-2">
+        <div class="col-md-2 offset-md-1 mb-1">
+            <span class="credit">{{patient.solde}}</span>
+        </div>
+        <div class="col-md-2 mb-1">
+            <a href="{% url 'epayment-recharge' %}?u={% user_id_hash user %}" class="btn btn-default">
+                {% trans 'Recharger' %}
+            </a>
+        </div>
+        <div class="col-md-3">
+            <a class="btn btn-default">
+                {% trans 'Historique des transactions' %}
+            </a>
+        </div>
+    </div>
+</div>
+{% endblock %}
+{% block js %}
+<script src="{% static 'v2/plugins/jquery-migrate/dist/jquery-migrate.min.js' %}"></script>
+<script src="{% static 'v2/plugins/x-editable-bs4/dist/bootstrap4-editable/js/bootstrap-editable.min.js' %}"></script>
+<script src="{% static 'v2/plugins/x-editable-bs4/dist/inputs-ext/address/address.js' %}"></script>
+<script src="{% static 'v2/plugins/x-editable-bs4/dist/inputs-ext/typeaheadjs/lib/typeahead.js' %}"></script>
+<script src="{% static 'v2/plugins/x-editable-bs4/dist/inputs-ext/typeaheadjs/typeaheadjs.js' %}"></script>
+<script src="{% static 'v2/plugins/x-editable-bs4/dist/inputs-ext/wysihtml5/wysihtml5.js' %}"></script>
+<script src="{% static 'v2/plugins/bootstrap-datepicker/dist/js/bootstrap-datepicker.min.js' %}"></script>
+<script src="{% static 'v2/plugins/select2/dist/js/select2.full.min.js' %}"></script>
+<script src="{% static 'v2/plugins/moment/min/moment.min.js' %}"></script>
+<script src='{% static "js/printThis.js" %}'></script>
+<script type="text/javascript">
+    function printQr() {
+        $('#qr-card-div').printThis({
+            pageTitle: "eTabib card",
+            importStyle: true,
+            canvas: true,
+            beforePrint : function() {
+                $("#qr-card-div").removeClass("hide");
+            },
+            afterPrint : function() {
+                $("#qr-card-div").addClass("hide");
+            }
+        });
+     }
+	$(document).ready(function () {
+	    var cTmp='{{patient.pays.id|default_if_none:""}}';
+		$.fn.editable.defaults.mode = 'inline';
+		$.fn.editable.defaults.inputclass = 'form-control input-sm';
+		$('#nom, #prenom, #chifa, #phone').editable();
+		$('#date-naissance').editable({});
+		$('#pays').editable({
+		    type: 'select2',
+		    tpl: '<select id="country-select"></select>',
+		    id: function (item) {
+                return item.id;
+            },
+			select2: {
+			    ajax: {
+                    dataType: 'json',
+                    url: "{% url 'country-autocomplete' %}",
+                    data: function (params) {
+                        var query = {
+                            q: params.term,
+                            page: params.page
+                        }
+                      return query;
+                    },
+                    results: function (data, page) {
+                        return { results: data.results };
+                    }
+                },
+				width: 200,
+				placeholder: '{% trans "Select country" %}',
+				allowClear: true,
+			},
+            display: function(value, sourceData, response) {
+                var that = $(this);
+                cTmp = value;
+                $.get( "/api/country/" + value, function( data ) {
+                    $(that).html(data.name);
+                });
+            }
+
+		});
+		$('#ville').editable({
+			tpl: '<select id="city-select"></select>',
+			select2: {
+			    ajax: {
+                    dataType: 'json',
+                    url: "{% url 'city-autocomplete' %}",
+                    data: function (params) {
+                        var query = {
+                            q: params.term,
+                            page: params.page
+                        }
+                        if (cTmp)  {
+                            query["forward"] = '{"country":' + cTmp + '}';
+                        }
+                      return query;
+                    },
+                    results: function (data, page) {
+                        return { results: data.results };
+                    }
+                },
+				width: 200,
+				placeholder: '{% trans "Select city" %}',
+				allowClear: true
+			},
+			display: function(value, sourceData, response) {
+                var that = $(this);
+                $.get( "/api/city/" + value, function( data ) {
+                    $(that).html(data.name);
+                });
+            }
+		});
+		$('#sexe').editable({
+			prepend: 'non séléctionné',
+			source: [{
+					value: 1,
+					text: 'Homme'
+				},
+				{
+					value: 2,
+					text: 'Femme'
+				}
+			],
+			display: function (value, sourceData) {
+				var icons = {
+						'': '',
+						1: '<i class="fa fa-male m-r-5"></i>',
+						2: '<i class="fa fa-female m-r-5"></i>'
+					},
+					elem = $.grep(sourceData, function (o) {
+						return o.value == value;
+					});
+
+				if (elem.length) {
+					$(this).text(elem[0].text).prepend(icons[value]);
+				} else {
+					$(this).empty();
+				}
+			}
+		});
+		//allergy and mld
+		$("#allergyBtn").click(function() {
+		    var allergy_id = $("#allergyinput").select2('data')[0].id;
+		    var allergy_text = $("#allergyinput").select2('data')[0].text;
+		    if (allergy_id) {
+                var data = {
+                    "name": "allergies",
+                    "value": allergy_id,
+                    "csrfmiddlewaretoken":'{{csrf_token}}'
+                };
+                $.post( "{% url 'patient-profile-update' patient.id %}", data, function( d ) {
+                    $("#allergyLst").append(`<li class="list-group-item">${allergy_text}<button data-id="${allergy_id}" class="btn btn-default btn-xs pull-right remove-allergie-item"><i class="fa fa-trash"></i></button></li>`);
+                    $("#allergyinput").val("");
+                });
+		    }
+		});
+		$("#mldBtn").click(function() {
+		    var mld = $("#mldinput").val();
+		    if (mld) {
+		        var data = {
+                    "name": "mld",
+                    "value": mld,
+                    "csrfmiddlewaretoken":'{{csrf_token}}'
+                };
+                $.post( "{% url 'patient-profile-update' patient.id %}", data, function( d ) {
+                    $("#mldLst").append(`<li class="list-group-item">${mld}<button data-id="${d.mld_index}" class="btn btn-default btn-xs pull-right remove-mld-item"><i class="fa fa-trash"></i></button></li>`);
+                    $("#mldinput").val("");
+                });
+		    }
+		});
+		$('body').on('click', '.remove-allergie-item', function() {
+		    var that = $(this);
+            var data = {
+                "name": "allergies",
+                "value": $(this).data("id"),
+                "csrfmiddlewaretoken":'{{csrf_token}}'
+            };
+            $.post( "{% url 'patient-profile-data-remove' patient.id %}", data, function( d ) {
+                $(that).closest(".list-group-item").remove();
+            });
+        });
+        $('body').on('click', '.remove-mld-item', function() {
+            var that = $(this);
+            var data = {
+                "name": "mld",
+                "value": $(this).data("id"),
+                "csrfmiddlewaretoken":'{{csrf_token}}'
+            };
+            $.post( "{% url 'patient-profile-data-remove' patient.id %}", data, function( d ) {
+                $(that).closest(".list-group-item").remove();
+            });
+        });
+	});
+
+
+
+
+
+
+
+
+
+
+
+</script>
+{% endblock %}

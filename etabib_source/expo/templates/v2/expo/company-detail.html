@@ -1,0 +1,99 @@
+{% extends "base.html" %}
+{% load i18n %}
+{% load static %}
+
+{% block title %} {% trans 'Detail' %} {% endblock %}
+
+{% block style %}
+<link rel="stylesheet" href='{% static "css/carousel/owl.carousel.min.css" %}'>
+<link rel="stylesheet" href='{% static "css/carousel/owl.theme.default.min.css" %}'>
+{% endblock %}
+
+{% block content %}
+<div class="container">
+    <div class="row">
+        {% include 'partial/messages-alerts.html' %}
+    </div>
+    <div class="row">
+        <div class="col-lg-9">
+            {% if partenaire.banner %}
+            <img class="img-responsive" src="{{ partenaire.banner.url }}"/>
+            {% else %}
+            <img class="img-responsive" src="http://via.placeholder.com/900x150?text=banner900x150"/>
+            {% endif %}
+            <br>
+            {% if partenaire.description %}
+            <h1>A PROPOS DE NOUS</h1>
+            <p>{{ partenaire.description|linebreaks }}</p>
+            <br>
+            {% endif %}
+            <h1>CONTACT</h1>
+            <p>
+            <p>
+                <strong>Adresse: </strong>
+                {% if partenaire.contact.pays %} {{partenaire.contact.pays}} {% endif %}
+                {% if partenaire.contact.ville %} {{partenaire.contact.ville}} {% endif %}
+                {% if partenaire.contact.commune %} {{partenaire.contact.commune}} {% endif %}
+                {% if partenaire.contact.adresse %} {{partenaire.contact.adresse}} {% endif %}
+            </p>
+            {% if partenaire.contact.email %}
+            <p><strong>Email: </strong>{{ partenaire.contact.email }}</p>{% endif %}
+            {% if partenaire.contact.mobile %}
+            <p><strong>Mobile: </strong>{{partenaire.contact.mobile}}</p>{% endif %}
+            {% if partenaire.contact.fixe %}
+            <p><strong>Telephone: </strong>{{partenaire.contact.fixe}}</p>{% endif %}
+            {% if partenaire.contact.siteweb %}
+            <p><strong>Site Web: </strong>{{partenaire.contact.siteweb}}</p>{% endif %}
+            {% if partenaire.contact.twitter %}
+            <p><strong>Twitter: </strong>{{ partenaire.contact.twitter }}</p>{% endif %}
+            {% if partenaire.contact.linkedin %}
+            <p><strong>LinkedIn: </strong>{{partenaire.contact.linkedin}}</p>{% endif %}
+            {% if partenaire.contact.facebook %}
+            <p><strong>Facebook: </strong>{{partenaire.contact.facebook}}</p>{% endif %}
+            {% if partenaire.contact.instagram %}
+            <p><strong>Instagram: </strong>{{partenaire.contact.instagram}}</p>{% endif %}
+            </p>
+        </div>
+        <div class="col-lg-3 text-center">
+            {% if partenaire.logo %}
+            <img class="img-responsive center-block" src="{{ partenaire.logo.url }}"/>
+            {% else %}
+            <img class="img-responsive center-block"
+                 src="http://via.placeholder.com/200x200?text=logo200x200"/>
+            {% endif %}
+            <br>
+            <h1>Nos marques</h1>
+            <div class="owl-carousel owl-theme">
+                {% for catalogue in catalogues %}
+                <div>
+                    <img class="img-responsive center-block"
+                         src="{{catalogue.image.url}}">
+                    <p><strong>{{catalogue.brand}}</strong></p>
+                    <a class="btn btn-etabib btn-lg mg-t-15">
+                        CATALOGUE PRODUIT
+                    </a>
+                </div>
+                {% endfor %}
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}
+
+{% block js %}
+<script src='{% static "js/carousel/owl.carousel.min.js" %}'></script>
+<script>
+    $(document).ready(function(){
+        $('.owl-carousel').owlCarousel({
+            items:1,
+            loop:true,
+            center:true,
+            dots: true,
+        });
+    });
+
+
+
+
+</script>
+{% endblock %}

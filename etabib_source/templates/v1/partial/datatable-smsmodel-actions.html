@@ -1,0 +1,18 @@
+{% load i18n %}
+{% load role_tags %}
+<a title="{% trans 'Modifier' %}"
+   href="{% url 'smsmodel-update' sms.pk %}"
+   class="btn btn-etabib fm-update"
+   data-fm-head=""
+   data-fm-callback="reload">
+    <i class="fa fa-edit" aria-hidden="true"></i>
+</a>
+<a title="{% trans 'Supprimer' %}" href="{% url 'smsmodel-delete' sms.pk %}"
+   class="btn btn-etabib fm-delete" data-fm-head="{% trans 'Supprimer' %}"
+   data-fm-callback="reload">
+    <i class="fa fa-trash" aria-hidden="true"></i>
+</a>
+
+
+
+

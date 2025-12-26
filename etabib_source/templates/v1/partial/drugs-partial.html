@@ -1,0 +1,33 @@
+{% load i18n %}
+{% load static %}
+{% load role_tags %}
+{% load drugs_tags %}
+{% load crispy_forms_tags %}
+{% load el_pagination_tags %}
+
+{% paginate 10 nom_commerciaux %}
+<div class="row">
+    <div class="col-lg-12 text-center">
+        <small>{{nc_count}} {% trans 'de résultats' %}</small>
+    </div>
+    {% for nom_commercial in nom_commerciaux %}
+    <div class="col-lg-12">
+    <hr/>
+    </div>
+    <div class="col-lg-12">
+        <div class="col-md-6">
+            <strong> {{ nom_commercial }}</strong>
+        </div>
+        <div class="col-md-6">
+            {% renderMedicForme nom_commercial %}
+        </div>
+    </div>
+    {% endfor %}
+</div>
+<div class="row text-center">
+    {% get_pages %}
+    {% if pages.paginated %}
+    {% show_current_number as page_number %}
+    {% include 'partial/pagination.html' with pages=pages current_page_number=page_number extra=extra_args %}
+    {% endif %}
+</div>

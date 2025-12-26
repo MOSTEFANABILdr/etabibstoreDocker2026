@@ -1,0 +1,59 @@
+{% extends "base.html" %} 
+{% load i18n static ads_tags utils_tags role_tags %}
+
+{% block title %} {% endblock %}
+
+{% block style %}
+
+{% endblock %}
+
+{% block content %}
+<div class="container-fluid">
+    <div class="row">
+        {% include 'partial/messages-alerts.html' %}
+    </div>
+    <div class="row">
+        <div class="col-lg-6 col-md-12 col-sm-12 col-xs-12">
+            <div class="white-box text-center">
+                <h1 class="box-title text-warning pd-10">
+                    {% trans 'عن طريق بطاقة الدفع' %}
+                </h1>
+                <img width="300px" height="160px" class="" src="{% static 'img/pay-edahabia.png' %}">
+                <br>
+                <br>
+                <a title="{% trans 'الدخول الى فصاء الدفع' %}"
+                   class="btn btn-primary btn btn-etabib" href="{{ url }}">
+                    <i aria-hidden="true"></i>
+                    {% trans 'الدخول الى فصاء الدفع' %}
+                </a>
+            </div>
+        </div>
+        <div class="col-lg-6 col-md-12 col-sm-12 col-xs-12">
+            <div class="white-box text-center">
+                <h1 class="box-title text-warning pd-10">
+                    {% trans 'تحويل بريدي أو مصرفي' %}
+                </h1>
+                <img width="300px" height="160px" class="" src="{% static 'img/pay-ccp-bank.png' %}">
+                <br>
+                <br>
+                <a href="{% url 'virement-ajouter' %}?type=1"
+                   class="fm-create btn btn-primary btn btn-etabib"
+                   data-fm-head="{% trans 'Réglement par virement postal ou bancaire' %}"
+                   data-fm-callback="redirect">
+                    {% trans 'تحميل الحوالة' %}
+                </a>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}
+
+{% block js %}
+{% include "fm/modal.html" %}
+<!-- /.modal -->
+<script type="text/javascript">
+    $(function() {
+        $.fm({debug: true});
+    });
+</script>
+{% endblock %}

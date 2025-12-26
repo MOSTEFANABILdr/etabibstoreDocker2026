@@ -1,0 +1,326 @@
+{% extends "base.html" %}
+{% load i18n %}
+{% load static %}
+{% load crispy_forms_tags %}
+{% load role_tags %}
+{% block title %} {% trans 'Contact list' %} {% endblock %}
+{% block style %}
+<!-- Google Fonts
+                    ============================================ -->
+<link
+        href="https://fonts.googleapis.com/css?family=Roboto:100,300,400,700,900"
+        rel="stylesheet">
+<!-- Bootstrap CSS
+                    ============================================ -->
+<link rel="stylesheet" href='{% static "css/bootstrap.min.css" %}'>
+<!-- Bootstrap CSS
+                    ============================================ -->
+<link rel="stylesheet" href='{% static "css/font-awesome.min.css" %}'>
+<!-- animate CSS
+                    ============================================ -->
+<link rel="stylesheet" href='{% static "css/animate.css" %}'>
+<!-- meanmenu icon CSS
+                    ============================================ -->
+<link rel="stylesheet" href='{% static "css/meanmenu.min.css" %}'>
+<!-- main CSS
+                    ============================================ -->
+<link rel="stylesheet" href='{% static "css/main.css" %}'>
+<!-- mCustomScrollbar CSS
+                    ============================================ -->
+<link rel="stylesheet"
+      href='{% static "css/scrollbar/jquery.mCustomScrollbar.min.css" %}'>
+<!-- metisMenu CSS
+                    ============================================ -->
+<link rel="stylesheet"
+      href='{% static "css/metisMenu/metisMenu.min.css" %}'>
+<link rel="stylesheet"
+      href='{% static "css/metisMenu/metisMenu-vertical.css" %}'>
+<!-- modernizr JS ============================================ -->
+<script src='{% static "js/vendor/modernizr-2.8.3.min.js" %}'></script>
+<!-- Custom modals css ============================================ -->
+<link rel="stylesheet" href='{% static "css/modals.css" %}'>
+<!-- jquery.dataTables CSS ============================================ -->
+<link href="{% static 'ajax_datatable/css/style.css' %}" rel="stylesheet"/>
+<link href="{% static 'v2/plugins/datatables.net-bs4/css/dataTables.bootstrap4.min.css' %}" rel="stylesheet"/>
+<link href="{% static 'v2/plugins/datatables.net-responsive-bs4/css/responsive.bootstrap4.min.css' %}"
+      rel="stylesheet"/>
+<link href="https://cdn.jsdelivr.net/npm/smartwizard@5/dist/css/smart_wizard_all.min.css" rel="stylesheet" type="text/css" />
+<style>
+    @media only screen and (max-width: 600px) {
+      div.dataTables_wrapper div.dataTables_filter input {
+        width: 100px;
+      }
+    }
+    .select2-container {
+        min-width: 100%!important;
+    }
+    @media (min-width: 768px) {
+        .form-inline .form-control {
+            width: 100%;
+        }
+    }
+</style>
+
+{% endblock %}
+{% block content %}
+<div class="single-pro-review-area mt-t-30 mg-b-15">
+    <div class="container-fluid">
+        <div class="row">
+            <div class="col-lg-12 col-md-12 col-sm-12 col-xs-12">
+                <div class="product-payment-inner-st">
+                    {% if perms.core.crm_can_view_contact_list or perms.core.crm_can_view_simplified_contact_list %}
+                    <a class="btn btn-etabib floatright mg-l-15 mg-l-15" href="{% url 'operator-add-contact' %}">
+                        {% trans 'Add contact' %}
+                    </a>
+                    {% endif %}
+                    <a href="#" class="btn btn-etabib floatright mg-l-15 mg-l-15" data-toggle="modal" data-target="#planModal">
+                        {% trans 'Planificateur' %}
+                    </a>
+                    <h3>{% trans 'Contact List' %}</h3>
+                    <br>
+                    {% if messages %}
+                    <div class="row">
+                        <ul>
+                            {% for message in messages %}
+                            <div class="alert alert-{{ message.tags }}">
+                                <button type="button" class="close" data-dismiss="alert" aria-label="Close">
+                                    <span aria-hidden="true">&times;</span>
+                                </button>
+                                <p>{{message}}</p>
+                            </div>
+                            {% endfor %}
+                        </ul>
+                    </div>
+                    {% endif %}
+                    <div class="row mg-b-30">
+                        {% crispy filter_form %}
+                    </div>
+                    <div id="myTabContent" class="tab-content custom-product-edit">
+                        <div class="product-tab-list tab-pane fade active in" id="description">
+                            <div class="">
+                                <table id="datatable_contacts" width="100%"
+                                       class="table table-striped table-bordered table-td-valign-middle dt-responsive">
+                                </table>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+<div class="modal fade" id="planModal" data-current-step="0" data-backdrop="static" data-keyboard="false" role="dialog" aria-labelledby="planModalLabel" aria-hidden="true">
+    <div class="modal-dialog modal-lg" role="document">
+
+        <div class="modal-content">
+            <div class="modal-header header-color-modal bg-color-1">
+                <h5 class="modal-title"> {% trans 'Choisir les critères de filtres' %}</h5>
+            </div>
+            <div class="modal-body" id="smartwizard">
+                <ul class="nav">
+                   <li>
+                       <a class="nav-link" href="#step-1">
+                           {% trans 'Étape1' %}
+                       </a>
+                   </li>
+                   <li>
+                       <a class="nav-link" href="#step-2">
+                          {% trans 'Étape2' %}
+                       </a>
+                   </li>
+                   <li>
+                       <a class="nav-link" href="#step-3">
+                          {% trans 'Estimation des Résultats' %}
+                       </a>
+                   </li>
+                </ul>
+                <div class="tab-content">
+                   <div id="step-1" class="tab-pane" role="tabpanel">
+                      {% crispy step1 %}
+                   </div>
+                   <div id="step-2" class="tab-pane" role="tabpanel">
+                      {% crispy step2 %}
+                   </div>
+                    <div id="step-3" class="tab-pane text-center" role="tabpanel">
+                        <h1><span id="all_count"></span> prospects trouvés répartis dans <span id="nb_list"></span> liste</h1>
+                        <ul>
+                            <li><span id="doctor_count"></span> medecins validé</li>
+                            <li><span id="visitor_count"></span> visiteurs</li>
+                            <li><span id="contacts_count"></span> contacts </li>
+                        </ul>
+                   </div>
+                </div>
+            </div>
+            <div class="modal-footer">
+                <button id="prev-btn"  class="btn btn-default sw-btn-prev">
+                    {% trans 'Rectifier les filtres' %}
+                </button>
+                <button id="next-btn" class="btn btn-info sw-btn-next">
+                    {% trans 'Suivant' %}
+                </button>
+                <button id="submit-btn" class="btn btn-success hide">
+                    {% trans 'Créer la liste des prospects' %}
+                </button>
+                <button class="btn btn-danger" data-dismiss="modal" aria-label="Close">
+                    {% trans 'Fermer' %}
+                </button>
+            </div>
+        </div>
+    </div>
+</div>
+
+
+{% endblock %}
+{% block js %}
+<!-- dataTables ============================================ -->
+<script type="text/javascript" src="{% static 'ajax_datatable/js/utils.js' %}?v=0.64"></script>
+<script src="{% static 'v2/plugins/datatables.net/js/jquery.dataTables.min.js' %}"></script>
+<script src="{% static 'v2/plugins/datatables.net-bs4/js/dataTables.bootstrap4.min.js' %}"></script>
+<script src="{% static 'v2/plugins/datatables.net-responsive/js/dataTables.responsive.min.js' %}"></script>
+<script src="{% static 'v2/plugins/datatables.net-responsive-bs4/js/responsive.bootstrap4.min.js' %}"></script>
+<!-- bootstrap JS ============================================ -->
+<script src='{% static "js/bootstrap.min.js" %}'></script>
+<!-- wow JS ============================================ -->
+<script src='{% static "js/wow.min.js" %}'></script>
+<!-- meanmenu JS
+                    ============================================ -->
+<script src='{% static "js/jquery.meanmenu.js" %}'></script>
+<!-- sticky JS ============================================ -->
+<script src='{% static "js/jquery.sticky.js" %}'></script>
+<!-- scrollUp JS ============================================ -->
+<script src='{% static "js/jquery.scrollUp.min.js" %}'></script>
+<!-- mCustomScrollbar JS ============================================ -->
+<script src='{% static "js/scrollbar/jquery.mCustomScrollbar.concat.min.js" %}'></script>
+<script src='{% static "js/scrollbar/mCustomScrollbar-active.js" %}'></script>
+<!-- metisMenu JS  ============================================ -->
+<script src='{% static "js/metisMenu/metisMenu.min.js" %}'></script>
+<script src='{% static "js/metisMenu/metisMenu-active.js" %}'></script>
+<!-- plugins JS  ============================================ -->
+<script src='{% static "js/plugins.js" %}'></script>
+<!-- main JS ============================================ -->
+<script src='{% static "js/main.js" %}'></script>
+<!-- tawk chat JS  ============================================ -->
+{% include 'partial/tawk-script.html' %}
+<!--jquery-smartwizard-->
+<script src="https://cdn.jsdelivr.net/npm/smartwizard@5/dist/js/jquery.smartWizard.min.js" type="text/javascript"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/jquery-validate/1.19.3/jquery.validate.min.js" type="text/javascript"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/jquery-validate/1.19.3/additional-methods.min.js" type="text/javascript"></script>
+<script src="https://cdn.jsdelivr.net/npm/jquery-validation@1.17.0/dist/localization/messages_fr.js" type="text/javascript"></script>
+<script>
+    $(document).ready(function() {
+        AjaxDatatableViewUtils.initialize_table(
+            $('#datatable_contacts'),
+            "{% url 'contact_ajax' %}",
+            {
+                processing: true,
+                lengthChange: false,
+                autoWidth: false,
+                scrollX: false,
+                "language": {
+                    "url": "//cdn.datatables.net/plug-ins/1.10.21/i18n/French.json"
+                },
+                responsive: true
+            }, {
+                "specialite_id": function() { return $("#id_specialite").val(); },
+                "commune_id": function() { return $("#id_commune").val(); },
+                "distance": function() { return $("#id_distance").val(); },
+            }
+        );
+        $(document.body).on("change","#id_specialite,#id_commune,#id_distance",function(){
+            $('#datatable_contacts').DataTable().ajax.reload(null, false);
+        });
+        $(document.body).on("keyup","#id_distance",function(){
+            $('#datatable_contacts').DataTable().ajax.reload(null, false);
+        });
+
+        $('#smartwizard').smartWizard({
+            selected: 0,
+            theme: "default",
+            enableURLhash: false,
+            autoAdjustHeight: false,
+            toolbarSettings: {
+              showNextButton: false,
+              showPreviousButton: false,
+          },
+        });
+
+        $("#smartwizard").on("showStep", function(e, anchorObject, stepNumber, stepDirection, stepPosition) {
+              $("#prev-btn").removeClass('disabled');
+              $("#next-btn").removeClass('disabled');
+              if(stepPosition === 'first') {
+                  $("#prev-btn").addClass('disabled');
+              } else if(stepPosition === 'last') {
+                  $("#next-btn").addClass('disabled');
+              } else {
+                  $("#prev-btn").removeClass('disabled');
+                  $("#next-btn").removeClass('disabled');
+              }
+        });
+        $("#next-btn").click(function(e) {
+            $('#smartwizard').smartWizard("loader", "show");
+            var stepIndex = $('#smartwizard').smartWizard("getStepIndex");
+            if (stepIndex == 0 && $("#planstep1form").valid()) {
+                $('#smartwizard').smartWizard("next");
+                $('#smartwizard').smartWizard("loader", "hide");
+            }
+            else if (stepIndex == 1 && $("#planstep2form").valid()) {
+                var data = {
+                    "specialite_q": $("#id_specialite_q").val(),
+                    "max_prospect": $("#id_max_prospect").val(),
+                    "inclure_visiteur": $("#id_inclure_visiteur").is(":checked"),
+                    "inclure_unknown": $("#id_inclure_profiles_unknown").is(":checked"),
+                    "commune_depart": $("#id_commune_depart").val(),
+                    "rayon": $("#id_rayon").val(),
+                };
+                $.post("{% url 'operator-filter-contacts' %}", data, function(data, status){
+                    console.log(data);
+                    $("#all_count").html(data.all_count);
+                    $("#nb_list").html(data.nb_list);
+                    $("#doctor_count").html(data.doctor_count);
+                    $("#visitor_count").html(data.visitor_count);
+                    $("#contacts_count").html(data.contacts_count);
+
+                    $('#smartwizard').smartWizard("loader", "hide");
+                    $('#smartwizard').smartWizard("next");
+                });
+            }
+            else {
+                $('#smartwizard').smartWizard("loader", "hide");
+            }
+
+
+        });
+        $("#prev-btn").click(function(e) {
+            $('#smartwizard').smartWizard("prev");
+        });
+        $("#smartwizard").on("leaveStep", function(e, anchorObject, currentStepIndex, nextStepIndex, stepDirection) {
+            if (nextStepIndex == 2) {
+                $("#submit-btn").removeClass("hide");
+            }
+            else {
+                $("#submit-btn").addClass("hide");
+            }
+            return true;
+        });
+
+
+        //step4 submit form
+        $("#submit-btn").click(function(e) {
+            e.preventDefault();
+            $('#smartwizard').smartWizard("loader", "show");
+            var data = {
+                "specialite_q": $("#id_specialite_q").val(),
+                "max_prospect": $("#id_max_prospect").val(),
+                "inclure_visiteur": $("#id_inclure_visiteur").is(":checked"),
+                "inclure_unknown": $("#id_inclure_profiles_unknown").is(":checked"),
+                "commune_depart": $("#id_commune_depart").val(),
+                "rayon": $("#id_rayon").val(),
+            };
+            $.post("{% url 'operator-prospect-list-create' %}", data, function(data, status){
+                $('#smartwizard').smartWizard("loader", "hide");
+                location.href = data.redirection_url;
+            });
+        });
+    });
+</script>
+{% endblock %}

@@ -1,0 +1,71 @@
+{% extends "docs/base.html" %}
+{% load static %}
+
+{% block extra_style %}
+<style>
+    .doc-content {
+        background: white;
+        padding: 40px;
+        border-radius: 12px;
+        box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
+        line-height: 1.8;
+    }
+
+    .doc-content h1 {
+        color: #667eea;
+        margin-bottom: 20px;
+        padding-bottom: 15px;
+        border-bottom: 3px solid #667eea;
+    }
+
+    .doc-content h2 {
+        color: #764ba2;
+        margin-top: 30px;
+        margin-bottom: 15px;
+    }
+
+    .doc-content code {
+        background: #f4f4f4;
+        padding: 2px 6px;
+        border-radius: 4px;
+        font-family: 'Courier New', monospace;
+        font-size: 0.9em;
+    }
+
+    .doc-content pre {
+        background: #2d2d2d;
+        color: #f8f8f2;
+        padding: 20px;
+        border-radius: 8px;
+        overflow-x: auto;
+        margin: 20px 0;
+    }
+
+    .doc-content table {
+        width: 100%;
+        border-collapse: collapse;
+        margin: 20px 0;
+    }
+
+    .doc-content th,
+    .doc-content td {
+        padding: 12px;
+        text-align: left;
+        border: 1px solid #ddd;
+    }
+
+    .doc-content th {
+        background: #667eea;
+        color: white;
+        font-weight: 600;
+    }
+</style>
+{% endblock %}
+
+{% block content %}
+<a href="{% url 'docs:index' %}" class="back-link">← Retour à l'index</a>
+
+<div class="doc-content">
+    {{ content|safe }}
+</div>
+{% endblock %}

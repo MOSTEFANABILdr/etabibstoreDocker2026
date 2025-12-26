@@ -1,0 +1,23 @@
+{% extends "admin/change_list.html" %} {% load i18n static %}
+{% block extrastyle %}
+    {{ block.super }}
+    <link href="{% static 'css/lightbox2/css/lightbox.min.css' %}" rel="stylesheet" />
+    <style>
+        .image-link {
+            display: inline-block;
+            padding: 4px;
+            margin: 0 0.5rem 1rem 0.5rem;
+            background-color: var(--bg-color);
+            line-height: 0;
+            border-radius: var(--border-radius-large);
+        }
+        .image-link img {
+            width: 7rem;
+            border-radius: var(--border-radius);
+        }
+    </style>
+{% endblock %}
+{% block extrahead %}
+{{ block.super }}
+    <script src="{% static 'js/lightbox2/js/lightbox-plus-jquery.min.js' %}"></script>
+{% endblock %}

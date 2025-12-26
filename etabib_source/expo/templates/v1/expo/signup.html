@@ -1,0 +1,145 @@
+{% extends "base2.html" %}
+{% load i18n %}
+{% load static %}
+{% load widget_tweaks %}
+{% load crispy_forms_tags %}
+{% block title %} {% trans "Sign up" %} {%endblock %}
+{% block style %}
+<!-- Google Fonts
+                    ============================================ -->
+<link href="https://fonts.googleapis.com/css?family=Play:400,700"
+      rel="stylesheet">
+<!-- Bootstrap CSS
+                    ============================================ -->
+<link rel="stylesheet" href='{% static "css/bootstrap.min.css" %}'>
+<!-- Bootstrap CSS
+                    ============================================ -->
+<link rel="stylesheet" href='{% static "css/font-awesome.min.css" %}'>
+<!-- animate CSS
+                    ============================================ -->
+<link rel="stylesheet" href='{% static "css/animate.css" %}'>
+<!-- normalize CSS
+                    ============================================ -->
+<link rel="stylesheet" href='{% static "css/normalize.css" %}'>
+<!-- main CSS
+                    ============================================ -->
+<link rel="stylesheet" href='{% static "css/main.css" %}'>
+<!-- mCustomScrollbar CSS
+                    ============================================ -->
+<link rel="stylesheet"
+      href='{% static "css/scrollbar/jquery.mCustomScrollbar.min.css" %}'>
+<!-- forms CSS
+                    ============================================ -->
+<link rel="stylesheet" href='{% static "css/form/all-type-forms.css" %}'>
+<!-- Dancing+Script font ============================================ -->
+<link rel="preconnect" href="https://fonts.gstatic.com">
+<link href="https://fonts.googleapis.com/css2?family=Dancing+Script&display=swap" rel="stylesheet">
+<!-- modernizr JS
+                    ============================================ -->
+<script src='{% static "js/vendor/modernizr-2.8.3.min.js" %}'></script>
+<style>
+ #bg {
+     background-image: url("/static/img/expo-bg.jpg") !important;
+}
+.error-pagewrap {
+    background: rgba(255,255,255,0.40);
+}
+.error-page-int {
+    max-width: 100%!important;
+    padding: 20px 0;
+    width: 100%;
+    position: relative;
+    margin: 0 auto;
+}
+.btn-etabib-dark {
+    background-color: #3ed5ff !important;
+    border-color: #3ed5ff !important;
+    color: black !important;
+    font-weight: 900;
+}
+ .btn-etabib-dark:hover {
+     background-color: black !important;
+     border-color: black !important;
+     color: #3ed5ff !important;
+}
+.title {
+    font-family: 'Dancing Script', cursive;
+    font-size: 20px;
+    color: black;
+}
+</style>
+{% endblock %} {% block content %}
+<div class="error-pagewrap">
+    <div class="error-page-int wrap-login">
+        <div class="m-b-md custom-login">
+            <img height="310px" src='{% static "img/logo/expo-logo.png" %}' alt=""/>
+            <h1 class="title">Expose Your Passion</h1>
+        </div>
+        <div class="content-error">
+            {% if messages %}
+            <div>
+                <ul>
+                    {% for message in messages %}
+                    <div class="alert alert-{{ message.tags }}">
+                        <button type="button" class="close" data-dismiss="alert" aria-label="Close">
+                            <span aria-hidden="true">&times;</span>
+                        </button>
+                        <p>{{message}}</p>
+                    </div>
+                    {% endfor %}
+                </ul>
+            </div>
+            {% endif %}
+            {% for error in form.non_field_errors %}
+            <div class="alert alert-danger alert-mg-b alert-danger-style4">
+                <p>{{error}}</p>
+            </div>
+            {%endfor %}
+            <div class="hpanel">
+                <div class="panel-body text-center login-body">
+                    {{ form.media }}
+                    {% if form.helper %}
+                    {% crispy form form.helper %}
+                    {% else %}
+                    {% crispy form %}
+                    {% endif %}
+                    {% if redirect_field_value %}
+                    <input type="hidden" name="{{ redirect_field_name }}"
+                           value="{{ redirect_field_value }}"/>
+                    {% endif %}
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %} {% block js %}
+<!-- bootstrap JS
+                    ============================================ -->
+<script src='{% static "js/bootstrap.min.js" %}'></script>
+<!-- wow JS
+                    ============================================ -->
+<script src='{% static "js/wow.min.js" %}'></script>
+<!-- meanmenu JS
+                    ============================================ -->
+<script src='{% static "js/jquery.meanmenu.js" %}'></script>
+<!-- scrollUp JS
+                    ============================================ -->
+<script src='{% static "js/jquery.scrollUp.min.js" %}'></script>
+<!-- mCustomScrollbar JS
+                    ============================================ -->
+<script src='{% static "js/scrollbar/jquery.mCustomScrollbar.concat.min.js" %}'></script>
+<script src='{% static "js/scrollbar/mCustomScrollbar-active.js" %}'></script>
+<!-- metisMenu JS
+                    ============================================ -->
+<script src='{% static "js/metisMenu/metisMenu.min.js" %}'></script>
+<script src='{% static "js/metisMenu/metisMenu-active.js" %}'></script>
+<!-- tab JS
+                    ============================================ -->
+<script src='{% static "js/tab.js" %}'></script>
+<!-- plugins JS
+                    ============================================ -->
+<script src='{% static "js/plugins.js" %}'></script>
+<!-- tawk chat JS
+                    ============================================ -->
+{% include 'partial/tawk-script.html' %}
+{% endblock %}

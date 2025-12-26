@@ -1,0 +1,28 @@
+<ul class="pagination">
+	{% if current_page_number > pages.first.number %}
+	    <li><a href="?page={{ current_page_number|add:'-1' }}{{extra}}" data-el-querystring-key="page" class="endless_page_link"><i class="fa fa-chevron-{{ LANGUAGE_START }}" aria-hidden="true"></i></a></li>
+	{% else %}
+	    <li class="disabled"><span><i class="fa fa-chevron-{{ LANGUAGE_START }}" aria-hidden="true"></i></span></li>
+	{% endif %}
+	
+	{% if current_page_number|add:'-4' > 1 %}
+	    <li><a href="?page={{ current_page_number|add:'-5' }}{{extra}}" data-el-querystring-key="page" class="endless_page_link">&hellip;</a></li>
+	{% endif %}
+	
+	{% for p in pages %}
+	    {% if p.is_current %}
+	        <li class="active"><span>{{ p.number }} <span class="sr-only">(current)</span></span></li>
+	    {% elif p.number > current_page_number|add:'-5' and p.number < current_page_number|add:'5' %}
+	        <li><a href="?page={{ p.number }}{{extra}}" data-el-querystring-key="page" class="endless_page_link">{{ p.number }}</a></li>
+	    {% endif %}
+	{% endfor %}
+	{% if pages|length > current_page_number|add:'4' %}
+	    <li><a href="?page={{ current_page_number|add:'5' }}{{extra}}" data-el-querystring-key="page" class="endless_page_link">&hellip;</a></li>
+	{% endif %}
+	
+	{% if current_page_number < pages.last.number %}
+	    <li><a href="?page={{ current_page_number|add:'1' }}{{extra}}" data-el-querystring-key="page" class="endless_page_link"><i class="fa fa-chevron-{{ LANGUAGE_END }}" aria-hidden="true"></i></a></li>
+	{% else %}
+	    <li class="disabled"><span><i class="fa fa-chevron-{{ LANGUAGE_END }}" aria-hidden="true"></i></span></li>
+	{% endif %}
+</ul>

@@ -1,0 +1,16 @@
+{% load notif_tags %}
+{% for notification in notifications %}
+<li class="pl-2 pr-2">
+    {% notificationContent notification as obj %}
+    <a href="{{notification|renderNotificationOnClickUrl}}" class="dropdown-item media">
+        <div class="media-left">
+            {{notification|renderNotificationIcon|safe}}
+        </div>
+        <div class="media-body">
+            <h6 class="media-heading">{{obj.0}}</h6>
+            <p>{{obj.1}}</p>
+            <div class="text-muted f-s-10">{{notification.timestamp}}</div>
+        </div>
+    </a>
+</li>
+{% endfor %}

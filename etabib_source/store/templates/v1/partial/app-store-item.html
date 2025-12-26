@@ -1,0 +1,61 @@
+{% load static %}
+{% load i18n ads_tags utils_tags %}
+{% if ad %}
+    {% ad360x200 request as annonce %}
+{% endif %}
+{% random_int 1 100000 as randint %}
+<div class="col-lg-3 col-md-3 col-sm-6">
+    <div id="annonce1_{{randint}}" class="courses-inner res-mg-b-30"
+         style="{% if ad and annonce %} display: none!important; {% endif %}">
+        <a href="{% url 'etabib-store-item' app.id app.slug %}">
+            <div class="courses-title">
+                <img src="{{app.icon.url}}" alt="">
+                <h2>{{app.libelle}}</h2>
+            </div>
+            <div class="text-center">
+                <div class="parameters">
+                    <p>
+                        <img src="{% static 'img/coins.svg' %}" alt="">
+                        {{app.consomation}}/<small>{{app.get_type_consomation_display|lower}}</small>
+                    </p>
+                    <p>
+                        <img src="{% static 'img/cloud-computing.png' %}" alt="">
+                        {{app.nb_telechargement}}
+                    </p>
+                    <p>
+                        <img src="{% static 'img/megaphone.png' %}" alt="">
+                        Non
+                    </p>
+                    <p>
+                        <img src="{% static 'img/compatible.png' %}" alt="">
+                        {{app.compatible_with}}
+                    </p>
+                    <span class="rateYo center-block"
+                          data-rateyo-rating="{{app.note_globale}}"></span>
+                </div>
+            </div>
+        </a>
+    </div>
+    {% if ad and annonce %}
+    <div id="annonce2_{{randint}}" class="courses-inner res-mg-b-30 ads">
+        <span class="bdge floatleft">{% trans 'annonce' %}</span>
+        <a href="{{annonce.annonce_url}}">
+            <img src="{{annonce.image_url}}" alt="">
+        </a>
+        <a href="{% url 'doctor-ad-feedback' %}?annonce_id={{annonce.annonce_id}}"
+           class="fm-create close"
+           data-fm-head="Why don't you want to see this"
+           data-fm-callback="hideAndShow"
+           data-fm-target='#annonce2_{{randint}},#annonce1_{{randint}}'>
+            <span aria-hidden="true">&times;</span>
+        </a>
+    </div>
+    {% endif %}
+</div>
+{% if ad and annonce %}
+<script>
+     $(function () {
+         $.get( "/api/annonce/impression/" + "{{annonce.campagne_id}}" + "/" + "{{annonce.annonce_id}}" + "/" + {{request.user.id}} + "/" + "1", function( data ) {});
+     });
+</script>
+{% endif %}

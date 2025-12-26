@@ -1,0 +1,548 @@
+{% load static %}
+{% load role_tags utils_tags i18n offer_tags %}
+
+{% if user.is_authenticated %}
+    {% with is_doctor=user|is_doctor is_professionnal=user|is_professionnal %}
+    {# Documentation link for staff members #}
+    {% if user.is_staff %}
+    <li id="li-staff-docs" class="{% if sidebar_docs %} active {% endif %}">
+        <a title="" href="{% url 'docs:index' %}" aria-expanded="false">
+            <img src="{% static 'img/docs.png' %}" alt="" onerror="this.src='{% static 'img/home.png' %}'\">
+            <span class="mini-click-non">{% trans 'Documentation' %}</span>
+            <small class="badge bg-info notify-badge">Nouveau</small>
+        </a>
+    </li>
+    {% endif %}
+    
+        {% if is_doctor or is_professionnal %}
+            {% if perms.core.care_can_view_dashboard %}
+            <li id="li-dashboard" class="{% if sidebar_dashboard %} active {% endif %}">
+                <a title="" href="{% if is_doctor %} {% url 'doctor-dashboard' %} {% else %} {% url 'professional-dashboard' %} {% endif %}"
+                   aria-expanded="false">
+                    <img src="{% static 'img/home.png' %}" alt="">
+                    <span class="mini-click-non">{% trans 'Dashboard' %}</span>
+                </a>
+            </li>
+            {% endif %}
+            {% if perms.core.care_can_view_profile %}
+            <li class="{% if sidebar_profile %} active {% endif %}">
+                <a title="" href="{% if is_doctor %} {% url 'doctor-profile' %} {% else %} {% url 'professional-profile' %} {% endif %}" aria-expanded="false">
+                    <img src="{% static 'img/man.png' %}" alt="">
+                    <span class="mini-click-non">{% trans 'Mon profil' %}</span>
+                </a>
+            </li>
+            {% endif %}
+            {% if perms.core.can_view_etabib_expos %}
+            <li class="{% if sidebar_expos %} active {% endif %} feature">
+                <a title="" class="has-arrow"   aria-expanded="false">
+                    <img src="{% static 'img/etabib-expo-logo-min.png' %}" alt="">
+                    <span class="mini-click-non">{% trans 'eTabib expo' %}</span>
+                    <small class="badge bg-purple notify-badge">Bêta</small>
+                </a>
+                <ul class="submenu-angle" aria-expanded="true">
+                     <li>
+                        <a title="" href="{% url 'etabib-expo' %}" aria-expanded="false">
+                            <span class="mini-sub-pro">{% trans 'eTabib expo' %}</span>
+                        </a>
+                    </li>
+                    <li>
+                        <a title="" href="{% url 'expo-list-partenaire' %}" aria-expanded="false">
+                            <span class="mini-sub-pro">{% trans 'Liste des Exposants' %}</span>
+                        </a>
+                    </li>
+                    <li>
+                        <a title="" href="{% url 'expo-list-marque' %}" aria-expanded="false">
+                            <span class="mini-sub-pro">{% trans 'Liste des Firmes' %}</span>
+                        </a>
+                    </li>
+                </ul>
+            </li>
+            {% endif %}
+            {% if perms.core.can_get_expo_badge %}
+            <li class="{% if badge_sidebar %} active {% endif %}">
+                <a title="" href="{% url 'expo-badge' %}" aria-expanded="false">
+                    <img src="{% static 'img/etabib-expo-logo-min.png' %}" alt="">
+                    <span class="mini-click-non">{% trans 'Mon badge' %}</span>
+                    <small class="badge bg-purple notify-badge">Bêta</small>
+                </a>
+            </li>
+            {% endif %}
+            {% if perms.core.can_view_etabib_store %}
+            <li id="li-appstore" class="{% if sidebar_store %} active {% endif %}">
+                <a class="has-arrow" href="#">
+                    <img src="{% static 'img/store.png' %}" alt="">
+                    <span class="mini-click-non">{% trans 'Mon Store' %}</span>
+                </a>
+                <ul class="submenu-angle" aria-expanded="true">
+                    <li>
+                        <a title="" href="{% url 'etabib-store' %}">
+                            <span class="mini-sub-pro">{% trans 'Télécharger les applications' %}</span>
+                        </a>
+                    </li>
+                    <li>
+                        <a title="" href="{% url 'etabib-store-my-apps' %}">
+                            <span class="mini-sub-pro">{% trans 'Mes Applications' %}</span>
+                        </a>
+                    </li>
+                    <li>
+                        <a title="" href="{% url 'etabib-workspace' %}">
+                            <span class="mini-sub-pro">{% trans 'Télécharger eTabib Workspace' %}</span>
+                        </a>
+                    </li>
+                </ul>
+            </li>
+            {% endif %}
+            {% if perms.core.can_veiw_e_prescription %}
+            <li id="li-presc"  class="{% if sidebar_presc %} active {% endif %}">
+                <a title="" href="{% url 'prescription' %}">
+                    {% if not user.medecin.current_services|is_including_e_prescription %}
+                    <img class="right-icon" src="{% static 'img/lock.svg' %}" alt="">
+                    {% else %}
+                    <img src="{% static 'img/prescribe.png' %}" alt="">
+                    {% endif %}
+                    <span class="mini-click-non">{% trans 'E-Prescription' %}</span>
+                </a>
+            </li>
+            {% endif %}
+            {% if sidebar_lg or mobile_app %}
+            {% if perms.core.can_veiw_teleconsultation %}
+            <li id="li-vc"  class="{% if sidebar_metting %} active {% endif %}">
+                <a title="" href="{% url 'doctor-appointments' %}">
+                    {% if not user.medecin.current_services|is_including_etabib_care %}
+                    <img class="right-icon" src="{% static 'img/lock.svg' %}" alt="">
+                    {% else %}
+                    <img src="{% static 'img/consult.png' %}" alt="">
+                    {% endif %}
+                    <span class="mini-click-non">{% trans 'Video-Consultation' %}</span>
+
+                </a>
+            </li>
+            {% endif %}
+            {% if perms.core.can_view_etabib_econgre %}
+            <li id="li-formation" class="{% if sidebar_congress %} active {% endif %}">
+                <a title="" href="{% url 'doctor-congress-list' %}">
+                    <img src="{% static 'img/econgre.png' %}" alt="">
+                    <span class="mini-click-non">{% trans 'Visio-Conférence' %}</span>
+                </a>
+            </li>
+            {% endif %}
+            {% if perms.core.can_veiw_agenda %}
+            <li id="li-agenda" class="{% if sidebar_appoinments %} active {% endif %}">
+                <a title="" href="{% url 'appointments-agenda' %}">
+                    {% if not user.medecin.current_services|is_including_online_agenda %}
+                    <img class="right-icon" src="{% static 'img/lock.svg' %}" alt="">
+                    {% else %}
+                    <img src="{% static 'img/rdv.png' %}" alt="">
+                    {% endif %}
+                    <span class="mini-click-non">{% trans 'Mon agenda' %}</span>
+                </a>
+            </li>
+            {% endif %}
+            {% if perms.core.can_veiw_etabib_file_sharing %}
+            <li id="li-dossier" class="{% if sidebar_files %} active {% endif %}">
+                <a title="" href="{% url 'doctor-files-list' %}">
+                    <img src="{% static 'img/mon-dossier.png' %}" alt="">
+                    <span class="mini-click-non">{% trans 'Mes dossiers' %}</span>
+                </a>
+            </li>
+            {% endif %}
+            {% if perms.core.can_view_test_dicom %}
+            <li id="li-dicom" class="{% if sidebar_files %} active {% endif %}">
+                <a title="" href="{% url 'doctor-dicom-journal' %}">
+                    <img src="{% static 'img/mon-dossier.png' %}" alt="">
+                    <span class="mini-click-non">{% trans 'Fichier Dicom' %}</span>
+                </a>
+            </li>
+            {% endif %}
+            {% if perms.core.can_veiw_teleconsultation %}
+            <li id="li-contacts" class="{% if sidebar_contact %} active {% endif %}">
+                <a title="" href="{% url 'doctor-contact' %}">
+                    {% if not user.medecin.current_services|is_including_etabib_care %}
+                    <img class="right-icon" src="{% static 'img/lock.svg' %}" alt="">
+                    {% else %}
+                    <img src="{% static 'img/mes-contacts.svg' %}" alt="">
+                    {% endif %}
+                    <span class="mini-click-non">{% trans 'Mes Contacts' %}</span>
+                </a>
+            </li>
+            {% endif %}
+            {% if perms.core.can_veiw_teleconsultation %}
+            <li id="li-journal" class="{% if sidebar_journal %} active {% endif %}">
+                <a title="" href="{% url 'doctor-teleconsultation-journal' %}">
+                    {% if not user.medecin.current_services|is_including_etabib_care %}
+                    <img class="right-icon" src="{% static 'img/lock.svg' %}" alt="">
+                    {% else %}
+                    <img src="{% static 'img/reclam.png' %}" alt="">
+                    {% endif %}
+                    <span class="mini-click-non">{% trans 'Mon journal' %}</span>
+                </a>
+            </li>
+            {% endif %}
+            {% endif %}
+            {% if perms.core.can_view_drugs_list %}
+                <li class="{% if sidebar_drugs %} active {% endif %}">
+                    <a title="" href="{% url 'professional-drugs-list' %}" aria-expanded="false">
+                        <img src="{% static 'img/DICO.png' %}" alt="">
+                        <span class="mini-click-non">{% trans 'BDD des Médicaments' %}</span>
+                    </a>
+                </li>
+            {% endif %}
+        {% elif user|is_operator %}
+            {% if perms.core.crm_can_view_oper_dashboard %}
+            <li class="{% if operator_sidebar_dashboard %} active {% endif %}">
+                <a title="" href="{% url 'operator-dashboard' %}" aria-expanded="false">
+                    <img src="{% static 'img/home.png' %}" alt="">
+                    <span class="mini-click-non">{% trans 'Dashboard' %}</span>
+                </a>
+            </li>
+            {% endif %}
+            {% if perms.core.crm_can_view_pin_boards %}
+            <li class="{% if sidebar_pin_board %} active {% endif %}">
+                <a title="" href="{% url 'pin-board' %}"
+                   aria-expanded="false">
+                    <i class="fa fa-thumb-tack fa-2x"></i>
+                    <span class="mini-click-non">{% trans 'Pin Boards' %}</span>
+                </a>
+            </li>
+            {% endif %}
+            {% if perms.core.crm_can_view_comn_agenda or perms.core.crm_can_view_comm_agenda or perms.core.crm_can_view_tech_agenda or perms.core.crm_can_view_delg_agenda %}
+            <li class="{% if comm_sidebar_events %} active {% endif %}">
+                <a title="" href="{% url 'operator-events' %}" aria-expanded="false">
+                    <img src="{% static 'img/rdv.png' %}" alt="">
+                    <span class="mini-click-non">{% trans 'Agenda' %}</span>
+                </a>
+            </li>
+            {% endif %}
+            {% if perms.core.crm_can_view_contact_list %}
+            <li class="{% if oper_list_contact %} active {% endif %}">
+                <a title="" href="{% url 'operator-list-contact' %}" aria-expanded="false">
+                    <i class="fa fa-users fa-2x"></i>
+                    <span class="mini-click-non">{% trans 'Liste des contacts' %}</span>
+                </a>
+            </li>
+            {% endif %}
+            {% if perms.core.crm_can_view_simplified_contact_list %}
+            <li class="{% if oper_list_contact_simplified %} active {% endif %}">
+                <a title="" href="{% url 'operator-list-contact-simplified' %}" aria-expanded="false">
+                    <i class="fa fa-users fa-2x"></i>
+                    <span class="mini-click-non">{% trans 'Liste des contacts' %}</span>
+                </a>
+            </li>
+            {% endif %}
+            {% if perms.core.crm_can_view_follow_up_list %}
+            <li class="{% if oper_sidebar_list_suivi %} active {% endif %}">
+                <a title="" href="{% url 'operator-monitoring-list' %}" aria-expanded="false">
+                    <i class="fa fa-folder-open-o fa-2x"></i>
+                    <span class="mini-click-non">{% trans 'Liste des suivis' %}</span>
+                    <small class="badge bg-orange notify-badge">New</small>
+                </a>
+            </li>
+            {% endif %}
+            {% if perms.core.crm_can_view_sms_email %}
+            <li class="{% if sidebar_sms %} active {% endif %}">
+                <a class="has-arrow" href="#">
+                    <img src="{% static 'img/econgre.png' %}" alt="">
+                    <span class="mini-click-non">{% trans 'SMS & Email' %}</span>
+                </a>
+                <ul class="submenu-angle" aria-expanded="true">
+                    <li>
+                        <a title="" href="{% url 'smsmodel-list' %}" aria-expanded="false">
+                            <span class="mini-click-non">{% trans 'Modèles SMS' %}</span>
+                        </a>
+                    </li>
+                    <li>
+                        <a title="" href="{% url 'emailmodel-list' %}" aria-expanded="false">
+                            <span class="mini-click-non">{% trans 'Modèles Email' %}</span>
+                        </a>
+                    </li>
+                    <li>
+                        <a title="" href="{% url 'listenvoi-dynamique-list' %}" aria-expanded="false">
+                            <span class="mini-click-non">{% trans "Listes d'envoi dynamiques" %}</span>
+                        </a>
+                    </li>
+                    <li>
+                        <a title="" href="{% url 'listenvoi-statique-list' %}" aria-expanded="false">
+                            <span class="mini-click-non">{% trans "Listes d'envoi statiques" %}</span>
+                        </a>
+                    </li>
+                </ul>
+            </li>
+            {% endif %}
+            {% if perms.core.crm_can_view_offer_list %}
+            <li class="{% if com_sidebar_offer %} active {% endif %}">
+                <a class="has-arrow" href="#">
+                    <i class="fa fa-gift fa-2x"></i>
+                    <span class="mini-click-non">{% trans 'Offres' %}</span>
+                </a>
+                <ul class="submenu-angle" aria-expanded="true">
+                    <li class="{% if com_sidebar_list_prep_offer %} active {% endif %}">
+                        <a title="" href="{% url 'list-prep-offer'%}">
+                            <span class="mini-sub-pro">{% trans 'Offres(Médecin)' %}</span>
+                        </a>
+                    </li>
+                    <li class="{% if com_sidebar_list_partn_offer %} active {% endif %}">
+                        <a title="" href="{% url 'list-partn-offer' %}">
+                            <span class="mini-sub-pro">{% trans 'Offres(Partenaire)' %}</span>
+                        </a>
+                    </li>
+                </ul>
+            </li>
+            {% endif %}
+            {% if perms.core.manage_tasks %}
+            <li class="{% if sidebar_list_task %} active {% endif %}">
+                <a title="" href="{% url 'operator-task-list' %}" aria-expanded="false">
+                    <i class="fa fa-tasks fa-2x"></i>
+                    <span class="mini-click-non">{% trans 'Taches' %}</span>
+                </a>
+            </li>
+            {% endif %}
+            {% if perms.core.crm_can_view_problem_list %}
+            <li class="{% if tech_sidebar_list_problem %} active {% endif %}">
+                <a title="" href="{% url 'technician-list-problem' %}" aria-expanded="false">
+                    <i class="fa fa-exclamation-triangle fa-2x"></i>
+                    <span class="mini-click-non">{% trans 'Problèmes & Solutions' %}</span>
+                </a>
+            </li>
+            {% endif %}
+            {% if perms.core.crm_can_view_prospect_list %}
+            <li class="{% if com_sidebar_list_prospect %} active {% endif %}">
+                <a title="" href="{% url 'commercial-list-prospect' %}" aria-expanded="false">
+                    <i class="fa fa-user fa-2x"></i>
+                    <span class="mini-click-non">{% trans 'Prospects' %}</span>
+                </a>
+            </li>
+            {% endif %}
+            {% if perms.core.crm_can_view_untreated_command_list %}
+            <li class="{% if com_sidebar_list_untreated_order %} active {% endif %}">
+                <a title="" href="{% url 'commande_list'%}"
+                   aria-expanded="false">
+                    <i class="fa fa-file-text-o fa-2x"></i>
+                    {% if user|has_group:"delegue commercial" %}
+                    <span class="mini-click-non">{% trans 'Mes commandes' %}</span>
+                    {% else %}
+                    <span class="mini-click-non">{% trans 'Commandes Non Traitées' %}</span>
+                    {% endif %}
+                </a>
+            </li>
+            {% endif %}
+            {% if perms.core.crm_can_view_bordereau_list %}
+            <li class="{% if com_sidebar_list_bordereau %} active {% endif %}">
+                <a title="" href="{% url 'bordereau_list'%}"
+                   aria-expanded="false">
+                    <i class="fa fa-file-text fa-2x"></i>
+                    <span class="mini-click-non">{% trans 'Bordereaux de versement' %}</span>
+                </a>
+            </li>
+            {% endif %}
+            {% if perms.core.crm_can_view_command_list %}
+            <li class="{% if com_sidebar_list_order %} active {% endif %}">
+                <a title="" href="{% url 'commercial-list-order'%}"
+                   aria-expanded="false">
+                    <img src="{% static 'img/invoice.png' %}" alt="">
+                    <span class="mini-click-non">{% trans 'Commandes' %}</span>
+                </a>
+            </li>
+            {% endif %}
+            {% if perms.core.crm_can_view_viement_list %}
+            <li class="{% if com_sidebar_list_virement %} active {% endif %}">
+                <a title="" href="{% url 'commercial-list-virement'%}"
+                   aria-expanded="false">
+                    <i class="fa fa-money fa-2x"></i>
+                    <span class="mini-click-non">{% trans 'Virements' %}</span>
+                </a>
+            </li>
+            {% endif %}
+            {% if perms.core.crm_can_view_invoice_list %}
+            <li class="{% if com_sidebar_list_invoice %} active {% endif %}">
+                <a title="" href="{% url 'commercial-list-invoice'%}"
+                   aria-expanded="false">
+                    <img src="{% static 'img/invoice.png' %}" alt="">
+                    <span class="mini-click-non">{% trans 'Facture' %}</span>
+                </a>
+            </li>
+            {% endif %}
+        {% elif user|is_partner %}
+            <li class="{% if par_sidebar_dashboard %} active {% endif %}">
+                <a title="" href="{% url 'partner-dashboard' %}" aria-expanded="false">
+                    <img src="{% static 'img/home.png' %}" alt="">
+                    <span class="mini-click-non">{% trans 'Dashboard' %}</span>
+                </a>
+            </li>
+            <li id="li-par-profile" class="{% if par_sidebar_profile %} active {% endif %}">
+                <a title="" href="{% url 'partner-profile' %}"
+                   aria-expanded="false">
+                    <img src="{% static 'img/man.png' %}" alt="">
+                    <span class="mini-click-non">{% trans 'Profil' %}</span>
+                </a>
+            </li>
+            <li id="li-par-products" class="{% if par_sidebar_products %} active {% endif %}">
+                <a title="" href="{% url 'partner-list-product' %}" aria-expanded="false">
+                    <img src="{% static 'img/products.png' %}" alt="">
+                    <span class="mini-click-non">{% trans 'Mes produits' %}</span>
+                </a>
+            </li>
+            {% if not perms.core.hide_ads_tab %}
+            <li id="li-par-annonces" class="{% if par_sidebar_ads %} active {% endif %}">
+                <a title="" href="{% url 'partner-list-ads' %}" aria-expanded="false">
+                    <img src="{% static 'img/feeds.png' %}" alt="">
+                    <span class="mini-click-non">{% trans 'Mes Annonces' %}</span>
+                </a>
+            </li>
+            {% endif %}
+            {% if not perms.core.hide_campaigns_tab %}
+            <li id="li-par-campaign" class="{% if par_sidebar_campaign %} active {% endif %}">
+                <a title="" href="{% url 'partner-list-campaign' %}" aria-expanded="false">
+                    <img src="{% static 'img/compagnes.png' %}" alt="">
+                    <span class="mini-click-non">{% trans 'Mes campagnes' %}</span>
+                </a>
+            </li>
+            {% endif %}
+            <li id="li-par-commande" class="{% if par_sidebar_commmande %} active {% endif %}">
+                <a title="" href="{% url 'partner-precommandes' %}" aria-expanded="false">
+                    <img src="{% static 'img/tasks.png' %}" alt="">
+                    <span class="mini-click-non">{% trans 'Carnet de Commande' %}</span>
+                    <small class="badge bg-purple notify-badge">Bêta</small>
+                </a>
+            </li>
+            <li id="li-par-appointments" class="{% if sidebar_appoinments %} active {% endif %}">
+                <a title="" href="{% url 'partner-appointments-agenda' %}" aria-expanded="false">
+                    <img src="{% static 'img/rdv.png' %}" alt="">
+                    <span class="mini-click-non">{% trans 'Mon agenda' %}</span>
+                    <small class="badge bg-purple notify-badge">Bêta</small>
+                </a>
+            </li>
+            <li id="li-par-catalogue" class="{% if sidebar_catalogue %} active {% endif %}">
+                <a title="" href="{% url 'partner-list-catalogue' %}" aria-expanded="false">
+                    <img src="{% static 'img/CAT-min.png' %}" alt="">
+                    <span class="mini-click-non">{% trans 'Mes catalogues' %}</span>
+                    <small class="badge bg-purple notify-badge">Bêta</small>
+                </a>
+            </li>
+            <li  id="li-par-stand" class="{% if sidebar_stand %} active {% endif %}">
+                <a title="" href="{% url 'partner-stand' %}" aria-expanded="false">
+                    <img src="{% static 'img/STAND-min.png' %}" alt="">
+                    <span class="mini-click-non">{% trans 'Mon stand' %}</span>
+                    <small class="badge bg-purple notify-badge">Bêta</small>
+                </a>
+            </li>
+            {% if user.partenaire.has_published_stand %}
+            <li  id="li-par-visio" class="{% if sidebar_viso %} active {% endif %}">
+                <a title="" href="{% url 'expo-stand-visio' user.partenaire.get_published_stand.id %}" aria-expanded="false">
+                    <img src="{% static 'img/VISIO-min.png' %}" alt="">
+                    <span class="mini-click-non">{% trans 'Visio' %}</span>
+                    <small class="badge bg-purple notify-badge">Bêta</small>
+                </a>
+            </li>
+            {% endif %}
+        {% elif user|is_patient %}
+            <li class="{% if sidebar_dashboard %} active {% endif %}">
+                <a title="" href="{% url 'patient-dashboard' %}"
+                   aria-expanded="false">
+                    <img src="{% static 'img/home.png' %}" alt="">
+                    <span class="mini-click-non">{% trans 'Dashboard' %}</span>
+                </a>
+            </li>
+            <li id="li-patient-profil" class="{% if sidebar_profile %} active {% endif %}">
+                <a title="" href="{% url 'patient-profile' %}"
+                   aria-expanded="false">
+                    <img src="{% static 'img/man.png' %}" alt="">
+                    <span class="mini-click-non">{% trans 'Profil' %}</span>
+                </a>
+            </li>
+            {% if sidebar_lg or mobile_app %}
+            <li id="li-patient-teleconsultation" class="{% if sidebar_consult %} active {% endif %}">
+                <a title="" href="{% url 'patient-teleconsultation' %}">
+                    <img src="{% static 'img/consult.png' %}" alt="">
+                    <span class="mini-click-non">{% trans 'Video-Consultation' %}</span>
+                </a>
+            </li>
+            <li id="li-patient-appointments" class="{% if sidebar_rdv %} active {% endif %}">
+                <a title="" href="{% url 'patient-appointments' %}">
+                    <img src="{% static 'img/rdv.png' %}" alt="">
+                    <span class="mini-click-non">{% trans 'Mes rendez-vous' %}</span>
+                </a>
+            </li>
+            <li id="li-patient-journal" class="{% if sidebar_journal %} active {% endif %}">
+                <a title="" href="{% url 'patient-teleconsultation-journal' %}">
+                    <img src="{% static 'img/reclam.png' %}" alt="">
+                    <span class="mini-click-non">{% trans 'Réclamations' %}</span>
+                </a>
+            </li>
+            {% endif %}
+            <li id="li-patient-files" class="{% if sidebar_files %} active {% endif %}">
+                <a title="" href="{% url 'patient-files-list' %}"
+                   aria-expanded="false">
+                    <img src="{% static 'img/mon-dossier.png' %}" alt="">
+                    <span class="mini-click-non">{% trans 'Mon dossier' %}</span>
+                </a>
+            </li>
+            {% comment %}
+            <li class="{% if sidebar_team %} active {% endif %}">
+                <a title="" href="#">
+                    <img src="{% static 'img/equipe-soin.png' %}" alt="">
+                    <span class="mini-click-non">{% trans 'Mon équipe de soin' %}</span>
+                </a>
+            </li>
+            {% endcomment %}
+        {% elif user|is_organizer %}
+            <li class="{% if sidebar_dashboard %} active {% endif %}">
+                <a title="" href="{% url 'organizer-dashboard' %}"
+                   aria-expanded="false">
+                    <img src="{% static 'img/home.png' %}" alt="">
+                    <span class="mini-click-non">{% trans 'Dashboard' %}</span>
+                </a>
+            </li>
+            <li class="{% if sidebar_profile %} active {% endif %}">
+                <a title="" href="{% url 'organizer-profile' %}" aria-expanded="false">
+                    <img src="{% static 'img/man.png' %}" alt="">
+                    <span class="mini-click-non">{% trans 'Profil' %}</span>
+                </a>
+            </li>
+            <li class="{% if sidebar_congress %} active {% endif %}">
+                <a class="" href="{% url 'organizer-congress-my' %}">
+                    <img src="{% static 'img/econgre.png' %}" alt="">
+                    <span class="mini-click-non">{% trans 'eTabib visio' %}</span>
+                </a>
+            </li>
+        {% elif user|is_speaker%}
+            <li class="{% if sidebar_dashboard %} active {% endif %}">
+                <a title="" href="{% url 'speaker-dashboard' %}" aria-expanded="false">
+                    <img src="{% static 'img/home.png' %}" alt="">
+                    <span class="mini-click-non">{% trans 'Dashboard' %}</span>
+                </a>
+            </li>
+            <li class="{% if sidebar_profile %} active {% endif %}">
+                <a title="" href="{% url 'speaker-profile' %}" aria-expanded="false">
+                    <img src="{% static 'img/man.png' %}" alt="">
+                    <span class="mini-click-non">{% trans 'Profil' %}</span>
+                </a>
+            </li>
+            <li class="{% if sidebar_webinars %} active {% endif %}">
+                <a title="" href="{% url 'speaker-webinar-list' %}" aria-expanded="false">
+                    <img src="{% static 'img/econgre.png' %}" alt="">
+                    <span class="mini-click-non">{% trans 'Webinars' %}</span>
+                </a>
+            </li>
+        {% elif user|is_moderator %}
+            <li class="{% if sidebar_dashboard %} active {% endif %}">
+                <a title="" href="{% url 'moderator-dashboard' %}" aria-expanded="false">
+                    <img src="{% static 'img/home.png' %}" alt="">
+                    <span class="mini-click-non">{% trans 'Dashboard' %}</span>
+                </a>
+            </li>
+            <li class="{% if sidebar_webinars %} active {% endif %}">
+                <a title="" href="{% url 'moderator-webinar-list' %}" aria-expanded="false">
+                    <img src="{% static 'img/econgre.png' %}" alt="">
+                    <span class="mini-click-non">{% trans 'Webinars' %}</span>
+                </a>
+            </li>
+        {% endif %}
+    {% endwith %}
+            {% if user|is_patient or user|is_doctor %}
+            <li>
+                <a href="{% url 'change-template' %}">
+                    {% trans 'الواجهة الجديدة' %}
+                </a>
+            </li>
+            {% endif %}
+{% endif %}

@@ -1,0 +1,48 @@
+{% load i18n role_tags %}
+{% if is_list %}
+{% if not listeProspect.traite  %}
+<a title="{% trans 'Affecter' %}"
+   href="{% url 'commercial-create-piste-bulk' listeProspect.id %}"
+   class="btn fm-create btn-etabib"
+   data-fm-head="{% blocktrans with var=listeProspect.titre %} Affecter les prospects de la {{var}} à la date  {% endblocktrans %}"
+   data-fm-callback="reload">
+    <i class="fa fa-calendar-check-o" aria-hidden="true"></i>
+</a>
+{% endif %}
+<a title="{% trans 'Détail' %}" class="btn btn-etabib"
+   href="{% url 'commercial-list-prospect-detail' listeProspect.id %}">
+    <i class="fa fa-list" aria-hidden="true"></i>
+</a>
+<a title="{% trans 'Enlever' %}"
+   href="{% url 'commercial-delete-prospect-list' listeProspect.id %}"
+   class="btn fm-delete btn-danger"
+   data-fm-head="{% blocktrans with var=listeProspect.titre %} Enlever la liste de prospects: {{var}}  {% endblocktrans %}"
+   data-fm-callback="reload">
+    <i class="fa fa-trash" aria-hidden="true"></i>
+</a>
+{% else %}
+<div class="btn-group" role="group">
+    <a title="{% trans 'Pister' %}"
+       href="{% url 'commercial-create-piste' prospect.contact.id %}"
+       class="btn fm-create btn-etabib"
+       data-fm-head="{% trans 'Créer un piste' %}"
+       data-fm-callback="redirect_from_response">
+        <i class="fa fa-bullhorn" aria-hidden="true"></i>
+    </a>
+    <a title="{% trans 'Journal des Pistes' %}" class="btn btn-etabib"
+       href="{% url 'commercial-list-piste' prospect.contact.id %}">
+        <i class="fa fa-calendar" aria-hidden="true"></i>
+    </a>
+</div>
+<a title="{% trans 'Enlever' %}"
+   href="{% url 'commercial-delete-prospect' prospect.id %}"
+   class="btn fm-delete btn-danger"
+   data-fm-head="{% blocktrans with var=prospect.contact.full_name %} Enlever {{var}} de la liste des prospects {% endblocktrans %}"
+   data-fm-callback="reload">
+    <i class="fa fa-trash" aria-hidden="true"></i>
+</a>
+<a title="{% trans 'Détail' %}" class="btn btn-etabib"
+   href="{% url 'operator-detail-contact' prospect.contact.id %}">
+    <i class="fa fa-book" aria-hidden="true"></i>
+</a>
+{% endif %}

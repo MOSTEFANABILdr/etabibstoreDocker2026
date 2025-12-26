@@ -1,0 +1,69 @@
+{% load avatar_tags %}
+<style>
+.tns-outer {
+  position: relative;
+}
+[data-controls] {
+  border: 0;
+  padding: 0;
+  font-size: 30px;
+  position: absolute;
+  top: 50%;
+  margin-top: -18px;
+  z-index: 1;
+  background: transparent;
+}
+[data-controls="prev"] {
+  left: -30px;
+}
+[data-controls="next"] {
+  right: -20px;
+}
+</style>
+<div class="container-fluid">
+    <div class="row">
+        <div class="col-lg-12 col-md-12 col-sm-12 col-xs-12">
+            <div class="carousel-sponsor" id="carousel-sponsor-{{counter}}">
+                {% for sponsor in sponsors %}
+                <div>
+                    <img src="{{sponsor.image.url}}" class="img-circle" alt="">
+                </div>
+                {% endfor %}
+            </div>
+        </div>
+    </div>
+</div>
+<script>
+$(document).ready(function(){
+    if ( $('#carousel-sponsor-{{counter}}').length > 0 ) {
+        var slider = tns({
+          container: '#carousel-sponsor-{{counter}}',
+          gutter: 0,
+          edgePadding: 0,
+          controlsText: ['<span class="fa fa-chevron-circle-left dark-blue"></span>', '<span class="fa fa-chevron-circle-right dark-blue"></span>'],
+          autoplay: true,
+          loop: true,
+          items: 3, // default number of items
+          responsive: {
+          640: {
+            edgePadding: 0,
+            gutter: 0,
+            items: 3},
+          700: {
+            gutter: 0},
+          200: {
+            center:true,
+            gutter: 0,
+            items: 1}
+            },
+          nav: false,
+          autoplayButtonOutput:false
+        });
+    }
+});
+
+
+
+
+
+</script>

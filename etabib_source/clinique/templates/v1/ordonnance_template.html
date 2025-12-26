@@ -1,0 +1,62 @@
+{% load static i18n %}
+<html>
+<head>
+    <meta charset="utf-8">
+    <title>{% trans 'Ordonnace' %} {{format}}</title>
+</head>
+
+<body>
+<p>Docteur: {{medecin}}</p>
+<table class="table">
+    <tr>
+        <td>Spécialité: {{medecin.contact.specialite}}</td>
+        {% if medecin.contact.adresse %}
+        <td>Adresse: {{medecin.contact.adresse}}</td>
+        {% endif %}
+    </tr>
+</table>
+{% if medecin.contact.qualifications  %}
+<table class="table">
+    <tr>
+        <td>Qualifications: </td>
+        {% for qlf in medecin.contact.qualifications.all %}
+            <td>{{ qlf }}</td>
+        {% endfor %}
+    </tr>
+</table>
+{% endif %}
+
+<h1 class="text-center"> <u>Ordonnance   وصفة </u></h1>
+<table class="table">
+    <tr>
+        <td>N°: {{ ordo.pk }}</td>
+        <td>Date: {{ ordo.date_modification|date:"d M Y" }}</td>
+        <td>Patient: {{ patient_name }}</td>
+        <td>Age: {{ patient_age }} </td>
+    </tr>
+</table>
+<hr>
+<table class="table table-bordered">
+    <tr>
+        <th>تسمية الدواء</th>
+        <th>الشكل الصيدلي</th>
+        <th>الجرعة/ الوحدة</th>
+        <th>التعليب</th>
+    </tr>
+    {% for medic in ordonnancemedic %}
+    <tr>
+        <td rowspan="2">
+            {{ medic.medicament.nom_commercial }}<br>
+            {{ medic.medicament.dci_atc }} <br>
+        </td>
+        <td class="second second-row">{{ medic.medicament.forme_homogene }}</td>
+        <td class="second second-row">{{ medic.medicament.dosage }}</td>
+        <td class="second">{{ medic.medicament.cond }}</td>
+    </tr>
+    <tr>
+        <td class="posologie" colspan="3">{{ medic.posologie }}</td>
+    </tr>
+    {% endfor %}
+</table>
+</body>
+</html>

@@ -1,0 +1,104 @@
+# Build stage
+FROM python:3.8-slim-bullseye as builder
+
+# Install system build dependencies
+RUN apt-get update && apt-get install -y --no-install-recommends \
+    build-essential \
+    gdal-bin \
+    python3-gdal \
+    binutils \
+    libproj-dev \
+    libgdal-dev \
+    default-libmysqlclient-dev \
+    netcat \
+    git \
+    pkg-config \
+    gcc \
+    libc-dev \
+    libffi-dev \
+    zlib1g-dev \
+    libjpeg-dev \
+    libopencv-dev \
+    libpng-dev \
+    libtiff-dev \
+    libfreetype6-dev \
+    libwebp-dev \
+    libxml2-dev \
+    libxslt1-dev \
+    libcairo2-dev \
+    libpango1.0-dev \
+    libssl-dev \
+    python3-cffi \
+    python3-brotli \
+    libpangocairo-1.0-0 \
+    libmupdf-dev \
+    libmagic1 \
+    file \
+    curl \
+    && rm -rf /var/lib/apt/lists/*
+
+WORKDIR /app
+
+ENV PYTHONUNBUFFERED=1 \
+    PYTHONDONTWRITEBYTECODE=1 \
+    GDAL_LIBRARY_PATH=/usr/lib/libgdal.so \
+    PIP_NO_CACHE_DIR=1 \
+    PIP_DEFAULT_TIMEOUT=300
+
+RUN python -m venv /opt/venv
+ENV PATH="/opt/venv/bin:$PATH"
+
+RUN python -m pip install "pip<25" 
+RUN pip install "setuptools<60.0.0" wheel
+RUN pip install build setuptools-scm
+
+COPY requirements.txt .
+RUN pip install --no-cache-dir -r requirements.txt -v
+
+FROM python:3.8-slim-bullseye
+
+RUN apt-get update && apt-get install -y --no-install-recommends \
+    gdal-bin \
+    python3-gdal \
+    libgdal-dev \
+    default-mysql-client \
+    netcat \
+    libpango1.0-0 \
+    libcairo2 \
+    libpangocairo-1.0-0 \
+    libwebp6 \
+    libjpeg62-turbo \
+    libopencv* \
+    libxml2 \
+    libxslt1.1 \
+    libfreetype6 \
+    libmupdf-dev \
+    libpng16-16 \
+    libtiff5 \
+    libssl1.1 \
+    libmagic1 \
+    file \
+    && rm -rf /var/lib/apt/lists/*
+
+RUN useradd -ms /bin/bash app
+
+RUN mkdir -p /app/static /app/media && \
+    chown -R app:app /app
+
+WORKDIR /app
+
+COPY --from=builder /opt/venv /opt/venv
+
+ENV PYTHONUNBUFFERED=1 \
+    PYTHONDONTWRITEBYTECODE=1 \
+    GDAL_LIBRARY_PATH=/usr/lib/libgdal.so \
+    PATH="/opt/venv/bin:$PATH"
+
+COPY --chown=app:app . .
+
+USER app
+
+COPY --chown=app:app docker-entrypoint.prod.sh /docker-entrypoint.sh
+RUN chmod +x /docker-entrypoint.sh
+
+ENTRYPOINT ["/docker-entrypoint.sh"]

@@ -1,0 +1,309 @@
+{% extends "base.html" %}
+{% load i18n static thumbnail avatar_tags app_store_tags offer_tags %}
+
+{% block title %} {{app.libelle}} {% endblock %}
+
+{% block style %}
+<link href="{% static 'v2/css/e-commerce/app.min.css' %}" rel="stylesheet"/>
+<link href="{% static 'v2/css/e-commerce/app.custom.min.css' %}?v=1.1" rel="stylesheet"/>
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/rateYo/2.3.2/jquery.rateyo.min.css">
+<link rel="stylesheet" href='{% static "css/owl.carousel.css" %}'>
+<link rel="stylesheet" href='{% static "css/owl.theme.css" %}'>
+<link rel="stylesheet" href='{% static "css/owl.transitions.css" %}'>
+<link rel="stylesheet" href='{% static "css/preloader/preloader-style.css" %}'>
+{% endblock %}
+
+{% block content %}
+<div class="container">
+    <div class="row">
+        {% include 'partial/messages-alerts.html' %}
+        <div class="col-lg-3 col-md-4 col-sm-3 col-xs-12">
+            <div class="card border-0 bg-light">
+                <div class="card-img-top d-flex justify-content-center pt-2">
+                    <img class="img-responsive pr-2 pl-2" src="{{app.icon.url}}" alt=""/>
+                </div>
+                <div class="card-body text-center pt-1">
+                    <h3>{{app.libelle}}</h3>
+                    <span class="mx-auto" id="rateYo"></span>
+                    <h6>{{app.note_globale}}</h6>
+                    {% if app.tags.all %}
+                    <b>{% trans 'Mots clés' %}</b><br/>
+                    {% for tag in app.tags.all %}
+                    <a class="label label-info text-decoration-none mr-2"
+                       href="{% url 'etabib-store-tag-apps' tag.slug %}">
+                        {{tag}}
+                    </a>
+                    {% endfor %}
+                    {% endif %}
+                    {% comment %}
+                    <h6 class="text-left">
+                        <img width="30px" class="profile-icon" src="{% static 'img/cloud-computing.png' %}" alt="">
+                        {{app.nb_telechargement}} <small>{% trans 'Téléchargements' %}</small>
+                    </h6>
+                    {% endcomment %}
+                    <h6 class="text-left mt-2">
+                        <img width="30px" class="profile-icon" src="{% static 'img/coins.svg' %}" alt="">
+                        {{app.consomation}}/
+                        <small>{{app.get_type_consomation_display|lower}}</small>
+                    </h6>
+                    <h6 class="text-left">
+                        <img width="30px" class="profile-icon" src="{% static 'img/compatible.png' %}" alt="">
+                        {{app.compatible_with}}
+                    </h6>
+                    {% if is_published %}
+                        {% if user.medecin.current_services|is_including_etabib_workspace %}
+                        <select id="select-machine" class="form-control custom-select-value"
+                                name="account">
+                            <option disabled selected>{% trans 'Selectionnez un poste' %}</option>
+                            {% for poste in request.user.medecin.non_blocked_postes %}
+                            <option value="{{poste.id}}">{{poste.simple_libelle}}</option>
+                            {% endfor %}
+                        </select>
+                        <button id="action" type="button"
+                                class="btn btn-etabib m-t-15 hide"
+                                data-toggle="modal"
+                                data-target="#modal">
+                            <i class="fa fa-shopping-cart"></i>
+                            <span></span>
+                        </button>
+                        {% endif %}
+                    {% endif %}
+                </div>
+            </div>
+        </div>
+        <div class="col-lg-9 col-md-8 col-sm-9 col-xs-12">
+            <div class="">
+                <ul class="nav nav-tabs">
+                    <li class="nav-item">
+                        <a class="nav-link active" data-toggle="tab" href="#description">{% trans 'Description' %}</a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link" data-toggle="tab" href="#reviews"> {% trans 'Comments' %}</a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link" data-toggle="tab" href="#preview"> {% trans 'Preview' %}</a>
+                    </li>
+                </ul>
+                <div class="tab-content">
+                    <div class="tab-pane fade active show" id="description">
+                        <div class="row">
+                            {{app.description|safe}}
+                        </div>
+                    </div>
+                    <div class="tab-pane fade" id="reviews">
+                        <div class="row">
+                            <div class="col-lg-12 col-md-12 col-sm-12 col-xs-12">
+                                <div class="review-content-section">
+                                    <div class="chat-discussion" style="height: auto">
+                                        <div class="chat-message">
+                                            <div class="profile-hdtc">
+                                                {% avatar user class="message-avatar" %}
+                                            </div>
+                                            <div class="message form-group">
+                                                <a class="message-author" href="#">
+                                                    {{request.user.medecin.full_name}} </a>
+                                                <textarea id="commentBox" placeholder="{% trans 'Add a comment' %}"
+                                                          class="form-control" style="height: 100px;"
+                                                          rows="1"></textarea>
+                                                <br>
+                                                <a id="addComment" class="btn btn-default"> {% trans 'send' %}</a>
+                                            </div>
+                                        </div>
+                                        <div id="chat-discussion" class="endless_page_template">
+                                            {% include page_template %}
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="product-tab-list tab-pane fade" id="preview">
+                        <div class="row">
+                            <div class="col-lg-12 col-md-12 col-sm-12 col-xs-12">
+                                <div class="owl-carousel owl-theme">
+                                    {% for screen in app.captures_ecran.all %}
+                                    <div><img class="img-rounded img-responsive" src="{{screen.image.url}}"></div>
+                                    {% endfor %}
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+    <!-- BEGIN similar-product -->
+    <h4 class="m-b-15 m-t-30">{% trans 'You Might Also Like' %}</h4>
+    <div class="row row-space-10">
+        {% for app in similar_apps %}
+        <div class="col-lg-2 col-md-4">
+            <!-- BEGIN item -->
+            <div class="item item-thumbnail">
+                <a href="{% url 'etabib-store-item' app.id app.slug %}" class="item-image">
+                    <img src="{{app.icon.url}}" alt="">
+                </a>
+                <div class="item-info">
+                    <h4 class="item-title">
+                        <a href="{% url 'etabib-store-item' app.id app.slug %}">
+                            {{app.libelle|title}}
+                        </a>
+                    </h4>
+<!--                    <p class="item-desc">3D Touch. 12MP photos. 4K video.</p>-->
+                    <div class="item-price">
+                        {{app.consomation}}
+                        <small> {% trans "Points" %} / {{app.get_type_consomation_display}}</small>
+                    </div>
+                </div>
+            </div>
+            <!-- END item -->
+        </div>
+        {% endfor %}
+    </div>
+    <!-- END similar-product -->
+</div>
+{% include 'partial/modal-install-app.html' with app=app status=status %}
+{% include 'partial/modal-loading.html' %}
+{% endblock %}
+
+{% block js %}
+<script src="https://cdnjs.cloudflare.com/ajax/libs/rateYo/2.3.2/jquery.rateyo.min.js"></script>
+<script src='{% static "js/owl.carousel.min.js" %}'></script>
+<script src='{% static "el-pagination/js/el-pagination.js" %}'></script>
+<script>
+    $(function () {
+        //Setting rating
+    	$("#rateYo").rateYo({
+            rating: {{rating}},
+            starWidth: "24px"
+        });
+        //Add Rating
+        $("#rateYo").rateYo().on("rateyo.set", function (e, data) {
+	       	var rating = data.rating;
+       	   	var data = { 'rating': rating,
+     			'user_id': {{request.user.id}},
+     			'app_id':{{app.id}},
+     			'csrfmiddlewaretoken': '{{ csrf_token }}'
+     			};
+           	$.post( "{% url 'etabib-store-item-add-rating' %}", data, function(response) {
+           		console.log(response);
+           	})
+       	  	.fail(function(response) {
+       	   	 	console.log(response);
+       	   	 	//TODO: Change msg text
+                 Lobibox.notify('error', {
+                     size: 'mini',
+                     position: 'top right',
+                     sound: false,
+                     msg: "Une erreur interne s'est produite"
+                 });
+       	  	});
+        });
+        //
+        $('.owl-carousel').owlCarousel({
+            items: 1,
+            center: true,
+            autoWidth: true
+        });
+        //Add Comment
+        $("#addComment").click(function() {
+            var element = $(this);
+            $(element).append(' <i class="fa fa-spinner fa-spin"></i>');
+        	var data = { 'comment': $("#commentBox").val(),
+        			'user_id': {{request.user.id}},
+        			'app_id':{{app.id}},
+        			'csrfmiddlewaretoken': '{{ csrf_token }}'
+        			};
+           $.post( "{% url 'etabib-store-item-add-comment' %}", data, function(response) {
+              $(element).find("i").remove();
+        	  $("#commentBox").val("");
+        	  $("#chat-discussion").prepend(response.html);
+        	  $("#chat-discussion div").first().animate({
+                  opacity:"0.5"
+              }, 1000, function() {
+                $("#chat-discussion div").first().animate({
+                    opacity:"1"
+                }, 1000);
+              });
+           })
+       	  .fail(function(response) {
+       	    $(element).find("i").remove();
+       	    console.log(response);
+       	    //TODO: Change msg text
+       	     Lobibox.notify('error', {
+                 size: 'mini',
+                 position: 'top right',
+                 sound: false,
+                 msg: "Une erreur interne s'est produite"
+             });
+       	  });
+        });
+        //processing installation
+        $("#install").click(function(event) {
+        	event.preventDefault();
+        	var element = $(this);
+            $(element).append(' <i class="fa fa-spinner fa-spin"></i>');
+        	var poste_id = $("#select-machine :selected").val();
+            var data = { 'poste_id': poste_id,
+        				 'app_id':{{app.id}},
+        			     'csrfmiddlewaretoken': '{{ csrf_token }}'
+        			   };
+           $.post( "{% url 'etabib-store-item-installation' %}", data, function(response) {
+             $(element).find("i").remove();
+        	 $("#modal").modal('hide');
+        	 $("#action span").text(response.action);
+        	 $("#modal-body").text(response.body);
+        	 //TODO: Change msg textF
+        	 Lobibox.notify('success', {
+                 size: 'mini',
+                 position: 'top right',
+                 sound: false,
+                 msg: response.success_message
+             });
+           })
+       	  .fail(function(response) {
+       	     $(element).find("i").remove();
+             //TODO: Change msg text
+             Lobibox.notify('error', {
+                 size: 'mini',
+                 position: 'top right',
+                 sound: false,
+                 msg: response.responseJSON.error
+             });
+       	  });
+        });
+        //get app status by machine
+        $('#select-machine').on('change', function() {
+            var data = {
+                 'csrfmiddlewaretoken': '{{ csrf_token }}',
+                 'poste_id': this.value,
+                 'app_id': {{app.id}}
+               };
+            $("#modal-loading").modal('show');
+            $.post( "{% url 'etabib-store-item-get-app-status' %}", data, function(response) {
+                console.log("sdfsdf");
+                $("#modal-loading").modal('hide');
+                $("#action span").text(response.app_status);
+        	    $("#modal-title").text(response.title);
+        	    $("#modal-body").text(response.body);
+                $("#action").removeClass("hide");
+            })
+            .fail(function(response) {
+                $("#modal-loading").modal('hide');
+                //TODO: Change msg text
+                 Lobibox.notify('error', {
+                     size: 'mini',
+                     position: 'top right',
+                     sound: false,
+                     msg: "Une erreur interne s'est produite"
+                 });
+            });
+        });
+
+        //Endlesss pagination
+        $.endlessPaginate();
+    });
+
+
+
+</script>
+{% endblock %}

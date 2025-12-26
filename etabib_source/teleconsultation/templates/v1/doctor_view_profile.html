@@ -1,0 +1,74 @@
+{% load i18n %}
+{% load static offer_tags %}
+{% block content %}
+<body>
+    <div class="text-center custom-login">
+        {% if medecin.contact.specialite %}
+        <h3>{% trans "Spécialité" %}: {{medecin.contact.specialite}}</h3>
+        {% endif %}
+        {% if  medecin.num_ordre %}
+        <h5>{% trans "Numéro d'ordre" %}:</h5>
+        <p>{{medecin.num_ordre}}</p>
+        {% endif %}
+    </div>
+    <div class="hpanel">
+        <div class="panel-body">
+            <div class="row">
+                {% if medecin.qualifications %}
+                    <div class="col-lg-12">
+                        <h5>{% trans "Qualifications" %}:</h5>
+                        {% for qal in medecin.qualifications %}
+                        <p>{{qal}}</p>
+                        {% endfor %}
+                    </div>
+                {% endif %}
+                <div class="col-lg-12">
+                    {% if medecin.contact.ville or medecin.contact.commune %}
+                    <p>
+                        <b>{% trans "Adresse" %}:</b>
+                        {{medecin.contact.ville}}
+                        {% if medecin.contact.commune %}
+                            {{medecin.contact.commune}}
+                        {% endif %}
+                    </p>
+                    {% endif %}
+                </div>
+                <div class="col-lg-12">
+                    <p><b>{% trans "Tarif consultation" %}:</b>
+                        {{medecin.tarif_consultation}}
+                    </p>
+                </div>
+                {% if medecin.infos %}
+                    <div class="col-lg-12 text-wrap text-break" >
+                        <p><b>{% trans "Informations" %}:</b> {{medecin.infos}}</p>
+                    </div>
+                {% endif %}
+            </div>
+        </div>
+    </div>
+{% if medecin.contact.gps %}
+
+    <h4>Localisation:</h4>
+    <div style="width: 600px; height: 400px;" id="mapid"></div>
+{% endif %}
+
+</body>
+{% endblock %}
+{% block script%}
+{% if medecin.contact.gps %}
+<script type="text/javascript">
+    var map = L.map('mapid').setView([{{medecin.contact.gps}}], 15);
+	L.tileLayer('https://api.mapbox.com/styles/v1/{id}/tiles/{z}/{x}/{y}?access_token=pk.eyJ1IjoibWFwYm94IiwiYSI6ImNpejY4NXVycTA2emYycXBndHRqcmZ3N3gifQ.rJcFIG214AriISLbB6B5aw', {
+		maxZoom: 18,
+		attribution: 'Map data &copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors, ' +
+			'Imagery © <a href="https://www.mapbox.com/">Mapbox</a>',
+		id: 'mapbox/streets-v11',
+		tileSize: 512,
+		zoomOffset: -1
+	}).addTo(map);
+    marker = L.marker([{{medecin.contact.gps}}]).addTo(map)
+                .bindPopup('{{medecin.full_name}}')
+                .openPopup();
+</script>
+{% endif %}
+{% endblock %}

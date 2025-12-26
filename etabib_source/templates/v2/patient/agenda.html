@@ -1,0 +1,163 @@
+{% extends "base.html" %}
+{% load i18n %}
+{% load static %}
+{% block title %}
+    {% trans 'Mon agenda' %}
+{% endblock %}
+{% block style %}
+	<link href="{% static 'v2/plugins/@fullcalendar/common/main.min.css' %}" rel="stylesheet" />
+	<link href="{% static 'v2/plugins/@fullcalendar/daygrid/main.min.css' %}" rel="stylesheet" />
+	<link href="{% static 'v2/plugins/@fullcalendar/timegrid/main.min.css' %}" rel="stylesheet" />
+	<link href="{% static 'v2/plugins/@fullcalendar/list/main.min.css' %}" rel="stylesheet" />
+	<link href="{% static 'v2/plugins/@fullcalendar/bootstrap/main.min.css' %}" rel="stylesheet" />
+{% endblock %}
+{% block content %}
+			<h1 class="page-header">
+				<i class="fas fa-calendar"></i>
+				{% trans 'Mon agenda' %}
+			</h1>
+			<div id="calendar" class="vertical-box-column calendar"></div>
+{% endblock %}
+{% block js %}
+	<script src="{% static 'v2/plugins/moment/min/moment.min.js' %}"></script>
+	<script src="{% static 'v2/plugins/@fullcalendar/core/main.global.js' %}"></script>
+	<script src="{% static 'v2/plugins/@fullcalendar/daygrid/main.global.js' %}"></script>
+	<script src="{% static 'v2/plugins/@fullcalendar/timegrid/main.global.js' %}"></script>
+	<script src="{% static 'v2/plugins/@fullcalendar/interaction/main.global.js' %}"></script>
+	<script src="{% static 'v2/plugins/@fullcalendar/list/main.global.js' %}"></script>
+	<script src="{% static 'v2/plugins/@fullcalendar/bootstrap/main.global.js' %}"></script>
+	<script src="https://unpkg.com/tooltip.js/dist/umd/tooltip.min.js"></script>
+	<!-- ================== END CUSTOM JS ================== -->
+	<script>
+		var handleCalendarDemo = function () {
+			// fullcalendar
+			var d = new Date();
+			var month = d.getMonth() + 1;
+			month = (month < 10) ? '0' + month : month;
+			var year = d.getFullYear();
+			var day = d.getDate();
+			var today = moment().startOf('day');
+			var calendarElm = document.getElementById('calendar');
+			var calendar = new FullCalendar.Calendar(calendarElm, {
+				headerToolbar: {
+					left: 'dayGridMonth,timeGridWeek,timeGridDay',
+					center: 'title',
+					right: 'prev,next today'
+				},
+				buttonText: {
+					today: 'Today',
+					month: 'Month',
+					week: 'Week',
+					day: 'Day'
+				},
+				initialView: 'dayGridMonth',
+				themeSystem: 'bootstrap',
+				views: {
+					timeGrid: {
+						eventLimit: 6 // adjust to 6 only for timeGridWeek/timeGridDay
+					}
+				},
+				events: [{
+					title: 'Trip to London',
+					start: year + '-' + month + '-01',
+					end: year + '-' + month + '-05',
+					icon: "data:image/svg+xml;base64,PHN2ZyB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHBvaW50ZXItZXZlbnRzPSJub25lIiB3aWR0aD0iMjAwIiBoZWlnaHQ9IjIwMCI+IDxyZWN0IHdpZHRoPSIyMDAiIGhlaWdodD0iMjAwIiByeD0iMCIgcnk9IjAiIHN0eWxlPSJmaWxsOiAjN2Y4YzhkIj48L3JlY3Q+IDx0ZXh0IHRleHQtYW5jaG9yPSJtaWRkbGUiIHk9IjUwJSIgeD0iNTAlIiBkeT0iMC4zNWVtIiBwb2ludGVyLWV2ZW50cz0iYXV0byIgZmlsbD0iI2ZmZmZmZiIgZm9udC1mYW1pbHk9IkhlbHZldGljYU5ldWUtTGlnaHQsSGVsdmV0aWNhIE5ldWUgTGlnaHQsSGVsdmV0aWNhIE5ldWUsSGVsdmV0aWNhLEFyaWFsLEx1Y2lkYSBHcmFuZGUsc2Fucy1zZXJpZiIgc3R5bGU9ImZvbnQtd2VpZ2h0OiA0MDA7IGZvbnQtc2l6ZTogODBweCI+QkE8L3RleHQ+IDwvc3ZnPg==",
+					color: COLOR_TEAL
+				}, {
+					title: 'Meet with Jess Lau',
+					start: year + '-' + month + '-02T06:00:00',
+					color: COLOR_BLUE
+				}, {
+					title: 'Mobile Apps Brainstorming',
+					start: year + '-' + month + '-10',
+					end: year + '-' + month + '-12',
+					color: COLOR_PINK
+				}, {
+					title: 'Stonehenge, Windsor Castle, Oxford',
+					start: year + '-' + month + '-05T08:45:00',
+					end: year + '-' + month + '-06T18:00',
+					icon: "data:image/svg+xml;base64,PHN2ZyB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHBvaW50ZXItZXZlbnRzPSJub25lIiB3aWR0aD0iMjAwIiBoZWlnaHQ9IjIwMCI+IDxyZWN0IHdpZHRoPSIyMDAiIGhlaWdodD0iMjAwIiByeD0iMCIgcnk9IjAiIHN0eWxlPSJmaWxsOiAjN2Y4YzhkIj48L3JlY3Q+IDx0ZXh0IHRleHQtYW5jaG9yPSJtaWRkbGUiIHk9IjUwJSIgeD0iNTAlIiBkeT0iMC4zNWVtIiBwb2ludGVyLWV2ZW50cz0iYXV0byIgZmlsbD0iI2ZmZmZmZiIgZm9udC1mYW1pbHk9IkhlbHZldGljYU5ldWUtTGlnaHQsSGVsdmV0aWNhIE5ldWUgTGlnaHQsSGVsdmV0aWNhIE5ldWUsSGVsdmV0aWNhLEFyaWFsLEx1Y2lkYSBHcmFuZGUsc2Fucy1zZXJpZiIgc3R5bGU9ImZvbnQtd2VpZ2h0OiA0MDA7IGZvbnQtc2l6ZTogODBweCI+QkE8L3RleHQ+IDwvc3ZnPg==",
+					color: COLOR_INDIGO
+				}, {
+					title: 'Paris Trip',
+					start: year + '-' + month + '-12',
+					end: year + '-' + month + '-16'
+				}, {
+					title: 'Domain name due',
+					start: year + '-' + month + '-15',
+					color: COLOR_BLUE
+				}, {
+					title: 'Cambridge Trip',
+					start: year + '-' + month + '-19'
+				}, {
+					title: 'Visit Apple Company',
+					start: year + '-' + month + '-22T05:00:00',
+					color: COLOR_GREEN
+				}, {
+					title: 'Exercise Class',
+					start: year + '-' + month + '-22T07:30:00',
+					color: COLOR_ORANGE
+				}, {
+					title: 'Live Recording',
+					start: year + '-' + month + '-22T03:00:00',
+					color: COLOR_BLUE
+				}, {
+					title: 'Announcement',
+					start: year + '-' + month + '-22T15:00:00',
+					color: COLOR_RED
+				}, {
+					title: 'Dinner',
+					start: year + '-' + month + '-22T18:00:00'
+				}, {
+					title: 'New Android App Discussion',
+					start: year + '-' + month + '-25T08:00:00',
+					end: year + '-' + month + '-25T10:00:00',
+					color: COLOR_RED
+				}, {
+					title: 'Marketing Plan Presentation',
+					start: year + '-' + month + '-25T12:00:00',
+					end: year + '-' + month + '-25T14:00:00',
+					color: COLOR_BLUE
+				}, {
+					title: 'Chase due',
+					start: year + '-' + month + '-26T12:00:00',
+					color: COLOR_ORANGE
+				}, {
+					title: 'Heartguard',
+					start: year + '-' + month + '-26T08:00:00',
+					color: COLOR_ORANGE
+				}, {
+					title: 'Lunch with Richard',
+					start: year + '-' + month + '-28T14:00:00',
+					color: COLOR_BLUE
+				}, {
+					title: 'Web Hosting due',
+					start: year + '-' + month + '-30',
+					color: COLOR_BLUE
+				}],
+				eventDidMount: function(info) {
+					if(info.event.extendedProps['icon']){
+						console.log("hererer2");
+						$(info.el).find(".fc-event-title").prepend('<img class="fc-event-image mr-2" src="' +info.event.extendedProps["icon"] + '" />');
+					}
+    			},
+			});
+
+			calendar.render();
+		};
+
+		var Calendar = function () {
+			"use strict";
+			return {
+				//main function
+				init: function () {
+					handleCalendarDemo();
+				}
+			};
+		}();
+
+		$(document).ready(function () {
+			Calendar.init();
+		});
+	</script>
+{% endblock %}

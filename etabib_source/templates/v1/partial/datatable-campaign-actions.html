@@ -1,0 +1,50 @@
+{% load i18n %}
+{% load partner_tags %}
+<a title="{% trans 'Détail' %}"
+   href="{% url 'partner-detail-campaign' campaign.id %}"
+   class="btn btn-default">
+    <i class="fa fa-eye" aria-hidden="true"></i>
+</a>
+{% if campaign|isVerfied %}
+    {% if not campaign|isActive %}
+        {% if campaign|isPending %}
+            {% if campaign|isCampagneImpression %}
+            <a title="{% trans 'Annuler' %}" href="{% url 'partner-cancel-campaign-imp' campaign.id %}"
+               class="btn btn-default fm-update" data-fm-head="{% trans 'Annuler la campagne' %}"
+               data-fm-callback="reload">
+                <i class="fa fa-times" aria-hidden="true"></i>
+            </a>
+            {% endif %}
+        {% else %}
+        <a title="{% trans 'Activer' %}" href="{% url 'partner-activate-campaign-imp' campaign.id %}"
+           class="btn btn-default fm-update" data-fm-head="{% trans 'Activer la campagne' %} "
+           data-fm-callback="reload">
+            <i class="fa fa-check" aria-hidden="true"></i>
+        </a>
+        <a title="{% trans 'Supprimer' %}" href="{% url 'partner-delete-campaign' campaign.id %}"
+           class="btn btn-default fm-delete" data-fm-head="{% trans 'Supprimer la compagne' %}: {{campaign.libelle}}"
+           data-fm-callback="reload">
+            <i class="fa fa-trash" aria-hidden="true"></i>
+        </a>
+        {% endif %}
+    {% else %}
+    <a title="{% trans 'Arrêter la campagne' %}" href="{% url 'partner-stop-campaign-imp' campaign.id %}"
+       class="btn btn-default fm-update" data-fm-head="{% trans 'Arrêter la campagne' %}"
+       data-fm-callback="reload">
+        <i class="fa fa-times" aria-hidden="true"></i>
+    </a>
+    {% endif %}
+    <a title="{% trans 'Statistiques' %}" href="{% url 'partner-campaign-stats' campaign.id %}"
+       class="btn btn-etabib"
+       data-fm-callback="reload">
+        <i class="fa fa-bar-chart " aria-hidden="true"></i>
+    </a>
+{% else %}
+{% if campaign|isCampagneImpression %}
+<a title="{% trans 'Mettre à jour' %}" href="{% url 'partner-update-campaign-imp' campaign.id %}"
+   class="btn btn-default fm-update" data-fm-head="{% trans 'Mise à jour de la campagne' %}"
+   data-fm-callback="reload">
+    <i class="fa fa-pencil-square-o" aria-hidden="true"></i>
+</a>
+{% endif %}
+{% endif %}

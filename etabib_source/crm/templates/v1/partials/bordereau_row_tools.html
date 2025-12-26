@@ -1,0 +1,17 @@
+{% load i18n %}
+<table class="table table-bordered table-hover">
+    <tr>
+        <th>{% trans 'Commande N°' %}</th>
+        <th>{% trans 'Total HT' %}</th>
+        <th>{% trans 'TTC' %}</th>
+        <th>{% trans 'Versement intial' %}</th>
+    </tr>
+    {% for commande in obj.commande_set.all %}
+    <tr>
+        <td>{{commande.id}}</td>
+        <td>{{commande.totalHt}} DA</td>
+        <td>{{commande.ttc}} DA</td>
+        <td>{{commande.versement_initial}} DA</td>
+    </tr>
+    {% endfor %}
+</table>

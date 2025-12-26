@@ -1,0 +1,15 @@
+*.pyc
+__pycache__/
+*.sqlite3
+media/
+static/
+.env
+.DS_Store
+*.sql
+*.log
+*.txt
+.idea/
+venv/
+.venv/
+*.pem
+.google-drive-*.json

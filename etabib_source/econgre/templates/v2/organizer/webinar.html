@@ -1,0 +1,123 @@
+{% extends "base.html" %}
+{% load i18n %}
+{% load static  utils_tags ads_tags role_tags %}
+
+{% block title %} {{webinar.nom}} {% endblock %}
+
+{% block style %}
+<style>
+#meet {
+   height: 500px;
+}
+
+
+</style>
+{% endblock %}
+
+{% block content %}
+<div class="container">
+    <div class="row">
+        <div class="col-lg-12 col-md-12 col-sm-12 col-xs-12">
+            <div class="product-status-wrap drp-lst latest-blog-single blog-single-full-view">
+                <h1><a class="blog-ht" href="#">{{webinar.nom}}</a></h1>
+                <div class="blog-details blog-sig-details">
+                    <p>
+                        {{webinar.description}}
+                    </p>
+                </div>
+            </div>
+        </div>
+        <div class="col-lg-12 col-md-12 col-sm-12 col-xs-12">
+            <div class="d-flex flex-column bd-highlight mb-3">
+                <div class="text-center" id="meet">
+                    {% if webinar.video %}
+                    <video id="advideo" class="hide" onended="openJitsiRoom();" width="100%" height="100%" controls
+                           autoplay muted>
+                        <source src="{{webinar.video.url}}" type="video/ogg">
+                    </video>
+                    {% endif %}
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}
+
+{% block js %}
+<script src='https://{% settings_value "ECONGRE_JITSI_DOMAIN_NAME" %}/external_api.js'></script>
+<script>
+var api = null;
+const domain = "{% settings_value "ECONGRE_JITSI_DOMAIN_NAME" %}";
+const options = {
+    roomName: '{{webinar.salle_discussion}}'{% if jwtToken %} + '?jwt={{jwtToken}}' {% endif %} ,
+    interfaceConfigOverwrite: {
+        filmStripOnly: false,
+        TOOLBAR_BUTTONS: [
+            'microphone', 'camera', 'closedcaptions', 'desktop', 'fullscreen',
+            'fodeviceselection', 'hangup', 'profile', 'chat',
+            'etherpad', 'sharedvideo', 'settings', 'raisehand',
+            'videoquality', 'filmstrip', 'feedback', 'stats', 'shortcuts',
+            'tileview', 'download', 'help'
+        ]
+    },
+    configOverwrite: {
+        enableWelcomePage: false,
+        startWithVideoMuted: {% if VIDEO_ON %} false {% else %} true  {% endif %},
+        startWithAudioMuted: {% if AUDIO_ON %} false {% else %} true  {% endif %},
+    },
+    width: '100%',
+    height: '100%',
+    onload: function() {
+        console.log("onload");
+    },
+    userInfo: {
+        name: '{{request.user.get_full_name}}'
+    },
+    parentNode: document.querySelector('#meet')
+};
+function openJitsiRoom() {
+    {% if webinar.video %}
+        {% if user|is_doctor %}
+            var url = "/api/annonce/impression/{0}/{1}/{2}";
+            var video_duration = Math.round($("#advideo").get(0).duration);
+            url = url.replace("{0}", {{webinar.video.id}}).replace("{1}", {{user.id}}).replace("{2}", video_duration);
+            $.get(url, function( data ) {});
+        {% endif %}
+    {% endif %}
+    $("#meet").html("");
+    $("#meet").addClass("holds-the-iframe");
+
+    {% is_mobile_app request as mobile_app %}
+    {% if mobile_app %}
+        {% if user|is_doctor %}
+            Android.openJitsiActivity(domain,'{{ webinar.salle_discussion }}', '', true, true);
+        {% elif user|is_speaker or user|is_organizer or user|is_moderator%}
+            Android.openJitsiActivity(domain,
+             '{{ webinar.salle_discussion }}',
+              {% if jwtToken %}'{{ jwtToken }}'{% endif %}, false, false);
+        {% endif %}
+    {% else %}
+        api = new JitsiMeetExternalAPI(domain, options);
+        // when local user has joined the video conference
+        api.addEventListener('videoConferenceJoined', (response) => {
+            api.executeCommand('displayName', '{{request.user.get_full_name}}');
+        });
+    {% endif %}
+}
+
+$(document).ready(function() {
+    $([document.documentElement, document.body]).animate({
+        scrollTop: $("#meet").offset().top
+    }, 1000);
+    {% if not webinar.video %}
+        openJitsiRoom();
+    {% else %}
+        $("#advideo").removeClass("hide");
+        $("#advideo").get(0).play();
+    {% endif %}
+
+});
+
+
+</script>
+{% endblock %}

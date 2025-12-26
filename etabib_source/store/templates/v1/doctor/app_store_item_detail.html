@@ -1,0 +1,359 @@
+{% extends "base.html" %}
+{% load i18n %}
+{% load static %}
+{% load avatar_tags %}
+{% load app_store_tags %}
+{% block title %} {% trans "eTabib Store" %} {% endblock %}
+{% block style %}
+<!-- Google Fonts ============================================ -->
+<link href="https://fonts.googleapis.com/css?family=Roboto:100,300,400,700,900" rel="stylesheet">
+<!-- Bootstrap CSS ============================================ -->
+<link rel="stylesheet" href='{% static "css/bootstrap.min.css" %}'>
+<!-- Bootstrap CSS ============================================ -->
+<link rel="stylesheet" href='{% static "css/font-awesome.min.css" %}'>
+<!-- owl.carousel CSS ============================================ -->
+<link rel="stylesheet" href='{% static "css/owl.carousel.css" %}'>
+<link rel="stylesheet" href='{% static "css/owl.theme.css" %}'>
+<link rel="stylesheet" href='{% static "css/owl.transitions.css" %}'>
+<!-- animate CSS ============================================ -->
+<link rel="stylesheet" href='{% static "css/animate.css" %}'>
+<!-- normalize CSS ============================================ -->
+<link rel="stylesheet" href='{% static "css/normalize.css" %}'>
+<!-- meanmenu icon CSS ============================================ -->
+<link rel="stylesheet" href='{% static "css/meanmenu.min.css" %}'>
+<!-- main CSS ============================================ -->
+<link rel="stylesheet" href='{% static "css/main.css" %}'>
+<!-- educate icon CSS ============================================ -->
+<link rel="stylesheet" href='{% static "css/educate-custon-icon.css" %}'>
+<!-- morrisjs CSS ============================================ -->
+<link rel="stylesheet" href='{% static "css/morrisjs/morris.css" %}'>
+<!-- mCustomScrollbar CSS ============================================ -->
+<link rel="stylesheet" href='{% static "css/scrollbar/jquery.mCustomScrollbar.min.css" %}'>
+<!-- metisMenu CSS ============================================ -->
+<link rel="stylesheet" href='{% static "css/metisMenu/metisMenu.min.css" %}'>
+<link rel="stylesheet" href='{% static "css/metisMenu/metisMenu-vertical.css" %}'>
+<!-- Preloader CSS ============================================ -->
+<link rel="stylesheet" href='{% static "css/preloader/preloader-style.css" %}'>
+<!-- modernizr JS ============================================ -->
+<script src='{% static "js/vendor/modernizr-2.8.3.min.js" %}'></script>
+<!-- rateyo CSS ============================================ -->
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/rateYo/2.3.2/jquery.rateyo.min.css">
+{% endblock %} {%block content %}
+<div class="single-pro-review-area mt-t-30 mg-b-15">
+    <div class="container-fluid">
+        <div class="row">
+            <div class="col-lg-12">
+                {% include 'partial/messages-alerts.html' %}
+            </div>
+            <div class="col-lg-3 col-md-3 col-sm-3 col-xs-12">
+                <div class="profile-info-inner">
+                    <div class="profile-img">
+                        <img src="{{app.icon.url}}" alt=""/>
+                    </div>
+                    <div class="profile-details-hr">
+                        <div class="col-lg-12 col-md-12 col-sm-12 col-xs-12">
+                            <div class="address-hr">
+                                <h3>{{app.libelle}}</h3>
+                                <span class="center-block" id="rateYo"></span>
+                                <span>{{app.note_globale}}</span>
+                            </div>
+                        </div>
+                        {% if app.tags.all %}
+                        <div class="col-lg-12 col-md-12 col-sm-12 col-xs-12">
+                            <div class="tb-sm-res-d-n dps-tb-ntn">
+                                <div class="text-center">
+                                    <b>{% trans 'Mots clés' %}</b><br/>
+                                    {% for tag in app.tags.all %}
+                                    <a class="trigger blue lighten" href="{% url 'etabib-store-tag-apps' tag.slug %}">
+                                        {{tag}}
+                                    </a>
+                                    {% endfor %}
+                                </div>
+                            </div>
+                        </div>
+                        {% endif %}
+                        <div class="col-lg-12 col-md-12 col-sm-12 col-xs-12">
+                            <h3>
+                                <img class="profile-icon" src="{% static 'img/cloud-computing.png' %}" alt="">
+                                {{app.nb_telechargement}} <small>{% trans 'Téléchargements' %}</small>
+                            </h3>
+                        </div>
+                        <div class="col-lgs-12 col-md-12 col-sm-12 col-xs-12">
+                            <h3>
+                                <img class="profile-icon" src="{% static 'img/coins.svg' %}" alt="">
+                                {{app.consomation}}/
+                                <small>{{app.get_type_consomation_display|lower}}</small>
+                            </h3>
+                        </div>
+                        <div class="col-lgs-12 col-md-12 col-sm-12 col-xs-12">
+                            <h3>
+                                <img class="profile-icon" src="{% static 'img/compatible.png' %}" alt="">
+                                {{app.compatible_with}}
+                            </h3>
+                        </div>
+                        {% if is_published %}
+                        <div class="row">
+                            <div class="col-lg-12">
+                                <div class="address-hr">
+                                    <div class="form-select-list">
+                                        <select id="select-machine" class="form-control custom-select-value"
+                                                name="account">
+                                            <option disabled selected>{% trans 'Selectionnez un poste' %}</option>
+                                            {% for poste in request.user.medecin.non_blocked_postes %}
+                                            <option value="{{poste.id}}">{% trans 'Poste' %} {{poste.libelle}}</option>
+                                            {% endfor %}
+                                        </select>
+                                    </div>
+                                </div>
+                                <div class="address-hr">
+                                    <button id="action" type="button"
+                                            class="btn btn-etabib mg-b-15 hide"
+                                            data-toggle="modal"
+                                            data-target="#modal">
+                                        <i class="fa fa-shopping-cart"></i>
+                                        <span></span>
+                                    </button>
+                                </div>
+                            </div>
+                        </div>
+                        {% endif %}
+                    </div>
+                </div>
+            </div>
+            <div class="col-lg-9 col-md-9 col-sm-9 col-xs-12">
+                <div
+                        class="product-payment-inner-st res-mg-t-30 analysis-progrebar-ctn">
+                    <ul id="myTabedu1" class="tab-review-design">
+                        <li class="active"><a href="#description">{% trans 'description' %}</a></li>
+                        <li><a href="#reviews"> {% trans 'comments' %}</a></li>
+                        <li><a href="#preview"> {% trans 'preview' %}</a></li>
+                    </ul>
+                    <div id="myTabContent"
+                         class="tab-content custom-product-edit st-prf-pro">
+                        <div class="product-tab-list tab-pane fade active in"
+                             id="description">
+                            <div class="row">
+                                <div class="col-lg-12 col-md-12 col-sm-12 col-xs-12">
+                                    <div class="review-content-section">
+                                        <div class="row">
+                                            {{app.description|safe}}
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="product-tab-list tab-pane fade" id="reviews">
+                            <div class="row">
+                                <div class="col-lg-12 col-md-12 col-sm-12 col-xs-12">
+                                    <div class="review-content-section">
+                                        <div class="chat-discussion" style="height: auto">
+                                            <div class="chat-message">
+                                                <div class="profile-hdtc">
+                                                    {% avatar user class="message-avatar" %}
+                                                </div>
+                                                <div class="message form-group">
+                                                    <a class="message-author" href="#">
+                                                        {{request.user.medecin.full_name}} </a>
+                                                    <textarea id="commentBox" placeholder="{% trans 'Add a comment' %}"
+                                                              class="form-control" style="height: 100px;"
+                                                              rows="1"></textarea>
+                                                    <br>
+                                                    <a id="addComment" class="btn btn-default"> {% trans 'send' %}</a>
+                                                </div>
+                                            </div>
+                                            <div id="chat-discussion" class="endless_page_template">
+                                                {% include page_template %}
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="product-tab-list tab-pane fade" id="preview">
+                            <div class="row">
+                                <div class="col-lg-12 col-md-12 col-sm-12 col-xs-12">
+                                    <div class="owl-carousel owl-theme">
+                                        {% for screen in app.captures_ecran.all %}
+                                        <div><img class="img-rounded img-responsive" src="{{screen.image.url}}"></div>
+                                        {% endfor %}
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+{% include 'partial/modal-install-app.html' with app=app status=status %}
+{% include 'partial/modal-loading.html' %}
+{% endblock %} {% block js %}
+<!-- bootstrap JS ============================================ -->
+<script src='{% static "js/bootstrap.min.js" %}'></script>
+<!-- wow JS  ============================================ -->
+<script src='{% static "js/wow.min.js" %}'></script>
+<!-- meanmenu JS ============================================ -->
+<script src='{% static "js/jquery.meanmenu.js" %}'></script>
+<!-- owl.carousel JS ============================================ -->
+<script src='{% static "js/owl.carousel.min.js" %}'></script>
+<!-- sticky JS ============================================ -->
+<script src='{% static "js/jquery.sticky.js" %}'></script>
+<!-- scrollUp JS ============================================ -->
+<script src='{% static "js/jquery.scrollUp.min.js" %}'></script>
+<!-- counterup JS ============================================ -->
+<script src='{% static "js/counterup/jquery.counterup.min.js" %}'></script>
+<script src='{% static "js/counterup/waypoints.min.js" %}'></script>
+<script src='{% static "js/counterup/counterup-active.js" %}'></script>
+<!-- mCustomScrollbar JS  ============================================ -->
+<script src='{% static "js/scrollbar/jquery.mCustomScrollbar.concat.min.js" %}'></script>
+<script src='{% static "js/scrollbar/mCustomScrollbar-active.js" %}'></script>
+<!-- metisMenu JS ============================================ -->
+<script src='{% static "js/metisMenu/metisMenu.min.js" %}'></script>
+<script src='{% static "js/metisMenu/metisMenu-active.js" %}'></script>
+<!-- plugins JS ============================================ -->
+<script src='{% static "js/plugins.js" %}'></script>
+<!-- main JS ============================================ -->
+<script src='{% static "js/main.js" %}'></script>
+<!-- tawk chat JS ============================================ -->
+{% include 'partial/tawk-script.html' %}
+<!-- rateyo JS ============================================ -->
+<script src="https://cdnjs.cloudflare.com/ajax/libs/rateYo/2.3.2/jquery.rateyo.min.js"></script>
+<!-- endless pagination JS ============================================ -->
+<script src='{% static "el-pagination/js/el-pagination.js" %}'></script>
+<script>
+    $(function () {
+        //Setting rating
+    	$("#rateYo").rateYo({
+            rating: {{rating}}
+        });
+        //Add Rating
+        $("#rateYo").rateYo().on("rateyo.set", function (e, data) {
+	       	var rating = data.rating;
+       	   	var data = { 'rating': rating,
+     			'user_id': {{request.user.id}},
+     			'app_id':{{app.id}},
+     			'csrfmiddlewaretoken': '{{ csrf_token }}'
+     			};
+           	$.post( "{% url 'etabib-store-item-add-rating' %}", data, function(response) {
+           		console.log(response);
+           	})
+       	  	.fail(function(response) {
+       	   	 	console.log(response);
+       	   	 	//TODO: Change msg text
+                 Lobibox.notify('error', {
+                     size: 'mini',
+                     position: 'top right',
+                     sound: false,
+                     msg: "Une erreur interne s'est produite"
+                 });
+       	  	});
+        });
+        //
+        $('.owl-carousel').owlCarousel({
+            items: 1,
+            center: true,
+            autoWidth: true
+        });
+        //Add Comment
+        $("#addComment").click(function() {
+            var element = $(this);
+            $(element).append(' <i class="fa fa-spinner fa-spin"></i>');
+        	var data = { 'comment': $("#commentBox").val(),
+        			'user_id': {{request.user.id}},
+        			'app_id':{{app.id}},
+        			'csrfmiddlewaretoken': '{{ csrf_token }}'
+        			};
+           $.post( "{% url 'etabib-store-item-add-comment' %}", data, function(response) {
+              $(element).find("i").remove();
+        	  $("#commentBox").val("");
+        	  $("#chat-discussion").prepend(response.html);
+        	  $("#chat-discussion div").first().animate({
+                  opacity:"0.5"
+              }, 1000, function() {
+                $("#chat-discussion div").first().animate({
+                    opacity:"1"
+                }, 1000);
+              });
+           })
+       	  .fail(function(response) {
+       	    $(element).find("i").remove();
+       	    console.log(response);
+       	    //TODO: Change msg text
+       	     Lobibox.notify('error', {
+                 size: 'mini',
+                 position: 'top right',
+                 sound: false,
+                 msg: "Une erreur interne s'est produite"
+             });
+       	  });
+        });
+        //processing installation
+        $("#install").click(function(event) {
+        	event.preventDefault();
+        	var element = $(this);
+            $(element).append(' <i class="fa fa-spinner fa-spin"></i>');
+        	var poste_id = $("#select-machine :selected").val();
+            var data = { 'poste_id': poste_id,
+        				 'app_id':{{app.id}},
+        			     'csrfmiddlewaretoken': '{{ csrf_token }}'
+        			   };
+           $.post( "{% url 'etabib-store-item-installation' %}", data, function(response) {
+             $(element).find("i").remove();
+        	 $("#modal").modal('hide');
+        	 $("#action span").text(response.action);
+        	 $("#modal-body").text(response.body);
+        	 //TODO: Change msg textF
+        	 Lobibox.notify('success', {
+                 size: 'mini',
+                 position: 'top right',
+                 sound: false, 
+                 msg: response.success_message
+             });
+           })
+       	  .fail(function(response) {
+       	     $(element).find("i").remove();
+             //TODO: Change msg text
+             Lobibox.notify('error', {
+                 size: 'mini',
+                 position: 'top right',
+                 sound: false,
+                 msg: response.responseJSON.error
+             });
+       	  });
+        });
+        //get app status by machine
+        $('#select-machine').on('change', function() {
+            var data = {
+                 'csrfmiddlewaretoken': '{{ csrf_token }}',
+                 'poste_id': this.value,
+                 'app_id': {{app.id}}
+               };
+            $("#modal-loading").modal('show');
+            $.post( "{% url 'etabib-store-item-get-app-status' %}", data, function(response) {
+                $("#modal-loading").modal('hide');
+                $("#action span").text(response.app_status);
+        	    $("#modal-title").text(response.title);
+        	    $("#modal-body").text(response.body);
+                $("#action").removeClass("hide");
+            })
+            .fail(function(response) {
+                $("#modal-loading").modal('hide');
+                //TODO: Change msg text
+                 Lobibox.notify('error', {
+                     size: 'mini',
+                     position: 'top right',
+                     sound: false,
+                     msg: "Une erreur interne s'est produite"
+                 });
+            });
+        });
+
+        //Endlesss pagination
+        $.endlessPaginate();
+    });
+
+
+
+</script>
+{% endblock %}

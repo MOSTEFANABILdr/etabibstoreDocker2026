@@ -1,0 +1,21 @@
+{% load i18n %}
+{% load static %}
+{% load role_tags utils_tags %}
+<li id="nav-alarm" class="nav-item">
+    <a id="notify_count" href="#" data-toggle="dropdown" role="button" aria-expanded="false"
+       class="nav-link dropdown-toggle badge1">
+        <img src="{% static 'img/alarm.png' %}" alt="">
+    </a>
+    <div role="menu" class="notification-author dropdown-menu dropdown-menu-center">
+        <div class="notification-single-top">
+            <h1>Notifications </h1>
+        </div>
+        <ul class="notification-menu">
+
+        </ul>
+        <div class="notification-view">
+            <a href="{% url 'notifications-list' %}">{% trans ' Afficher toutes les notifications' %}</a>
+        </div>
+    </div>
+</li>
+{% include "partial/websocket-script.html" %}

@@ -1,0 +1,77 @@
+{% load i18n role_tags utils_tags %}
+<div class="container m-t-20">
+    {% if success == True %}
+    <div class="alert alert-success">
+        <strong>Succès de l'opération! </strong>
+        Vous avez rechargé <a href="#" class="alert-link">{{ montant }}</a> d.a
+    </div>
+    {% endif %}
+    {% if success == False %}
+    <div class="alert alert-danger">
+        <strong>Echèc de l'opération! </strong>
+        Un problème est survenu lors de l'opération <strong>({{ msg }})</strong>. <a href="#" class="alert-link">Veuillez
+        réessayer</a>.
+    </div>
+    {% endif %}
+    <div class="row">
+        {% include 'partial/messages-alerts.html' %}
+    </div>
+    <form method="post" class="post-form">
+        {% csrf_token %}
+        <div class="row">
+            <div class="col-lg-4 col-md-12 col-sm-12 col-xs-12">
+                <div class="white-box text-center">
+                    <h3 class="box-title bg-light p-10">1-أولا</h3>
+                    {% if not hide_montant_select %}
+                    <h4>إختر المبلغ الذي تريد تعبئته</h4>
+                    {{form.montant_select}}
+                    {% endif %}
+
+                    {% if not hide_montant_select %}
+                    <h4>أو أكتب المبلغ الذي تريد تعبئته</h4>
+                    {% else %}
+                    <h4>المبلغ</h4>
+                    {% endif %}
+                    {{form.montant}}
+                </div>
+            </div>
+            <div class="col-lg-4 col-md-12 col-sm-12 col-xs-12 mt-4 mt-sm-0">
+                <div class="white-box text-center">
+                    <h3 class="box-title bg-light p-10">2-ثانيا</h3>
+                    <ul class="basic-list">
+                        <h4>أوافق على شروط الإستخدام
+                        </h4>
+                        <p>
+                            <a href="#" id="read-la">الشروط</a>
+                        </p>
+                        {{ form.agree }}
+                    </ul>
+                </div>
+            </div>
+            <div class="col-lg-4 col-md-12 col-sm-12 col-xs-12 mt-4 mt-sm-0">
+                <div class="white-box text-center">
+                    <h3 class="box-title bg-light p-10">3-ثالثا</h3>
+                    <ul class="text-center">
+                        <li>
+                            <h4>إختر طريقة الدفع</h4>
+                        </li>
+                        <li class="mx-auto d-block">
+                            {{form.mode_paiement}}
+                        </li>
+                        <li>
+                            <h4>أدخل الرمز الظـاهر في الصورة</h4>
+                        </li>
+                        <li>
+                            {{form.captcha}}
+                        </li>
+                        <li>
+                            <input type="button" value="تعبئة الرصيد"
+                                   class="btn btn-primary btn btn-etabib" id="submit-btn">
+                            <button type="submit" class="hide"></button>
+                        </li>
+                    </ul>
+                </div>
+            </div>
+        </div>
+    </form>
+</div>

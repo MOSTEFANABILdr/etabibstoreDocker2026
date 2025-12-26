@@ -1,0 +1,120 @@
+{% extends "base.html" %}
+{% load i18n %}
+{% load static notif_tags %}
+
+{% block title %} {% trans 'Notifications list' %}  {% endblock %}
+
+{% block style %}
+<style>
+.media-left .notification-icon {
+    height: 40px;
+}
+.media:hover {
+    background-color: #f8f9fa;
+    cursor: pointer;
+}
+
+
+</style>
+{% endblock %}
+
+{% block content %}
+<div class="container">
+    <div class="row">
+        {% include 'partial/messages-alerts.html' %}
+        <h1 class="page-header">
+            <i class="fas fa-bell"></i>
+            {% trans 'Liste des notifications' %}
+        </h1>
+        <div class="col-md-12 col-md-12 col-sm-12 col-xs-12">
+            <div class="row">
+                <div class="col-lg-12">
+                    <div class="btn-group mb-3 pull-right">
+                        <button title="{% trans 'Rafraîchir' %}" onClick="window.location.reload()"
+                                class="btn btn-etabib btn-sm">
+                            <i class="fa fa-spinner"></i>
+                        </button>
+                        <button onclick="markNotificationsAsRead(this)" class="btn btn-etabib btn-sm"
+                                data-toggle="tooltip" data-placement="top"
+                                title="{% trans 'Marquer tout comme lu' %}">
+                            <i class="fa fa-check"></i>
+                        </button>
+                        <button onclick="markNotificationsAsUnread(this)" class="btn btn-etabib btn-sm"
+                                data-toggle="tooltip" data-placement="top"
+                                title="{% trans 'marquer tout comme non lu' %}">
+                            <i class="fa fa-square"></i>
+                        </button>
+                    </div>
+                </div>
+            </div>
+            <div class="notifications-list">
+                {% include page_template %}
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}
+
+{% block js %}
+<script src='{% static "el-pagination/js/el-pagination.js" %}'></script>
+<script>
+     function markNotificationsAsRead(param) {
+        //Mark all notifications as read
+        var data = {
+            'csrfmiddlewaretoken': '{{ csrf_token }}'
+         };
+        $(param).find('i').removeClass("fa fa-check").addClass("fa fa-spinner fa-spin");
+        $.post( "{% url 'mark-all-notifications-as-read' %}", data, function(response) {
+            $(param).find('i').removeClass("fa fa-spinner fa-spin").addClass("fa fa-check");
+            //set Notification css class
+            $(".notifications-list .media").addClass("bg-light");
+        })
+        .fail(function(response) {
+            $(param).find('i').removeClass("fa fa-spinner fa-spin").addClass("fa fa-check");
+            console.log(response);
+        });
+     }
+
+     function markNotificationsAsUnread(param) {
+        //Mark all notifications as unread
+        var data = {
+            'csrfmiddlewaretoken': '{{ csrf_token }}'
+        };
+        $(param).find('i').removeClass("fa fa-square-o").addClass("fa fa-spinner fa-spin");
+        $.post( "{% url 'mark-all-notifications-as-unread' %}", data, function(response) {
+            $(param).find('i').removeClass("fa fa-spinner fa-spin").addClass("fa fa-square-o");
+            //remove read Notification css class
+            $(".notifications-list .media").removeClass("bg-light");
+        })
+        .fail(function(response) {
+            $(param).find('i').removeClass("fa fa-spinner fa-spin").addClass("fa fa-square-o");
+        });
+     }
+
+      function deleteNotification(event, id, obj) {
+        //delete notification
+        var data = {
+                     'notif_id': id,
+                     'csrfmiddlewaretoken': '{{ csrf_token }}'
+                   };
+        $.post( "{% url 'delete-notification' %}", data, function(response) {
+            $(obj).closest(".media").fadeOut("normal", function() {
+                $(this).remove();
+            });
+        })
+        .fail(function(response) {
+            console.log(response);
+        });
+        event.stopPropagation();
+      }
+
+	 $(function () {
+		 	//Endlesss pagination
+	        $.endlessPaginate({paginateOnScroll: true});
+	});
+
+
+
+
+</script>
+{% endblock %}

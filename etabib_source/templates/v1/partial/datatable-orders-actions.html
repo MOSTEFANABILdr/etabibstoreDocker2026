@@ -1,0 +1,21 @@
+{% load i18n %}
+{% load role_tags %}
+<a title="{% trans 'Détail de la commande: ' %} {{order.id}}"
+   href="{% url 'detail-order' order.id %}"
+   class="btn btn-etabib">
+    <i class="fa fa-file-text-o" aria-hidden="true"></i>
+</a>
+{% if order.commercial == user %}
+{% if order.offre_prepa %}
+<a title="{% trans 'Mise à jour de la commande' %}" href="{% url 'commercial-update-order' order.pk %}"
+   class="btn btn-etabib fm-update" data-fm-head="{% trans 'Mise à jour de la commande' %}: {{order.id}}"
+   data-fm-callback="reload">
+    <i class="fa fa-pencil-square-o" aria-hidden="true"></i>
+</a>
+{% endif %}
+<a title="{% trans 'supprimer la commande' %}" href="{% url 'commercial-delete-order' order.pk %}"
+   class="btn btn-etabib fm-delete" data-fm-head="{% trans 'Suppression de la commande' %}: {{order.id}}"
+   data-fm-callback="reload">
+    <i class="fa fa-trash" aria-hidden="true"></i>
+</a>
+{% endif %}

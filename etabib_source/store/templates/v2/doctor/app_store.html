@@ -1,0 +1,277 @@
+{% extends "base.html" %}
+{% load i18n ads_tags widget_tweaks role_tags %}
+{% load static %}
+
+{% block title %}  {% trans "eTabib Store" %} {% endblock %}
+{% block style %}
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/rateYo/2.3.2/jquery.rateyo.min.css">
+<link href="{% static 'v2/css/e-commerce/app.min.css' %}" rel="stylesheet"/>
+<link href="{% static 'v2/css/e-commerce/app.custom.min.css' %}?v=1.1" rel="stylesheet"/>
+{% endblock %}
+
+{% block content %}
+<!-- BEGIN #page-container -->
+<div id="page-container">
+    <!-- BEGIN search-results -->
+    <div id="search-results" class="section-container p-t-10">
+        <!-- BEGIN container -->
+        <div class="container">
+            <h1 class="page-header p-b-10">
+                <i class="fas fa-shopping-basket"></i>
+                {% trans 'eTabib Store' %}
+            </h1>
+            <div class="row">
+                {% include 'partial/messages-alerts.html' %}
+            </div>
+            <!-- BEGIN search-container -->
+            <div class="search-container">
+                <!-- BEGIN search-sidebar -->
+                <div class="search-sidebar">
+                    <h4 class="title">{% trans 'Filtrez par' %}</h4>
+                    <form action="" method="POST" name="filter_form">
+                        {% csrf_token %}
+                        <div class="form-group">
+                            <label class="control-label"></label>
+                            {{searchform.sq}}
+                        </div>
+                        <div class="form-group">
+                            <label class="control-label">{% trans 'Catégorie' %}</label>
+                            {{searchform.category}}
+                        </div>
+                        {% if user|is_doctor %}
+                        <div class="form-group hide">
+                            <label class="control-label">{% trans 'Poste' %}</label>
+                            <select id="select-machine" class="form-control"
+                                    name="poste">
+                                <option disabled {% if not poste_id %} selected {% endif %}>
+                                    {% trans 'Selectionnez un poste' %}
+                                </option>
+                                {% for poste in user.medecin.non_blocked_postes %}
+                                <option value="{{poste.id}}" {% if poste.id == poste_id %} selected {% endif %}>
+                                    {{poste.simple_libelle}}
+                                </option>
+                                {% endfor %}
+                            </select>
+                        </div>
+                        {% endif %}
+                        <div class="form-group">
+                            <label class="control-label">{% trans 'Sous catégorie' %}</label>
+                            {{searchform.sub_category}}
+                        </div>
+                        {% comment %}
+                        <div class="form-group">
+                            <label class="control-label">{% trans 'Prix' %}</label>
+                            <div class="row row-space-0">
+                                <div class="col-md-5">
+                                    <input type="number" class="form-control input-sm" name="price_from" value="0"
+                                           placeholder="Price From"/>
+                                </div>
+                                <div class="col-md-2 text-center p-t-5 f-s-12 text-muted">{% trans 'à' %}</div>
+                                <div class="col-md-5">
+                                    <input type="number" class="form-control input-sm" name="price_to" value="10000"
+                                           placeholder="Price To"/>
+                                </div>
+                            </div>
+                        </div>
+                        {% endcomment %}
+                        <div class="m-b-30">
+                            <button type="submit" class="btn btn-sm btn-theme btn-etabib"><i
+                                    class="fa fa-search fa-fw mr-1 ml-n3"></i> {% trans 'Filtrez' %}
+                            </button>
+                        </div>
+                    </form>
+                </div>
+                <!-- END search-sidebar -->
+                <!-- BEGIN search-content -->
+                <div class="search-content">
+                    <!-- BEGIN search-toolbar -->
+                    <div class="search-toolbar">
+                        <!-- BEGIN row -->
+                        <div class="row">
+                            <div class="col-lg-6">
+                                <h4>
+                                    {% blocktrans %} Nous avons trouvé: {{ products_count }} Articles {% endblocktrans %}
+                                </h4>
+                            </div>
+                            <!-- END col-6 -->
+                            {% comment %}
+                            <!-- BEGIN col-6 -->
+                            <div class="col-lg-6 text-right">
+                                <ul class="sort-list">
+                                    <li class="text"><i class="fa fa-filter"></i> {% trans 'Trier par' %}</li>
+                                    <li class="active"><a href="#">{% trans 'Populaire' %}</a></li>
+                                    <li><a href="#">{% trans 'Nouvelle arrivée' %}</a></li>
+                                    <li><a href="#">{% trans 'Price' %}</a></li>
+                                </ul>
+                            </div>
+                            {% endcomment %}
+                            <!-- END col-6 -->
+                        </div>
+                        <!-- END row -->
+                    </div>
+                    <!-- END search-toolbar -->
+                    <div class="endless_page_template">
+                        {% include page_template %}
+                    </div>
+                </div>
+                <!-- END search-content -->
+            </div>
+            <!-- END search-container -->
+        </div>
+        <!-- END container -->
+    </div>
+    <!-- END search-results -->
+    {% comment %}
+    <!-- BEGIN #footer -->
+    <div id="footer" class="footer">
+        <!-- BEGIN container -->
+        <div class="container">
+            <!-- BEGIN row -->
+            <div class="row">
+                <!-- BEGIN col-3 -->
+                <div class="col-lg-3">
+                    <h4 class="footer-header">ABOUT US</h4>
+                    <p>
+                        Lorem ipsum dolor sit amet, consectetur adipiscing elit. Sed nec tristique dolor, ac efficitur
+                        velit. Nulla lobortis tempus convallis. Nulla aliquam lectus eu porta pulvinar. Mauris semper
+                        justo erat.
+                    </p>
+                    <p class="mb-lg-4 mb-0">
+                        Vestibulum porttitor lorem et vestibulum pharetra. Phasellus sit amet mi congue, hendrerit mi
+                        ut, dignissim eros.
+                    </p>
+                </div>
+                <!-- END col-3 -->
+                <!-- BEGIN col-3 -->
+                <div class="col-lg-3">
+                    <h4 class="footer-header">RELATED LINKS</h4>
+                    <ul class="fa-ul mb-lg-4 mb-0">
+                        <li><i class="fa fa-li fa-angle-right"></i> <a href="#">Shopping Help</a></li>
+                        <li><i class="fa fa-li fa-angle-right"></i> <a href="#">Terms of Use</a></li>
+                        <li><i class="fa fa-li fa-angle-right"></i> <a href="#">Contact Us</a></li>
+                        <li><i class="fa fa-li fa-angle-right"></i> <a href="#">Careers</a></li>
+                        <li><i class="fa fa-li fa-angle-right"></i> <a href="#">Payment Method</a></li>
+                        <li><i class="fa fa-li fa-angle-right"></i> <a href="#">Sales & Refund</a></li>
+                        <li><i class="fa fa-li fa-angle-right"></i> <a href="#">Sitemap</a></li>
+                        <li><i class="fa fa-li fa-angle-right"></i> <a href="#">Privacy & Policy</a></li>
+                    </ul>
+                </div>
+                <!-- END col-3 -->
+                <!-- BEGIN col-3 -->
+                <div class="col-lg-3">
+                    <h4 class="footer-header">LATEST PRODUCT</h4>
+                    <ul class="list-unstyled list-product mb-lg-4 mb-0">
+                        <li>
+                            <div class="image">
+                                <img src="{% static 'v2/img/product/product-iphone-6s.jpg" alt=""/>
+                            </div>
+                            <div class="info">
+                                <h4 class="info-title">Iphone 6s</h4>
+                                <div class="price">$1200.00</div>
+                            </div>
+                        </li>
+                        <li>
+                            <div class="image">
+                                <img src="{% static 'v2/img/product/product-galaxy-s6.jpg" alt=""/>
+                            </div>
+                            <div class="info">
+                                <h4 class="info-title">Samsung Galaxy s7</h4>
+                                <div class="price">$850.00</div>
+                            </div>
+                        </li>
+                        <li>
+                            <div class="image">
+                                <img src="{% static 'v2/img/product/product-ipad-pro.jpg" alt=""/>
+                            </div>
+                            <div class="info">
+                                <h4 class="info-title">Ipad Pro</h4>
+                                <div class="price">$800.00</div>
+                            </div>
+                        </li>
+                        <li>
+                            <div class="image">
+                                <img src="{% static 'v2/img/product/product-galaxy-note5.jpg" alt=""/>
+                            </div>
+                            <div class="info">
+                                <h4 class="info-title">Samsung Galaxy Note 5</h4>
+                                <div class="price">$1200.00</div>
+                            </div>
+                        </li>
+                    </ul>
+                </div>
+                <!-- END col-3 -->
+                <!-- BEGIN col-3 -->
+                <div class="col-lg-3">
+                    <h4 class="footer-header">OUR CONTACT</h4>
+                    <address class="mb-lg-4 mb-0">
+                        <strong>Twitter, Inc.</strong><br/>
+                        1355 Market Street, Suite 900<br/>
+                        San Francisco, CA 94103<br/><br/>
+                        <abbr title="Phone">Phone:</abbr> (123) 456-7890<br/>
+                        <abbr title="Fax">Fax:</abbr> (123) 456-7891<br/>
+                        <abbr title="Email">Email:</abbr> <a href="mailto:sales@myshop.com">sales@myshop.com</a><br/>
+                        <abbr title="Skype">Skype:</abbr> <a href="skype:myshop">myshop</a>
+                    </address>
+                </div>
+                <!-- END col-3 -->
+            </div>
+            <!-- END row -->
+        </div>
+        <!-- END container -->
+    </div>
+    <!-- END #footer -->
+    <!-- BEGIN #footer-copyright -->
+    <div id="footer-copyright" class="footer-copyright">
+        <!-- BEGIN container -->
+        <div class="container">
+            <div class="payment-method">
+                <img src="{% static 'v2/img/payment/dahabia.jpg' %}" alt=""/>
+            </div>
+            <div class="copyright">
+                Copyright &copy; 2022 SARL IbnHamza. All rights reserved.
+            </div>
+        </div>
+        <!-- END container -->
+    </div>
+    <!-- END #footer-copyright -->
+    {% endcomment %}
+</div>
+<!-- END #page-container -->
+{% endblock %}
+{% block js %}
+{{searchform.media}}
+<script src="https://cdnjs.cloudflare.com/ajax/libs/rateYo/2.3.2/jquery.rateyo.min.js"></script>
+<script src='{% static "el-pagination/js/el-pagination.js" %}'></script>
+<script>
+	 $(function () {
+	        //Setting rating
+		 	$(".rateYo").rateYo({
+			    readOnly: true,
+			    starWidth: "18px"
+			 });
+		 	//Endlesss pagination
+	        $.endlessPaginate({});
+
+	        //update rateYo
+            $(window).scroll(function() {
+               $(".rateYo").rateYo({
+                    readOnly: true,
+                    starWidth: "20px"
+                });
+            });
+
+            //unhide poste select
+            $('#id_category').on('change', function() {
+                if (this.value == "1") {
+                    $('select[name=poste]').closest(".form-group").removeClass("hide");
+                }
+                else {
+                    $('select[name=poste]').closest(".form-group").addClass("hide");
+                }
+            });
+            if ($("#id_category").val() == "1") {
+                $('select[name=poste]').closest(".form-group").removeClass("hide");
+            }
+	});
+</script>
+{% endblock %}

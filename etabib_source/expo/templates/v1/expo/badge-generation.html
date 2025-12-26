@@ -1,0 +1,161 @@
+{% extends "base.html" %}
+{% load i18n %}
+{% load static %}
+{% load qr_code expo_tags %}
+{% block title %} QR {% endblock %}
+{% block style %}
+<!-- Google Fonts
+                    ============================================ -->
+<link
+        href="https://fonts.googleapis.com/css?family=Roboto:100,300,400,700,900"
+        rel="stylesheet">
+<!-- Bootstrap CSS
+                    ============================================ -->
+<link rel="stylesheet" href='{% static "css/bootstrap.min.css" %}'>
+<!-- Bootstrap CSS
+                    ============================================ -->
+<link rel="stylesheet" href='{% static "css/font-awesome.min.css" %}'>
+<!-- animate CSS
+                    ============================================ -->
+<link rel="stylesheet" href='{% static "css/animate.css" %}'>
+<!-- normalize CSS
+                    ============================================ -->
+<link rel="stylesheet" href='{% static "css/normalize.css" %}'>
+<!-- meanmenu icon CSS
+                    ============================================ -->
+<link rel="stylesheet" href='{% static "css/meanmenu.min.css" %}'>
+<!-- main CSS
+                    ============================================ -->
+<link rel="stylesheet" href='{% static "css/main.css" %}'>
+<!-- educate icon CSS
+                    ============================================ -->
+<link rel="stylesheet" href='{% static "css/educate-custon-icon.css" %}'>
+<!-- mCustomScrollbar CSS
+                    ============================================ -->
+<link rel="stylesheet"
+      href='{% static "css/scrollbar/jquery.mCustomScrollbar.min.css" %}'>
+<!-- metisMenu CSS
+                    ============================================ -->
+<link rel="stylesheet"
+      href='{% static "css/metisMenu/metisMenu.min.css" %}'>
+<link rel="stylesheet"
+      href='{% static "css/metisMenu/metisMenu-vertical.css" %}'>
+<!-- modernizr JS
+                    ============================================ -->
+<script src='{% static "js/vendor/modernizr-2.8.3.min.js" %}'></script>
+<style>
+    @media print {
+        body {-webkit-print-color-adjust: exact;}
+    }
+</style>
+{% endblock %}
+{% block content %}
+<div class="widgets-programs-area">
+    <div class="container-fluid">
+        <div class="row">
+            <div class="col-lg-12">
+                {% include 'partial/messages-alerts.html' %}
+            </div>
+        </div>
+        <div class="row text-center">
+            <div class="row">
+                <button class="btn btn-etabib block-center" onclick="printBadge();">
+                    <i class="fa fa-print fa-2x"></i>
+                    {% trans "Imprimer" %}
+                </button>
+            </div>
+            <br>
+            <div id="badge" class="col-lg-6 col-lg-offset-3">
+                <p style="text-align: center;">&nbsp;<img src="https://www.evencia.dz/images/accueil/LOGO-SIMEM.png"
+                                                          alt="simem" width="105" height="87"/></p>
+                <table style="border-collapse: collapse; width: 100%; height: 416px;" border="1">
+                    <tbody>
+                    <tr style="height: 10px; border-color: #3ed5ff; background-color: #3ed5ff!important;">
+                        <td style="width: 100%; height: 10px;" colspan="2">
+                            <h1 style="text-align: center;">VISITEUR - زائر</h1>
+                        </td>
+                    </tr>
+                    <tr style="height: 12px;">
+                        <td style="width: 48.3871%; height: 10px;">
+                            <h3 style="text-align: center;">{{user.first_name}}</h3>
+                        </td>
+                        <td style="width: 51.6129%; height: 10px;">
+                            <h3 style="text-align: center;">{{user.last_name}}</h3>
+                        </td>
+                    </tr>
+                    <tr style="height: 75px;">
+                        <td style="height: 10px; width: 100%; text-align: center;" colspan="2">
+                            <h3>{{contact.organisme}}</h3>
+                        </td>
+                    </tr>
+                    <tr style="height: 10px;">
+                        <td style="width: 100%; text-align: center; height: 10px;" colspan="2">
+                            <h3>{{contact.fonction}}</h3>
+                        </td>
+                    </tr>
+                    <tr style="height: 358px;">
+                        <td style="height: 358px;" colspan="2">
+                            <img style="display: block; margin-left: auto; margin-right: auto;"
+                                 src="{% qr_url_from_text badge_url size=6 image_format='png' %}">
+                        </td>
+                    </tr>
+                    <tr style="height: 18px; border-color: GREEN; background-color: {% get_badge_color user %}!important;">
+                        <td style="width: 100%; text-align: center; height: 18px;" colspan="2">
+                        </td>
+                    </tr>
+                    </tbody>
+                </table>
+                <br>
+                <p style="text-align: center;"><img src="https://store.etabib.dz/static/img/logo/logdo.png"
+                                                    alt="eTabib logo" width="96" height="98"/></p>
+                <p style="text-align: center;">&nbsp; &nbsp;ا<strong>لراعي الرسمي للمعرض الدولي للتجهيزات
+                    الطبية&nbsp;</strong></p>
+                <p style="text-align: center;">SIMEM 2021</p>
+                <p style="text-align: center;"><a href="http://www.etabib.dz">www.etabib.dz</a>&nbsp; copyright 2021</p>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}
+{% block js %}
+<!-- bootstrap JS
+                    ============================================ -->
+<script src='{% static "js/bootstrap.min.js" %}'></script>
+<!-- wow JS
+                    ============================================ -->
+<script src='{% static "js/wow.min.js" %}'></script>
+<!-- meanmenu JS
+                    ============================================ -->
+<script src='{% static "js/jquery.meanmenu.js" %}'></script>
+<!-- scrollUp JS
+                    ============================================ -->
+<script src='{% static "js/jquery.scrollUp.min.js" %}'></script>
+<!-- mCustomScrollbar JS
+                    ============================================ -->
+<script
+        src='{% static "js/scrollbar/jquery.mCustomScrollbar.concat.min.js" %}'></script>
+<script src='{% static "js/scrollbar/mCustomScrollbar-active.js" %}'></script>
+<!-- metisMenu JS
+                    ============================================ -->
+<script src='{% static "js/metisMenu/metisMenu.min.js" %}'></script>
+<script src='{% static "js/metisMenu/metisMenu-active.js" %}'></script>
+<!-- plugins JS
+                    ============================================ -->
+<script src='{% static "js/plugins.js" %}'></script>
+<!-- printThis JS ============================================ -->
+<script src='{% static "js/printThis.js" %}'></script>
+<!-- main JS
+                    ============================================ -->
+<script src='{% static "js/main.js" %}'></script>
+<!-- tawk chat JS
+                    ============================================ -->
+{% include 'partial/tawk-script.html' %}
+<script>
+    function printBadge() {
+        $('#badge').printThis({
+            importCSS: true,
+            pageTitle: "Badge",
+        });
+     }
+</script>
+{% endblock %}

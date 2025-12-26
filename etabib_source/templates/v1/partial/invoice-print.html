@@ -1,0 +1,246 @@
+{% load i18n %}
+{% load static %}
+<html>
+<head>
+    <meta charset="utf-8">
+    <title>{% trans 'Facture' %}</title>
+</head>
+<body>
+<div id="invoice">
+    <div class="row text-center company">
+        <h1>IBN Hamza Services &amp; Micro applications</h1>
+    </div>
+    <div class="row">
+        <div class="col-md-12">
+            <div class="row" style="border-bottom: 1px solid;border-color: #2ad4ff !important; margin-bottom: 1px">
+                <div class="col-xs-2">
+                    <img class="img-responsive pull-left" src="file://{{logo1}}"/>
+                </div>
+                <div class="col-xs-2">
+                    <img class="img-responsive pull-left" src="file://{{logo2}}"/>
+                </div>
+                <div class="col-xs-7 text-center">
+                    <p>SARL IBNHAMZA SERVICE & MICRO APPLICATIONS - SOCIETE UNIPERSONNELLE A RESPONSABILITE LIMITEE
+                        AU CAPITAL SOCIAL 300 000 .00 DA SIEGE SOCIAL PARC TECH NOLOGIQUE SIDI ABDALLAH -
+                        TECHNOBRIDGE E1S04 STATION 02 (PREMIER ETAGE ) RAHMANIA -ALGER</p>
+                </div>
+            </div>
+            <div class="col-lg-12">
+                <div class="pull-right text-justify" style="margin-bottom: 0px; margin-right: 23px; font-size: 24px">
+                    <strong>Facture</strong>
+                </div>
+            </div>
+            <div class="row" style='font-size:80%'>
+                <div class="col-md-2 col-xs-2 text-center company">
+                    <strong>INFOS FOURNISSEUR</strong>
+                </div>
+                <div class="col-md-7 col-xs-7 ">
+                    <p>TEL: (+213) 23 20 23 01 &nbsp &nbsp EMAIL: contact@ibnhamza.com</p>
+                    <p>NRC: 16/00- 1042685B 16</p>
+                    <p>NIS: 00 16 1609 00931 51</p>
+                    <p>NIF: 00 16 1610 4268525</p>
+                    <p>RIP: 007 99999 0021002424 60</p>
+                    <p>RIB: 021 00019 1130041078 (SOGEDZAL B. EL KIFFANE)</p>
+                </div>
+                <div class="col-md-3 col-xs-3 text-center">
+                    {% trans 'N°' %} &nbsp {{facture.numero}}<br>
+                    {% trans 'Date' %} &nbsp {{facture.date_creation|date:"d M, Y"}}<br>
+                    {% if facture.numeros_telephone %}
+                    {% trans 'REF BC' %} &nbsp {{facture.numero_commande}}
+                    {% endif %}
+                </div>
+            </div>
+            <div class="row">
+                <div class="col-md-12"
+                     style="margin-top: 0 !important; border-top: 1px solid;border-color: #2ad4ff !important;">
+                    <div class="table-responsive">
+                        <small>
+                            <table class="table table-borderless" style='font-size:85%'>
+                                <tbody>
+                                <tr>
+                                    <td class="text-left" style="border:0">
+                                        <div class="company">
+                                            <p>INFOS CLIENT</p>
+                                        </div>
+                                    </td>
+                                    <td class="text-left" style="border:0" colspan="3">{{facture.first_last_name}}</td>
+                                    {% if facture.numeros_telephone %}
+                                    <td class="text-left" style="border:0">TEL:</td>
+                                    <td class="text-left" style="border:0">{{facture.numeros_telephone}}</td>
+                                    {% endif %}
+                                </tr>
+                                <tr>
+                                    <td class="text-left" style="border:0">ADRESSE</td>
+                                    <td class="text-left" style="border:0" colspan="3">{{facture.adresse}}</td>
+                                    {% if facture.adresse_electronique %}
+                                    <td class="text-left" style="border:0">MAIL:</td>
+                                    <td class="text-left" style="border:0">{{facture.adresse_electronique}}</td>
+                                    {% endif %}
+                                </tr>
+                                <tr>
+                                    {% if facture.numero_registre_commerce %}
+                                    <td class="text-left" style="border:0">R/C</td>
+                                    <td class="text-left" style="border:0" colspan="3">
+                                        {{facture.numero_registre_commerce}}
+                                    </td>
+                                    {% endif %}
+                                    {% if facture.numeros_fax %}
+                                    <td class="text-left" style="border:0">FAX:</td>
+                                    <td class="text-left" style="border:0">{{facture.numeros_fax}}</td>
+                                    {% endif %}
+                                </tr>
+                                <tr>
+                                    {% if facture.numero_identification_fiscale %}
+                                    <td class="text-left" style="border:0">NIF</td>
+                                    <td class="text-left" style="border:0">{{facture.numero_identification_fiscale}}
+                                    </td>
+                                    {% endif %}
+                                    {% if facture.numero_tin %}
+                                    <td class="text-left" style="border:0">TIN N°</td>
+                                    <td class="text-left" style="border:0" colspan="2">{{facture.numero_tin}}</td>
+                                    {% endif %}
+                                </tr>
+                                {% if facture.numero_identification_domaine %}
+                                <tr>
+                                    <td class="text-left" style="border:0">NIS</td>
+                                    <td class="text-left" style="border:0" colspan="3">
+                                        {{facture.numero_identification_domaine}}
+                                    </td>
+                                </tr>
+                                {% endif %}
+                                </tbody>
+                            </table>
+                        </small>
+                    </div>
+                </div>
+            </div>
+            <div class="row">
+                <div class="col-md-12">
+                    <table class="table table-bordered text-center" style='font-size:85%'>
+                        <thead class="thead-light">
+                        <tr>
+                            <td>
+                                <strong>
+                                    {% trans 'Désignation' %}
+                                </strong>
+                            </td>
+                            <td>
+                                <strong>
+                                    {% trans 'QTT' %}
+                                </strong>
+                            </td>
+                            <td>
+                                <strong>
+                                    {% trans 'Montant' %}
+                                </strong>
+                            </td>
+                            <td>
+                                <strong>
+                                    {% trans 'TVA' %}
+                                </strong>
+                            </td>
+                            <td>
+                                <strong>
+                                    {% trans 'Montant TTC' %}
+                                </strong>
+                            </td>
+                        </tr>
+                        </thead>
+                        <tbody>
+                        <!-- foreach ($order->lineItems as $line) or some such thing here -->
+                        {% for fac in facture.facture_company_detail.all %}
+                        <tr>
+                            <td>{{fac.designation}}</td>
+                            <td>{{fac.quantity}}</td>
+                            <td>{{fac.montant}} {{currency}}</td>
+                            <td>{{fac.pourcentage_tva}}% &nbsp &nbsp
+                                {{fac.detail_mantant_tva}}
+                            </td>
+                            <td>{{fac.detail_with_tva}} {{currency}}</td>
+                        </tr>
+                        {% endfor %}
+                        </tbody>
+                    </table>
+                    <br>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+<div class="footer">
+    <div class="row">
+        <div class="col-md-12">
+            <div class="table-responsive">
+                <table class="table table-borderless" style='font-size:85%'>
+                    <thead class="thead-light">
+                    <tr>
+                        <th colspan="4" style="border:0"></th>
+                        <td colspan="2" class="text-center" style="border:0">
+                            <strong>TOTAL HT</strong>
+                        </td>
+                    </tr>
+                    </thead>
+                    <small>
+                        <tr>
+                            <td>OBSERVATIONS</td>
+                            <td colspan="3"></td>
+                            <td colspan="2" class="text-center"><strong>{{facture.total_without_tva}} DA</strong></td>
+                        </tr>
+                        <tr>
+                            <td>STATUS</td>
+                            <td colspan="3">{% if facture.statut%}{{facture.statut}}{% endif %}</td>
+                            <td>Remises</td>
+                            <td> {{facture.remises_et_rabais}}</td>
+                        </tr>
+                        <tr>
+                            <td>Date limite règlement</td>
+                            <td colspan="3">{% if facture.statut%}{{facture.date_limite_reglement|date:"d M, Y"}}{% endif %}
+                            </td>
+                            <td>Frais Livraison</td>
+                            <td> {{facture.frais_de_livraison}}</td>
+                        </tr>
+                        <tr>
+                            <td>Mode de Paiement</td>
+                            <td colspan="3">{% if facture.statut%}{{facture.mode_de_paiement}}{% endif %}</td>
+                            <td>Timbre</td>
+                            <td> {{facture.timbre}}</td>
+                        </tr>
+                    </small>
+                </table>
+                <table class="table table-borderless" style='font-size:90%'>
+                    <thead class="thead-light">
+                    <tr>
+                        <td colspan="4" style="border:0"> TOUT EN LETTRE</td>
+                        <td colspan="2" class="text-center" style="border:0">
+                            <strong>TOTAL TTC</strong>
+                        </td>
+                    </tr>
+                    </thead>
+                    <small>
+                        <tr>
+                            <td><span id="total2words">{{total2words|upper}}</span></td>
+                            <td colspan="3"></td>
+                            <td colspan="2" class="text-center"><strong>{{facture.total_with_tva_r_f_t}} DA</strong>
+                            </td>
+                        </tr>
+                    </small>
+                </table>
+                <table class="table table-borderless" style='font-size:90%'>
+                    <thead class="thead-light">
+                    <tr>
+                        <th colspan="4" style="border:0"></th>
+                        <th class="text-center" style="border:0">
+                            <strong>CACHET HUMIDE ET SIGNATURE <br></strong>
+                            <br>
+                            <br>
+                            <br>
+                        </th>
+                    </tr>
+                    </thead>
+                </table>
+            </div>
+        </div>
+    </div>
+</div>
+</body>
+</html>

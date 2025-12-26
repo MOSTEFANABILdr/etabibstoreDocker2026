@@ -1,0 +1,49 @@
+{% load el_pagination_tags static i18n avatar_tags %}
+{% paginate 12 contacts %}
+<div class="row">
+
+    {% for contact in contacts %}
+    <div class="col-lg-4 col-md-6 col-sm-6">
+        <div class="card card-contact mb-2">
+            <div class="card-body text-center">
+                <div class="doctor-profile-telec">
+                    <div class="text-container">
+                        <h5 title="{{contact.full_name|upper}}" class="card-title">
+                            {{contact.full_name|upper}}
+                        </h5>
+                    </div>
+                    <p class="card-text label label-default" style="font-size:12px;">
+                        {% trans 'MÉDECIN' as transl %}
+                        {{contact.specialite|default_if_none:transl}}
+                    </p>
+                </div>
+            </div>
+            <div class="card-footer text-center">
+                <a href="{% url 'doctor-profile-detail' contact.id %}" class="btn">
+                    <i class="fa fa-info-circle white fa-2x"></i>
+                    {% trans 'Voir Profil' %}
+                </a>
+            </div>
+        </div>
+    </div>
+    {% empty %}
+    <p class="m-l-4">{% trans 'Désolé, aucun résultat trouvé :(.' %}</p>
+    {% endfor %}
+</div>
+{% get_pages %}
+{% if pages.paginated %}
+<div class="col-lg-12 d-flex">
+    {% show_current_number as page_number %}
+    {% include 'partial/pagination.html' with pages=pages current_page_number=page_number extra=extra_args %}
+</div>
+{% endif %}
+<script>
+$( document ).ready(function() {
+    $(".card-contact .card-body .text-container").each( function() {
+        let text = $(this).find("h5");
+        if ($(this).width() < $(text).width()) {
+            $(text).addClass("animate");
+        }
+     });
+});
+</script>

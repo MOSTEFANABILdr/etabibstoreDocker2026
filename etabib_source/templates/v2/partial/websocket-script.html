@@ -1,0 +1,216 @@
+{% load static %}
+{% load i18n %}
+{% load role_tags utils_tags offer_tags %}
+<script src='{% static "js/websocket/reconnecting-websocket.min.js" %}'></script>
+<script>
+
+    var original_title = document.title;
+    var timeout;
+
+    var notifSocket = null;
+    var audioBeep = new Audio('{% static 'sounds/notification_sound.mp3' %}');
+    var audioRing = new Audio('{% static 'sounds/Phone.wav' %}');
+    $(document).ready(function() {
+        window.flashTitle = function (newMsg, howManyTimes) {
+            function step() {
+                document.title = (document.title == original_title) ? newMsg : original_title;
+
+                if (--howManyTimes > 0) {
+                    timeout = setTimeout(step, 1000);
+                };
+            };
+
+            howManyTimes = parseInt(howManyTimes);
+
+            if (isNaN(howManyTimes)) {
+                howManyTimes = 5;
+            };
+
+            cancelFlashTitle(timeout);
+            step();
+        };
+
+        window.cancelFlashTitle = function () {
+            clearTimeout(timeout);
+            document.title = original_title;
+        };
+
+        var com1 = "FETCH_NOTIFICATIONS";
+        var com2 = "NEW_NOTIFICATION";
+        var com3 = "FETCH_CART_COUNTS";
+        var com4 = "TELECONSULTATION_DEMAND_ACCEPTED";
+
+        var socketProtocol = location.protocol === "https:" ? "wss:" : "ws:";
+        notifSocket = new ReconnectingWebSocket(
+            socketProtocol + '//' + window.location.host + '/ws/notifications/'
+        );
+
+        notifSocket.onopen = function(event) {
+            console.log("Notification Socket: onopen");
+            notifSocket.send(JSON.stringify({
+                'command': com1
+            }));
+            notifSocket.send(JSON.stringify({
+                'command': com3
+            }));
+        };
+
+        notifSocket.onmessage = function(e) {
+            console.log("Notification Socket: onmessage");
+            var data = JSON.parse(e.data);
+            console.debug(data);
+            var command = data['command'];
+
+            switch(command) {
+                case com2:
+                    var new_notification_content = data['new_notification_content'];
+                    var icon = data['icon'];
+                    var url = data['url'];
+                    var title = data['title'];
+                    var delay = data['delay'];
+                    var notif_type = data['notif_type'];
+                    var sound = data['sound'];
+                    var delayIndicator = data['delayIndicator'];
+                    var isCall = data['is_a_call'];
+                    var redirect_url = data['redirect_url'];
+                    var notif_title = data['notif_title'];
+                    var notif_body = data['notif_body'];
+                    var is_patient = data['is_patient'];
+                    var tdemand_id = data['tdemand_id'];
+                    var settings = {
+                        title: title,
+                         size: 'mini',
+                         position: 'top right',
+                         sound: sound,
+                         msg: new_notification_content,
+                         img: icon,
+                         onClickUrl: url,
+                         delay: delay,
+                         delayIndicator: delayIndicator,
+                         is_call: isCall,
+                         redirect_url: redirect_url,
+                         is_patient: is_patient,
+                         tdemand_id: tdemand_id,
+                    };
+                    //TODO: user is_call instead of url == ''
+                    if (url == '') {
+                        settings['closeOnClick']= false;
+                        settings['onClickUrl']= null;
+                    }
+                    {% is_mobile_app request as mobile_app %}
+                    {% if mobile_app  %}
+                        {% if user.medecin.current_services|is_including_etabib_care or user|is_patient %}
+                            {% user_token request as token  %}
+                                Android.setupWebsocketClient('{{token}}', JSON.stringify(settings));
+                        {% endif %}
+                    {% endif %}
+                    Lobibox.notify(notif_type, settings);
+                    if (!sound) {
+                        //play customised sounds
+                        if (url == '') {
+                            audioRing.play();
+                        }
+                        else {
+                            audioBeep.play();
+                        }
+                    }
+                case com1:
+                    var notify_count = data['notify_count'];
+                    var notify_list_html = data['notify_list_html'];
+
+                    if (notify_count > 0) {
+                        $("#notify_count").html(notify_count);
+                        $("#notify_count").removeClass("hide");
+                        document.title = "(" + notify_count + ") " + original_title;
+                        flashTitle("(" + notify_count + ") Notification(s)", 100);
+                    } else {
+                        $("#notify_count").html("");
+                        $("#notify_count").addClass("hide");
+                        document.title = original_title;
+                        cancelFlashTitle();
+                    }
+
+                    $(".notification-menu").html(notify_list_html);
+                    {% is_mobile_app request as mobile_app %}
+                    {% if mobile_app  %}
+                        {% if user.medecin.current_services|is_including_etabib_care or user|is_patient %}
+                            Android.fetchNotificationCount(notify_count, "{% url 'notifications-list' %}");
+                        {% endif %}
+                    {% endif %}
+                    break;
+                case com3:
+                    var cart_count = data['cart_count'];
+                    console.log(cart_count);
+                    if (cart_count > 0) {
+                        $("#cart_count").html(cart_count);
+                        $("#cart_count").removeClass("hide");
+                    } else {
+                        $("#cart_count").html("");
+                        $("#cart_count").addClass("hide");
+                    }
+                    break;
+                case com4:
+                    var url = data['url'];
+                    var doctor = data['doctor'];
+                    //show success notification
+                    Lobibox.alert("success", {
+                        buttons: {
+                            ok: {
+                                closeOnClick: true,
+                                text: "{% trans 'Entrer' %}",
+                            }
+                        },
+                        closeButton: true,
+                        msg: doctor + " {% trans 'a accepté votre demande de téléconsultation.' %}",
+                        callback: function(lobibox, type) {
+                            var btnType;
+                            if (type === 'ok') {
+                                //open url in another tab
+                                window.open(url, '_blank');
+                            }
+                        }
+                    });
+                    break;
+            }
+        };
+
+        notifSocket.onclose = function(e) {
+            console.error('Notification socket closed unexpectedly');
+        };
+
+        notifSocket.onerror = function(e){
+            console.error("'Notification socket error");
+            console.log(e);
+        };
+
+        //To ensure that an active connection is not marked as stale
+        {% if user.medecin.current_services|is_including_etabib_care or user|is_patient %}
+        setInterval(function() {
+            notifSocket.send(JSON.stringify("heartbeat"));
+        }, 20000);
+        {% endif %}
+
+        //detect browser close event
+        $(window).on("beforeunload", function() {
+            if (location.pathname != "{% url 'patient-teleconsultation' %}" && location.pathname != "{% url 'doctor-contact' %}") {
+                notifSocket.close();
+            }
+        });
+
+        //Mark all notifications as read when dropdown opened
+        $('.notification-dropdown-menu').on('shown.bs.dropdown', function () {
+            var data = {
+                'csrfmiddlewaretoken': '{{ csrf_token }}'
+            };
+            $.post( "{% url 'mark-all-notifications-as-read' %}", data, function(response) {
+            })
+            .fail(function(response) {
+                console.log(response);
+            });
+        });
+    });
+
+
+
+
+</script>

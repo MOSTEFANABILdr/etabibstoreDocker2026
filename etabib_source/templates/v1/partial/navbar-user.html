@@ -1,0 +1,30 @@
+{% load i18n %}
+{% load static %}
+{% load avatar_tags role_tags %}
+<li class="nav-item" id="li-profil">
+    <a href="#" data-toggle="dropdown" role="button" aria-expanded="false" class="nav-link dropdown-toggle">
+        {% avatar user %}
+        {% comment %}
+        <span class="admin-name hidden-xs">
+			{{user.get_full_name}}
+		</span>
+        {% endcomment %}
+    </a>
+    <ul role="menu"
+        class="dropdown-header-top author-log dropdown-menu dropdown-menu-center animated zoomIn">
+        {% if user.is_staff %}
+        <li>
+            <a href="/admin" target="_blank">
+                <span class="edu-icon edu-locked author-log-ic"></span>
+                {% trans "Espace d'administration" %}
+            </a>
+        </li>
+        {% endif %}
+    </ul>
+</li>
+<li id="nav-exit" class="nav-item">
+    <a title="{% trans 'Log Out' %}" href="/logout">
+        <img src="{% static 'img/exit.png' %}" alt="">
+        <span class="hidden-md" style="font-size:14px; color: black">{% trans 'Sortie' %}</span>
+    </a>
+</li>

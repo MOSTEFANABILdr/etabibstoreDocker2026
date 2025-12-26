@@ -1,0 +1,17 @@
+{% load i18n static %}
+<li class="dropdown notification-dropdown-menu">
+    <a href="#" data-toggle="dropdown" class="dropdown-toggle f-s-14">
+        <img src="{% static 'v2/icons/rounded/3.svg' %}">
+        <span id="notify_count" class="label"></span>
+    </a>
+    <div class="dropdown-menu media-list dropdown-menu-right p-0">
+        <div class="dropdown-header">NOTIFICATIONS</div>
+        <div class="notification-menu">
+
+        </div>
+        <div class="dropdown-footer text-center">
+            <a href="{% url 'notifications-list' %}">{% trans ' Afficher toutes les notifications' %}</a>
+        </div>
+    </div>
+</li>
+{% include "partial/websocket-script.html" %}

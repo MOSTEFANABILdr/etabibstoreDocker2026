@@ -1,0 +1,41 @@
+{% extends "base.html" %}
+{% load i18n %}
+{% load static %}
+
+{% block title %} {% trans 'Points History list' %} {% endblock %}
+
+{% block style %}
+
+{% endblock %}
+
+{% block content %}
+<div class="container">
+    <div class="row">
+        {% include 'partial/messages-alerts.html' %}
+        <div class="col-md-12 col-md-12 col-sm-12 col-xs-12">
+            <button onClick="window.location.reload()" class="btn btn-default btn-sm mb-4"><i
+                    class="fa fa-refresh"></i>
+                {% trans 'Refresh' %}
+            </button>
+            <div class="notifications-list">
+                <ul class="media-list media-list-with-divider media-messaging">
+                    {% include page_template %}
+                </ul>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}
+
+{% block js %}
+<script src='{% static "el-pagination/js/el-pagination.js" %}'></script>
+<script>
+	 $(function () {
+		 	//Endlesss pagination
+	        $.endlessPaginate({paginateOnScroll: true});
+	});
+
+
+
+</script>
+{% endblock %}

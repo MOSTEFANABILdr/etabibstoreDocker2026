@@ -1,0 +1,237 @@
+{% extends "base.html" %}
+{% load i18n %}
+{% load static %}
+{% load widget_tweaks %}
+{% block title %} {% trans 'Créer une offre personnalisée' %} {% endblock %}
+{% block style %}
+<!-- Google Fonts
+                    ============================================ -->
+<link
+        href="https://fonts.googleapis.com/css?family=Roboto:100,300,400,700,900"
+        rel="stylesheet">
+<!-- Bootstrap CSS
+                    ============================================ -->
+<link rel="stylesheet" href='{% static "css/bootstrap.min.css" %}'>
+<!-- Bootstrap CSS
+                    ============================================ -->
+<link rel="stylesheet" href='{% static "css/font-awesome.min.css" %}'>
+<!-- owl.carousel CSS
+                    ============================================ -->
+<link rel="stylesheet" href='{% static "css/owl.carousel.css" %}'>
+<link rel="stylesheet" href='{% static "css/owl.theme.css" %}'>
+<link rel="stylesheet" href='{% static "css/owl.transitions.css" %}'>
+<!-- animate CSS
+                    ============================================ -->
+<link rel="stylesheet" href='{% static "css/animate.css" %}'>
+<!-- normalize CSS
+                    ============================================ -->
+<link rel="stylesheet" href='{% static "css/normalize.css" %}'>
+<!-- meanmenu icon CSS
+                    ============================================ -->
+<link rel="stylesheet" href='{% static "css/meanmenu.min.css" %}'>
+<!-- main CSS
+                    ============================================ -->
+<link rel="stylesheet" href='{% static "css/main.css" %}'>
+<!-- educate icon CSS
+                    ============================================ -->
+<link rel="stylesheet" href='{% static "css/educate-custon-icon.css" %}'>
+<!-- mCustomScrollbar CSS
+                    ============================================ -->
+<link rel="stylesheet"
+      href='{% static "css/scrollbar/jquery.mCustomScrollbar.min.css" %}'>
+<!-- metisMenu CSS
+                    ============================================ -->
+<link rel="stylesheet"
+      href='{% static "css/metisMenu/metisMenu.min.css" %}'>
+<link rel="stylesheet"
+      href='{% static "css/metisMenu/metisMenu-vertical.css" %}'>
+
+<link rel="stylesheet" href="//code.jquery.com/ui/1.12.1/themes/base/jquery-ui.css">
+<!-- duallistbox CSS ============================================ -->
+<link rel="stylesheet" href='{% static "css/duallistbox/dual-listbox.css" %}'>
+<!-- modernizr JS
+                    ============================================ -->
+<script src='{% static "js/vendor/modernizr-2.8.3.min.js" %}'></script>
+{% endblock %}
+{% block content %}
+<div class="single-pro-review-area mt-t-30 mg-b-15">
+    <div class="container-fluid">
+        <div class="row">
+            <div class="col-lg-12 col-md-12 col-sm-12 col-xs-12">
+                <div class="product-payment-inner-st">
+                    <ul id="myTabedu1" class="tab-review-design">
+                        <li class="active"><a href="#offre-postpayee">{% trans 'Offre Personnalisée' %}</a></li>
+                    </ul>
+                    <div id="myTabContent" class="tab-content custom-product-edit">
+                        <div class="product-tab-list tab-pane fade active in" id="offre-postpayee">
+                            <form id="offre-perso-form" action="{% url 'commercial-create-custom-order' %}" method="post">
+                                {% csrf_token %}
+                                <div id="offre-perso-wizard">
+                                    <h3>Offre</h3>
+                                    <section>
+                                        <div class="row">
+                                            <div class="col-lg-12 col-md-12 col-sm-12 col-xs-12">
+                                                <div class="all-form-element-inner">
+                                                    {% for error in form.non_field_errors %}
+                                                    <div class="alert alert-danger alert-mg-b alert-danger-style4">
+                                                        <p>{{error}}</p>
+                                                    </div>
+                                                    {%endfor %}
+                                                    <div class="form-group-inner {% if form.contact.errors %} has-error {% endif %}">
+                                                        <div class="row ">
+                                                            <div class="col-lg-3 col-md-3 col-sm-3 col-xs-12">
+                                                                <label class="login2 pull-right pull-right-pro">
+                                                                    {{form.contact.label}}
+                                                                </label>
+                                                            </div>
+                                                            <div class="col-lg-9 col-md-9 col-sm-9 col-xs-12">
+                                                                <div class="form-select-list">
+                                                                    {% render_field form.contact %}
+                                                                    {% if form.contact.errors %}
+                                                                    <ul class="list-unstyled">
+                                                                        {% for error in form.contact.errors %}
+                                                                        <li>
+                                                                                <span class="help-block">
+                                                                                    {{ error|escape }}
+                                                                                </span>
+                                                                        </li>
+                                                                        {% endfor %}
+                                                                    </ul>
+                                                                    {% endif %}
+                                                                </div>
+                                                            </div>
+                                                        </div>
+                                                    </div>
+                                                    <div class="form-group-inner {% if form.services.errors %} has-error {% endif %}">
+                                                        <div class="row ">
+                                                            <div class="col-lg-3 col-md-3 col-sm-3 col-xs-12">
+                                                                <label class="login2 pull-right pull-right-pro">
+                                                                    {{form.services.label}}
+                                                                </label>
+                                                            </div>
+                                                            <div class="col-lg-9 col-md-9 col-sm-9 col-xs-12">
+                                                                <div class="form-select-list">
+                                                                    {% render_field form.services  placeholder="" value="" class="dual_services_select" %}
+                                                                    {% if form.services.errors %}
+                                                                    <ul class="list-unstyled">
+                                                                        {% for error in form.services.errors %}
+                                                                        <li>
+                                                                                <span class="help-block">
+                                                                                    {{ error|escape }}
+                                                                                </span>
+                                                                        </li>
+                                                                        {% endfor %}
+                                                                    </ul>
+                                                                    {% endif %}
+                                                                </div>
+                                                            </div>
+                                                        </div>
+                                                    </div>
+                                                    <div class="form-group-inner {% if form.avantages.errors %} has-error {% endif %}">
+                                                        <div class="row ">
+                                                            <div class="col-lg-3 col-md-3 col-sm-3 col-xs-12">
+                                                                <label class="login2 pull-right pull-right-pro">
+                                                                    {{form.avantages.label}}
+                                                                </label>
+                                                            </div>
+                                                            <div class="col-lg-9 col-md-9 col-sm-9 col-xs-12">
+                                                                <div class="form-select-list">
+                                                                    {% render_field form.avantages placeholder="" value="" class="form-control dual_avg_select" %}
+                                                                    {% if form.avantages.errors %}
+                                                                    <ul class="list-unstyled">
+                                                                        {% for error in form.avantages.errors %}
+                                                                        <li>
+                                                                                <span class="help-block">
+                                                                                    {{ error|escape }}
+                                                                                </span>
+                                                                        </li>
+                                                                        {% endfor %}
+                                                                    </ul>
+                                                                    {% endif %}
+                                                                </div>
+                                                            </div>
+                                                        </div>
+                                                    </div>
+                                                    {% render_field form.quantite %}
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </section>
+                                    <h3>Facture</h3>
+                                    <section>
+
+                                    </section>
+                                </div>
+                            </form>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+{% endblock %}
+{% block js %}
+<!-- bootstrap JS
+                    ============================================ -->
+<script src='{% static "js/bootstrap.min.js" %}'></script>
+<!-- wow JS
+                    ============================================ -->
+<script src='{% static "js/wow.min.js" %}'></script>
+<!-- price-slider JS
+                    ============================================ -->
+<script src='{% static "js/jquery-price-slider.js" %}'></script>
+<!-- meanmenu JS
+                    ============================================ -->
+<script src='{% static "js/jquery.meanmenu.js" %}'></script>
+<!-- owl.carousel JS
+                    ============================================ -->
+<script src='{% static "js/owl.carousel.min.js" %}'></script>
+<!-- sticky JS
+                    ============================================ -->
+<script src='{% static "js/jquery.sticky.js" %}'></script>
+<!-- scrollUp JS
+                    ============================================ -->
+<script src='{% static "js/jquery.scrollUp.min.js" %}'></script>
+<!-- counterup JS ============================================ -->
+<script src='{% static "js/counterup/jquery.counterup.min.js" %}'></script>
+<script src='{% static "js/counterup/waypoints.min.js" %}'></script>
+<script src='{% static "js/counterup/counterup-active.js" %}'></script>
+<!-- mCustomScrollbar JS
+                    ============================================ -->
+<script
+        src='{% static "js/scrollbar/jquery.mCustomScrollbar.concat.min.js" %}'></script>
+<script src='{% static "js/scrollbar/mCustomScrollbar-active.js" %}'></script>
+<!-- metisMenu JS
+                    ============================================ -->
+<script src='{% static "js/metisMenu/metisMenu.min.js" %}'></script>
+<script>
+    var globurl = "{% url 'commercial-invoice-load' %}";
+    var csrftoken = '{{ csrf_token }}';
+</script>
+<script src='{% static "js/metisMenu/metisMenu-active.js" %}'></script>
+<!-- Jquery Validation
+                    ============================================ -->
+<script src='{% static "js/form-validation/jquery.validate.min.js" %}'></script>
+<script src='{% static "js/form-validation/messages_fr.js" %}'></script>
+<!-- Jquery Steps JS
+                    ============================================ -->
+<script src='{% static "js/wizard/jquery.steps.js" %}'></script>
+<script src='{% static "js/wizard/steps-active.js" %}?v=1.3'></script>
+<!-- duallistbox JS ============================================ -->
+<script src='{% static "js/duallistbox/dual-listbox.js" %}'></script>
+<script src='{% static "js/duallistbox/duallistbox.active.js" %}'></script>
+
+<script src="https://code.jquery.com/ui/1.12.1/jquery-ui.js"></script>
+<!-- plugins JS
+                    ============================================ -->
+<script src='{% static "js/plugins.js" %}'></script>
+<!-- main JS
+                    ============================================ -->
+<script src='{% static "js/main.js" %}'></script>
+<!-- tawk chat JS
+                    ============================================ -->
+{% include 'partial/tawk-script.html' %}
+{{ form.media }}
+{% endblock %}

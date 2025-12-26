@@ -1,0 +1,10 @@
+{% load el_pagination_tags %}
+{% paginate 2 events %}
+{% for e in events %}
+    {%  include 'partial/care-path-timeline.html' with event=e %}
+{% empty %}
+    {%  include 'partial/care-path-timeline.html' %}
+{% endfor %}
+{% with loading_template='<div class="timeline-body">Chargement ...</div>' %}
+{% show_more "Voir plus" loading_template "btn btn-success btn-sm" %}
+{% endwith %}

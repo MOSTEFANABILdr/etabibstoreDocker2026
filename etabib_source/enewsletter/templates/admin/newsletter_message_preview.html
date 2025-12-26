@@ -1,0 +1,10 @@
+{% extends "admin/base_site.html" %}
+{% load i18n %}
+{% load static %}
+
+{% block content %}
+    <h1>{{newsletter.title}}</h1>
+    {% for message in newsletter.message_set.all %}
+        {{message.html_content|safe}}
+    {% endfor %}
+{% endblock %}

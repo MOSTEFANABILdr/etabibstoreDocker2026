@@ -1,0 +1,95 @@
+{% load i18n %}
+{% load role_tags %}
+<a title="{% trans 'Modifier Les paramètres' %}"
+   href="{% url 'listenvoi-dynamique-update' smscritere.pk %}"
+   class="btn btn-etabib fm-update"
+   data-fm-head=""
+   data-fm-callback="reload">
+    <i class="fa fa-edit" aria-hidden="true"></i>
+</a>
+<a title="{% trans 'Contact Problemes' %}"
+   href="{% url 'listenvoi-dynamique-mobile-probleme' smscritere.pk %}"
+   class="btn btn-etabib "
+   data-fm-head="">
+    <i class="fa fa-exclamation" aria-hidden="true"></i>
+</a>
+<a title="{% trans 'Email Problemes' %}"
+   href="{% url 'listenvoi-dynamique-email-probleme' smscritere.pk %}"
+   class="btn btn-etabib "
+   data-fm-head="">
+    <i class="fa fa-question" aria-hidden="true"></i>
+</a>
+
+{% comment %}
+<span class="dropdown">
+    <button class="btn btn-etabib dropdown-toggle"
+            title="{% trans 'SMS' %}"
+            type="button" id="dropdownMenu1" data-toggle="dropdown"
+            aria-haspopup="true" aria-expanded="true">
+        <i class="fa fa-life-ring"></i>
+        {% trans 'SMS' %}
+        <span class="caret"></span>
+    </button>
+     <ul class="dropdown-menu dropdown-menu-right" aria-labelledby="dropdownMenu1">
+        <li>
+           <a title="{% trans 'Envoyer un SMS Modèle' %}"
+              href="{% url 'listenvoi-dynamique-send-sms-model' smscritere.pk %}"
+              class="fm-create"
+              data-fm-head=""
+              data-fm-callback="reload">
+              <i class="fa fa-envelope" aria-hidden="true"></i>
+               {% trans 'Envoyer un SMS Modèle' %}
+           </a>
+        </li>
+        <li>
+            <a title="{% trans 'Envoyer un SMS' %}"
+               href="{% url 'listenvoi-dynamique-send-sms' smscritere.pk %}"
+               class="fm-create"
+               data-fm-head=""
+               data-fm-callback="reload">
+               <i class="fa fa-envelope-square" aria-hidden="true"></i>
+                {% trans 'Envoyer un SMS' %}
+            </a>
+        </li>
+     </ul>
+</span>
+{% endcomment %}
+
+<span class="dropdown">
+    <button class="btn btn-etabib dropdown-toggle"
+            title="{% trans 'Email' %}"
+            type="button" id="dropdownMenu2" data-toggle="dropdown"
+            aria-haspopup="true" aria-expanded="true">
+        <i class="fa fa-paper-plane"></i>
+        {% trans 'Email' %}
+        <span class="caret"></span>
+    </button>
+     <ul class="dropdown-menu dropdown-menu-right" aria-labelledby="dropdownMenu2">
+        <li>
+          <a title="{% trans 'Envoyer un Email Modèle' %}"
+             href="{% url 'listenvoi-dynamique-send-email-model' smscritere.pk %}"
+             class="fm-create"
+             data-fm-head=""
+             data-fm-callback="reload">
+             <i class="fa fa-envelope" aria-hidden="true"></i>
+              {% trans 'Envoyer un Email Modèle' %}
+             </a>
+        </li>
+        <li>
+            <a title="{% trans 'Envoyer un Email' %}"
+               href="{% url 'listenvoi-dynamique-send-email' smscritere.pk %}"
+               class="fm-create"
+               data-fm-head=""
+               data-fm-callback="reload">
+               <i class="fa fa-envelope-square" aria-hidden="true"></i>
+                {% trans 'Envoyer un Email' %}
+            </a>
+        </li>
+     </ul>
+</span>
+
+
+
+
+
+

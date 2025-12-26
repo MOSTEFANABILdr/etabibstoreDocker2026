@@ -1,0 +1,32 @@
+{% load i18n %}
+{% load static %}
+{% load fm_tags %}
+<!-- Custom modals css ============================================ -->
+<link rel="stylesheet" href='{% static "css/modals.css" %}?v=1.1'>
+<div role="dialog" aria-hidden="true" id="fm-modal" class="modal default-popup-PrimaryModal">
+    <div class="modal-loader" style="display: none;">
+        <img class="modal-loader-img" src="{% static 'fm/img/loading-bars.svg' %}">
+    </div>
+    <div class="modal-dialog">
+    	<div class="modal-content">
+           <div class="modal-header header-color-modal bg-color-1">
+           		<h4 class="modal-title" id="modal-title"><div class="modal-head"></div></h4>
+           		<div class="modal-close-area modal-close-df">
+					<a class="close" data-dismiss="modal" href="#"><i
+						class="fa fa-close"></i></a>
+				</div>
+           </div>
+           <div class="modal-body"></div>
+           <div class="modal-buttons modal-footer">
+               {% block modal_buttons %}
+                <button class="btn btn-etabib modal-ok" type="submit" data-fm-default-ok="{% trans 'OK' %}">
+                </button>
+                <button data-dismiss="modal" class="btn btn-default" type="button"><i class="fa fa-times"></i>
+                    <span class="modal-cancel" data-fm-default-cancel="{% trans 'Annuler' %}"></span>
+                </button>
+                {% endblock %}
+           </div>
+    	</div>
+    </div>
+</div>
+<script type="text/javascript" src="{% static 'js/fm/fm.js' %}?v={% fm_version %}3"></script>

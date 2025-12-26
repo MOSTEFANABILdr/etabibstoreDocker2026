@@ -1,0 +1,19 @@
+{% load i18n %}
+{% load utils_tags %}
+{% load el_pagination_tags %}
+{% paginate 10 pointsHist %}
+    {% for ph in pointsHist %}
+    <li class="media media-sm">
+         <a class="pull-left" href="#">
+            {{ph|geticon|safe}}
+        </a>
+        <div class="media-body">
+            <h5 class="media-heading">{{ph.points}} point{{ ph.points|pluralize }}</h5>
+            <p>{{ph.description}}</p>
+        </div>
+        <p class="pull-right">
+            <small>{{ph.date_creation|date:'Y-m-d H:i'}}</small>
+        </p>
+    </li>
+    {% endfor %}
+{% show_more %}

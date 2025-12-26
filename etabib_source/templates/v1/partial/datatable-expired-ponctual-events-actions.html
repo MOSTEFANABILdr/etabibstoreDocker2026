@@ -1,0 +1,24 @@
+{% load i18n %}
+{% load role_tags %}
+<div class="btn-group-vertical" >
+    <a title="{% trans 'Détail' %}" class="btn btn-etabib" href="{% url 'action-detail' action.id %}">
+        <i class="fa fa-book" aria-hidden="true"></i>
+        {% trans 'Détail' %}
+    </a>
+    <a title="{% trans 'prochaine rencontre' %}"
+       href="{% url 'create-meeting-piste' action.pk %}"
+       class="btn btn-etabib fm-create"
+       data-fm-head="Action à programmer la prochaine"
+       data-fm-callback="reload">
+        <i class="fa fa-calendar-plus-o" aria-hidden="true"></i>
+        {% trans 'prochaine rencontre' %}
+    </a>
+    <a title="{% trans 'Marquer comme terminée' %}"
+       href="{% url 'inactivate-action' action.pk %}"
+       class="btn btn-etabib fm-create"
+       data-fm-head="Marquer comme terminée"
+       data-fm-callback="reload">
+        <i class="fa fa-check" aria-hidden="true"></i>
+        {% trans 'Marquer comme terminée' %}
+    </a>
+</div>

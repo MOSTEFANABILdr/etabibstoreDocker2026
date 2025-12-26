@@ -1,0 +1,26 @@
+{% load i18n %}
+<div class="btn-group-vertical" >
+    {% if perms.core.crm_can_view_prospect_list %}
+    {% if not is_client and not contact.prospect %}
+    <a title="{% trans 'Ajouter à la liste des prospects' %}" href="{% url 'commercial-add-prospect' contact.id %}"
+       class="btn btn-etabib fm-create"
+       data-fm-head="{% trans 'Ajouter à la liste des prospects' %}"
+       data-fm-callback="appendWithAlert">
+        <i class="fa fa-user-plus" aria-hidden="true"></i>
+        {% trans 'Prospect' %}
+    </a>
+    {% endif %}
+    {% endif %}
+    {% if perms.core.crm_can_view_contact_list or perms.core.crm_can_view_simplified_contact_list %}
+    <a title="{% trans 'Détail' %}" class="btn btn-etabib" href="{% url 'operator-detail-contact' contact.id %}">
+        <i class="fa fa-book" aria-hidden="true"></i>
+        {% trans 'Détail' %}
+    </a>
+    {% endif %}
+    {% if contact.maps_url %}
+    <a title="{% trans 'Itinéraire' %}" target="_blank" class="btn btn-etabib" href="{{contact.maps_url}}">
+        <i class="fa fa-map-marker" aria-hidden="true"></i>
+        {% trans 'Itinéraire' %}
+    </a>
+    {% endif %}
+</div>

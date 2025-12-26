@@ -1,0 +1,131 @@
+version: '3.8'
+
+services:
+  db:
+    image: mysql:5.7
+    command: >
+      --character-set-server=utf8mb4 --collation-server=utf8mb4_unicode_ci --default-storage-engine=InnoDB --explicit_defaults_for_timestamp=1
+    container_name: etabib_db_dev
+    volumes:
+      - mysql_data_dev:/var/lib/mysql
+    environment:
+      MYSQL_ROOT_PASSWORD: ${MYSQL_ROOT_PASSWORD:-root}
+      MYSQL_DATABASE: ${DB_NAME:-etabibstore}
+      MYSQL_USER: ${DB_USER:-etabib}
+      MYSQL_PASSWORD: ${DB_PASSWORD:-etabib}
+    networks:
+      - etabib_network_dev
+    ports:
+      - "3309:3306"
+    restart: always
+
+  redis:
+    image: redis:6.2
+    container_name: etabib_redis_dev
+    volumes:
+      - redis_data_dev:/data
+    networks:
+      - etabib_network_dev
+    command: redis-server --appendonly yes
+
+  web:
+    build:
+      context: .
+      dockerfile: Dockerfile.prod
+    container_name: etabib_web_dev
+    # In Dev, we might want to run the dev server for better debugging, 
+    # OR run daphne to be identical to prod. 
+    # Given "identical as prod" request, we use daphne but with DEBUG=True.
+    command: >
+      bash -c "daphne -b 0.0.0.0 -p 8000 etabibWebsite.asgi:application"
+    volumes:
+      - .:/app
+      - static_volume_dev:/app/static
+      - media_volume_dev:/app/media
+    expose:
+      - 8000
+    environment:
+      - PROJECT_ENV=DEV
+      - DEBUG=True
+      - DB_HOST=etabib_db_dev
+      - DB_NAME=${DB_NAME:-etabibstore}
+      - DB_USER=${DB_USER:-etabib}
+      - DB_PASSWORD=${DB_PASSWORD:-etabib}
+      - DB_PORT=3306
+      - REDIS_URL=redis://etabib_redis_dev:6379
+      - REDIS_HOST=etabib_redis_dev
+      - DJANGO_SETTINGS_MODULE=etabibWebsite.settings
+      - FTP_USER=${FTP_USER:-test_user}
+      - FTP_PASSWORD=${FTP_PASSWORD:-test_password}
+      - FTP_HOSTNAME=${FTP_HOSTNAME:-localhost}
+      - JWT_APP_SECRET=vBtU6p6PXdFaMjKb99pArxYeNsbjjf23
+    networks:
+      - etabib_network_dev
+    depends_on:
+      - db
+      - redis
+
+  celery:
+    build:
+      context: .
+      dockerfile: Dockerfile.prod
+    container_name: etabib_celery_dev
+    command: celery -A etabibWebsite worker --loglevel=info
+    volumes:
+      - .:/app
+    environment:
+      - DJANGO_SETTINGS_MODULE=etabibWebsite.settings
+      - REDIS_URL=redis://etabib_redis_dev:6379
+      - PROJECT_ENV=DEV
+      - FTP_USER=${FTP_USER:-test_user}
+      - FTP_PASSWORD=${FTP_PASSWORD:-test_password}
+      - FTP_HOSTNAME=${FTP_HOSTNAME:-localhost}
+    networks:
+      - etabib_network_dev
+    depends_on:
+      - redis
+      - web
+
+  celery-beat:
+    build:
+      context: .
+      dockerfile: Dockerfile.prod
+    container_name: etabib_celery_beat_dev
+    command: celery -A etabibWebsite beat --loglevel=info
+    volumes:
+      - .:/app
+    environment:
+      - DJANGO_SETTINGS_MODULE=etabibWebsite.settings
+      - REDIS_URL=redis://etabib_redis_dev:6379
+      - PROJECT_ENV=DEV
+      - FTP_USER=${FTP_USER:-test_user}
+      - FTP_PASSWORD=${FTP_PASSWORD:-test_password}
+      - FTP_HOSTNAME=${FTP_HOSTNAME:-localhost}
+    networks:
+      - etabib_network_dev
+    depends_on:
+      - redis
+      - web
+
+  nginx:
+    build: ./nginx
+    container_name: etabib_nginx_dev
+    volumes:
+      - static_volume_dev:/app/static
+      - media_volume_dev:/app/media
+    ports:
+      - "8080:80" # Map to 8080 to avoid conflict if prod is running locally or just to be safe
+    depends_on:
+      - web
+    networks:
+      - etabib_network_dev
+
+networks:
+  etabib_network_dev:
+    driver: bridge
+
+volumes:
+  mysql_data_dev:
+  redis_data_dev:
+  static_volume_dev:
+  media_volume_dev:

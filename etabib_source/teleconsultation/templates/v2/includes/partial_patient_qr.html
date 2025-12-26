@@ -1,0 +1,46 @@
+{% load i18n %}
+{% load static %}
+{% load qr_code %}
+<div id="qrcode">
+    <div class="modal-header">
+        <h4 class="modal-title">{% trans 'Le compte patient est crée' %}</h4>
+    </div>
+    <div class="modal-body">
+        <img style="display: block; margin-left: auto; margin-right: auto;"
+             src="{% qr_url_from_text patient.make_qr_code_text size=6 image_format='png' %}"></div>
+    <div class="modal-footer">
+        <button onclick="printQr(); return false;" type="submit" class="btn btn-primary">
+            <i class="fa fa-print"></i>
+            {% trans 'Imprimer' %}
+        </button>
+        <button type="button" class="btn btn-default" onclick="closeModal();return false;" >{% trans 'Fermer' %}</button>
+    </div>
+</div>
+<script src='{% static "js/printThis.js" %}'></script>
+<script>
+    function printQr() {
+        $('#qrcode').printThis({
+            beforePrint : function() {
+                $(".modal-footer").hide();
+                $(".modal-header").hide();
+            },
+            afterPrint : function() {
+                $(".modal-footer").show();
+                $(".modal-header").show();
+            }
+        });
+     }
+     function closeModal() {
+        $('#patient_container').html("");
+        $("#patient_container").html("<div class='text-center'><i class='fa fa-spinner fa-spin fa-2x'></i></div>");
+        $('#patient_container').load('{% url 'doctor-contact' %}', {
+                'patient_id': {{patient.pk}},
+		        'csrfmiddlewaretoken': '{{csrf_token}}'
+		    },
+            function() {
+            }
+        );
+        $('#modal-patient').modal('hide');
+     }
+
+</script>

@@ -1,0 +1,24 @@
+{% load el_pagination_tags %}
+{% paginate comments %} 
+{% for comment in comments %} 
+{% include 'partial/comment_item.html' with comment=comment %} 
+{% endfor %}
+{% show_more %}
+<script>
+   	function deleteComment(id, that) {
+       	var data = {
+       			'id' : id,
+       			'csrfmiddlewaretoken': '{{ csrf_token }}'
+       			};
+    	$.post( "{% url 'etabib-store-item-remove-comment' %}", data, function(response) {
+    		$(that).closest(".chat-message" ).animate({
+                opacity:"0.1"
+            }, 1000, function() {
+            	$(that).closest(".chat-message" ).remove();
+            });
+          })
+     	  .fail(function(response) {
+     	    console.log(response);
+     	  });
+   	 }
+</script>

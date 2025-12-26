@@ -1,0 +1,25 @@
+{% load i18n %}
+{% load notif_tags el_pagination_tags %}
+{% paginate 10 notifications %}
+    {% for notification in notifications %}
+    <div class="media media-sm pt-2 pr-2 pl-2 border {% if not notification.unread %}bg-light{% endif %}"
+         onclick="window.location='{{notification|renderNotificationOnClickUrl}}';">
+        <a class="media-left pull-left" href="#">
+            {{notification|renderNotificationIcon|safe}}
+        </a>
+        <div class="media-body">
+            {% notificationContent notification as obj %}
+            <h4 class="media-heading">{{obj.0}}</h4>
+            <p>{{obj.1}}</p>
+            <p class="pull-right">
+                {{notification.timestamp|date:'Y-m-d H:i'}}
+            </p>
+            <button onclick="deleteNotification(event, {{notification.id}}, this); return false;" class="btn btn-link">
+                <small>
+                    <i class="fa fa-trash" aria-hidden="true"></i> {% trans 'Delete' %}
+                </small>
+            </button>
+        </div>
+    </div>
+    {% endfor %}
+{% show_more %}

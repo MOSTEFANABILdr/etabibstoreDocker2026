@@ -1,0 +1,26 @@
+{% load i18n %}
+<div class="btn-group-vertical" >
+    {% if is_delegue %}
+        {% if commande.bordereau %}
+        <i class="fa fa-check green fa-2x"></i> Bordereau N°: {{commande.bordereau.id}}
+        {% else %}
+        <input type="checkbox" name="commande_checkbox" value="{{commande.id}}" onclick="onCheck(this);">
+        {% endif %}
+    {% else %}
+        {% if not commande.traitee %}
+        {% if commande.detail_action.action.id %}
+        <a title="{% trans 'Traiter' %}" href="{% url 'commande_confirme' commande.user.medecin.contact.id commande.id commande.detail_action.action.id %}"
+           class="btn btn-etabib">
+            {% trans 'Traiter' %}
+        </a>
+        {% else %}
+        <a title="{% trans 'Traiter' %}" href="{% url 'commande_confirme_q' commande.user.medecin.contact.id commande.id %}"
+           class="btn btn-etabib">
+            {% trans 'Traiter' %}
+        </a>
+        {% endif %}
+        {% else %}
+        <i class="fa fa-check green fa-2x"></i>
+        {% endif %}
+    {% endif %}
+</div>

@@ -1,0 +1,71 @@
+<!-- Breaking news Start -->
+<div class="container-fluid">
+    <div class="row">
+        <div class="col-lg-12 col-md-12 col-sm-12 col-xs-12">
+            <div class="bn-breaking-news" id="newsTicker">
+                <div class="bn-label">INFO</div>
+                <div class="bn-news">
+                    <ul>
+                        {% for annonce in annonces %}
+                        <li data-comagne_id="{{ annonce.campagne_id }}" data-annonce_id="{{ annonce.annonce_id }}">
+                            <a href="{{ annonce.annonce_url }}" target="_blank"><strong>{{ annonce.titre }}:</strong> {{ annonce.corps }}</a></li>
+                        {% endfor %}
+                    </ul>
+                </div>
+                <div class="bn-controls">
+                    <button><span class="bn-arrow bn-prev"></span></button>
+                    <button><span class="bn-action"></span></button>
+                    <button><span class="bn-arrow bn-next"></span></button>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+<br>
+<script type="text/javascript">
+    var isTabActive = true;
+    window.onfocus = function () {
+      isTabActive = true;
+    };
+    window.onblur = function () {
+      isTabActive = false;
+    };
+    $(function () {
+        var user_id = {{user.id}};
+       $('#newsTicker').breakingNews({
+            effect: "slide-up",
+            delayTimer: 5000,
+            direction:"ltr",
+            play:true,
+            borderWidth: 3,
+            height: 40,
+            radius: 2,
+            stopOnHover:true,
+            themeColor: 'rgb(196, 243, 255)',
+        });
+        {% comment %}
+        //visibility event to detect which text is visible
+        var visibilityCounter=0;
+        $('#newsTicker li').on( 'visibility', function() {
+            var $element = $( this );
+            var timer = setInterval( function() {
+              if( $element.is( ':hidden' ) ) {
+                visibilityCounter=0;
+              } else {
+                if(visibilityCounter==0)
+                {
+                  visibilityCounter=1;
+                  var annonce_id = $('#newsTicker li').data("annonce_id");
+                  var comagne_id = $('#newsTicker li').data("comagne_id");
+                  //send Ajax request to the server for each annonce printed
+                  if (isTabActive) {
+                       $.get( "/api/annonce/impression/"+ comagne_id + "/"+annonce_id +"/"+user_id+"/"+"1", function( data ) {});
+                  }
+                }
+              }
+            }, 300 );
+        }).trigger('visibility');
+        {% endcomment %}
+    });
+</script>
+<!-- Breaking new End -->

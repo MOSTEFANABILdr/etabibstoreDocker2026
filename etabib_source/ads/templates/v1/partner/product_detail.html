@@ -1,0 +1,391 @@
+{% extends "base.html" %}
+{% load i18n %}
+{% load static %}
+{% load partner_tags %}
+{% block title %} {% trans 'Détail du produit' %} {% endblock %}
+{% block style %}
+<!-- Google Fonts
+                    ============================================ -->
+<link
+        href="https://fonts.googleapis.com/css?family=Roboto:100,300,400,700,900"
+        rel="stylesheet">
+<!-- Bootstrap CSS
+                    ============================================ -->
+<link rel="stylesheet" href='{% static "css/bootstrap.min.css" %}'>
+<!-- Bootstrap CSS
+                    ============================================ -->
+<link rel="stylesheet" href='{% static "css/font-awesome.min.css" %}'>
+<!-- owl.carousel CSS
+                    ============================================ -->
+<link rel="stylesheet" href='{% static "css/owl.carousel.css" %}'>
+<link rel="stylesheet" href='{% static "css/owl.theme.css" %}'>
+<link rel="stylesheet" href='{% static "css/owl.transitions.css" %}'>
+<!-- animate CSS
+                    ============================================ -->
+<link rel="stylesheet" href='{% static "css/animate.css" %}'>
+<!-- normalize CSS
+                    ============================================ -->
+<link rel="stylesheet" href='{% static "css/normalize.css" %}'>
+<!-- meanmenu icon CSS
+                    ============================================ -->
+<link rel="stylesheet" href='{% static "css/meanmenu.min.css" %}'>
+<!-- main CSS
+                    ============================================ -->
+<link rel="stylesheet" href='{% static "css/main.css" %}'>
+<!-- educate icon CSS
+                    ============================================ -->
+<link rel="stylesheet" href='{% static "css/educate-custon-icon.css" %}'>
+<!-- morrisjs CSS
+                    ============================================ -->
+<link rel="stylesheet" href='{% static "css/morrisjs/morris.css" %}'>
+<!-- mCustomScrollbar CSS
+                    ============================================ -->
+<link rel="stylesheet"
+      href='{% static "css/scrollbar/jquery.mCustomScrollbar.min.css" %}'>
+<!-- metisMenu CSS
+                    ============================================ -->
+<link rel="stylesheet"
+      href='{% static "css/metisMenu/metisMenu.min.css" %}'>
+<link rel="stylesheet"
+      href='{% static "css/metisMenu/metisMenu-vertical.css" %}'>
+<!-- modernizr JS
+                    ============================================ -->
+<script src='{% static "js/vendor/modernizr-2.8.3.min.js" %}'></script>
+<!-- slick-carousel CSS  ============================================ -->
+<link rel="stylesheet" type="text/css" href="//cdn.jsdelivr.net/npm/slick-carousel@1.8.1/slick/slick.css"/>
+<link rel="stylesheet" type="text/css"
+      href="https://cdnjs.cloudflare.com/ajax/libs/slick-carousel/1.8.1/slick-theme.css"/>
+<!-- dropzone CSS ============================================ -->
+<link rel="stylesheet" href='{% static "css/dropzone/dropzone.css" %}'>
+{% endblock %}
+{% block content %}
+<div class="single-pro-review-area mt-t-30 mg-b-15">
+    <div class="container-fluid">
+        <div class="row">
+            <div class="col-lg-12">
+                <div class="ibox product-detail">
+                    <div class="ibox-content">
+                        <div class="row">
+                            {% if messages %}
+                            <ul>
+                                {% for message in messages %}
+                                <div class="alert alert-{{ message.tags }}">
+                                    <button type="button" class="close" data-dismiss="alert" aria-label="Close">
+                                        <span aria-hidden="true">&times;</span>
+                                    </button>
+                                    <p>{{message}}</p>
+                                </div>
+                                {% endfor %}
+                            </ul>
+                            {% endif %}
+                            <div class="col-md-5">
+                                <div class="product-images slick-slider" role="toolbar">
+                                    {% for image in images %}
+                                    <div>
+                                        <img class="img-responsive" src="{{image.image.url}}">
+                                    </div>
+                                    {% endfor %}
+                                </div>
+                            </div>
+                            <div class="col-md-7">
+                                <h2 class="product-title">
+                                    {{product.libelle}}
+                                </h2>
+                                <hr>
+                                <div class="m-t-md">
+                                    <h2 class="product-main-price">
+                                        {% with discount=product.prix_promotion %}
+                                        {% if not discount or discount == product.prix %}
+                                        {{product.prix}}
+                                        {% else %}
+                                        <del>
+                                            <span class="amount">{{product.prix}}</span>
+                                        </del>
+                                        {{discount}}
+                                        {% endif %}
+                                        {% endwith %}
+                                    </h2>
+                                </div>
+                                <hr>
+                                {% if product.description %}
+                                <h4>{% trans 'Description' %}</h4>
+                                <div class="small">
+                                    {{product.description|linebreaks}}
+                                </div>
+                                {% endif %}
+                                <dl class="row m-t-md small">
+                                    {% if product.n_enregistrement %}
+                                    <dt class="col-md-3">{% trans "N° d'enregistrement" %}</dt>
+                                    <dd class="col-md-9">{{product.n_enregistrement}}</dd>
+                                    {% endif %}
+                                    {% if product.reference %}
+                                    <dt class="col-md-3">{% trans "Référence" %}</dt>
+                                    <dd class="col-md-9">{{product.reference}}</dd>
+                                    {% endif %}
+                                    {% if product.categorie %}
+                                    <dt class="col-md-3">{% trans 'Catégorie' %}</dt>
+                                    <dd class="col-md-9">{{product.categorie}}</dd>
+                                    {% endif %}
+                                    {% if product.marque %}
+                                    <dt class="col-md-3">{% trans 'Marque' %}</dt>
+                                    <dd class="col-md-9">{{product.marque}}</dd>
+                                    {% endif %}
+                                    {% if product.origine %}
+                                    <dt class="col-md-3">{% trans 'Origine' %}</dt>
+                                    <dd class="col-md-9">{{product.origine}}</dd>
+                                    {% endif %}
+                                    {% if product.document_hom %}
+                                    <dt class="col-md-3">{% trans "Document pour l'homologation" %}</dt>
+                                    <dd class="col-md-9">
+                                        <div class="file-box">
+                                            <div class="file">
+                                                <a href="{{product.document_hom.document.url}}">
+                                                    <span class="corner"></span>
+                                                    <div class="icon">
+                                                        <i class="fa fa-file"></i>
+                                                    </div>
+                                                    <div class="file-name">
+                                                        {{product.document_hom.filename}}
+                                                        <br>
+                                                        <small>{% trans 'Ajouté' %}:
+                                                            {{product.document_hom.date_creation}}</small>
+                                                    </div>
+                                                </a>
+                                            </div>
+                                        </div>
+                                    </dd>
+                                    {% endif %}
+                                    {% if product.document_aut %}
+                                    <dt class="col-md-3">{% trans "Document pour l'autorisation" %}</dt>
+                                    <dd class="col-md-9">
+                                        <div class="file-box">
+                                            <div class="file">
+                                                <a href="{{product.document_aut.document.url}}">
+                                                    <span class="corner"></span>
+                                                    <div class="icon">
+                                                        <i class="fa fa-file"></i>
+                                                    </div>
+                                                    <div class="file-name">
+                                                        {{product.document_aut.filename}}
+                                                        <br>
+                                                        <small>{% trans 'Ajouté' %}:
+                                                            {{product.document_aut.date_creation}}</small>
+                                                    </div>
+                                                </a>
+                                            </div>
+                                        </div>
+                                    </dd>
+                                    {% endif %}
+                                    {% if product.dci %}
+                                    <dt class="col-md-3">{% trans 'Dci' %}</dt>
+                                    <dd class="col-md-9">{{product.dci}}</dd>
+                                    {% endif %}
+                                    {% if product.type %}
+                                    <dt class="col-md-3">{% trans 'Type' %}</dt>
+                                    <dd class="col-md-9">{{product.type}}</dd>
+                                    {% endif %}
+                                    {% if product.fabriquant %}
+                                    <dt class="col-md-3">{% trans 'Fabriquant' %}</dt>
+                                    <dd class="col-md-9">{{product.fabriquant}}</dd>
+                                    {% endif %}
+                                    {% if product.exploitant %}
+                                    <dt class="col-md-3">{% trans 'Exploitant' %}</dt>
+                                    <dd class="col-md-9">{{product.exploitant}}</dd>
+                                    {% endif %}
+                                    {% if product.remboursement %}
+                                    <dt class="col-md-3">{% trans 'Remboursable' %}</dt>
+                                    <dd class="col-md-9">{{product.remboursement}}</dd>
+                                    {% endif %}
+                                    {% if product.indications %}
+                                    <dt class="col-md-3">{% trans 'Indications' %}</dt>
+                                    <dd class="col-md-9">{{product.indications}}</dd>
+                                    {% endif %}
+                                    {% if product.interactions.all %}
+                                    <dt class="col-md-3">{% trans 'Interactions' %}</dt>
+                                    <dd class="col-md-9">
+                                        {% for inter in product.interactions.all %}
+                                            {{inter}},
+                                        {% endfor %}
+                                    </dd>
+                                    {% endif %}
+                                    {% if product.ref_etude %}
+                                    <dt class="col-md-3">{% trans 'Étude de référence' %}</dt>
+                                    <dd class="col-md-9">
+                                        <a href="{{product.ref_etude}}">
+                                            {{product.ref_etude}}
+                                        </a>
+                                    </dd>
+                                    {% endif %}
+                                    {% if product.document_aut_amm %}
+                                    <dt class="col-md-3">{% trans "Document attestant l'autorisation AMM" %}</dt>
+                                    <dd class="col-md-9">
+                                        <div class="file-box">
+                                            <div class="file">
+                                                <a href="{{product.document_aut_amm.document.url}}">
+                                                    <span class="corner"></span>
+                                                    <div class="icon">
+                                                        <i class="fa fa-file"></i>
+                                                    </div>
+                                                    <div class="file-name">
+                                                        {{product.document_aut_amm.filename}}
+                                                        <br>
+                                                        <small>{% trans 'Ajouté' %}:
+                                                            {{product.document_aut_amm.date_creation}}</small>
+                                                    </div>
+                                                </a>
+                                            </div>
+                                        </div>
+                                    </dd>
+                                    {% endif %}
+                                    {% if product.rcp %}
+                                    <dt class="col-md-3">{% trans "RCP" %}</dt>
+                                    <dd class="col-md-9">
+                                        <div class="file-box">
+                                            <div class="file">
+                                                <a href="{{product.rcp.document.url}}">
+                                                    <span class="corner"></span>
+                                                    <div class="icon">
+                                                        <i class="fa fa-file"></i>
+                                                    </div>
+                                                    <div class="file-name">
+                                                        {{product.rcp.filename}}
+                                                        <br>
+                                                        <small>{% trans 'Ajouté' %}:
+                                                            {{product.rcp.date_creation}}</small>
+                                                    </div>
+                                                </a>
+                                            </div>
+                                        </div>
+                                    </dd>
+                                    {% endif %}
+                                </dl>
+                                <hr>
+                                <div>
+                                    {% if product.partenaire.user == request.user %}
+                                    <div class="btn-group">
+                                        {% if product|isMedicalDevice %}
+                                        <a title="{% trans 'Mettre à jour' %}"
+                                           href="{% url 'partner-update-product' product.id %}"
+                                           class="btn btn-etabib btn-sm fm-update"
+                                           data-fm-head="{% trans 'Mise à jour du produit' %} "
+                                           data-fm-callback="reload">
+                                            <i class="fa fa-pencil-square-o" aria-hidden="true"></i>
+                                            {% trans 'Mettre à jour' %}
+                                        </a>
+                                        {% elif product|isDrug %}
+                                        <a title="{% trans 'Mettre à jour' %}"
+                                           href="{% url 'partner-update-drug' product.id %}"
+                                           class="btn btn-etabib btn-sm fm-update"
+                                           data-fm-head="{% trans 'Mise à jour du Médicament/Parapharmacie' %} "
+                                           data-fm-callback="reload">
+                                            <i class="fa fa-pencil-square-o" aria-hidden="true"></i>
+                                            {% trans 'Mettre à jour' %}
+                                        </a>
+                                        {% elif product|isAutre %}
+                                        <a title="{% trans 'Mettre à jour' %}"
+                                           href="{% url 'partner-update-other-product' product.id %}"
+                                           class="btn btn-etabib btn-sm fm-update"
+                                           data-fm-head="{% trans 'Mise à jour du Produit' %} "
+                                           data-fm-callback="reload">
+                                            <i class="fa fa-pencil-square-o" aria-hidden="true"></i>
+                                            {% trans 'Mettre à jour' %}
+                                        </a>
+                                        {% endif %}
+                                        <a title="{% trans 'Supprimer' %}"
+                                           href="{% url 'partner-delete-product' product.id %}"
+                                           class="btn btn-default fm-delete btn-sm"
+                                           data-fm-head="{% trans 'Supprimer le produit' %}: "
+                                           data-fm-callback="redirect"
+                                           data-fm-target="{% url 'partner-list-catalogue' %}">
+                                            <i class="fa fa-trash" aria-hidden="true"></i>
+                                            {% trans 'Supprimer' %}
+                                        </a>
+                                    </div>
+                                    {% endif %}
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+<!-- DateTimePicker ============================================ -->
+<script type="text/javascript"
+        src="https://cdnjs.cloudflare.com/ajax/libs/moment.js/2.9.0/moment-with-locales.min.js"></script>
+<script type="text/javascript"
+        src="https://cdnjs.cloudflare.com/ajax/libs/bootstrap-datetimepicker/4.17.47/js/bootstrap-datetimepicker.min.js"></script>
+{% endblock %}
+{% block js %}
+<!-- bootstrap JS
+                    ============================================ -->
+<script src='{% static "js/bootstrap.min.js" %}'></script>
+<!-- wow JS
+                    ============================================ -->
+<script src='{% static "js/wow.min.js" %}'></script>
+<!-- price-slider JS
+                    ============================================ -->
+<script src='{% static "js/jquery-price-slider.js" %}'></script>
+<!-- meanmenu JS
+                    ============================================ -->
+<script src='{% static "js/jquery.meanmenu.js" %}'></script>
+<!-- owl.carousel JS
+                    ============================================ -->
+<script src='{% static "js/owl.carousel.min.js" %}'></script>
+<!-- sticky JS
+                    ============================================ -->
+<script src='{% static "js/jquery.sticky.js" %}'></script>
+<!-- scrollUp JS
+                    ============================================ -->
+<script src='{% static "js/jquery.scrollUp.min.js" %}'></script>
+<!-- counterup JS
+                    ============================================ -->
+<script src='{% static "js/counterup/jquery.counterup.min.js" %}'></script>
+<script src='{% static "js/counterup/waypoints.min.js" %}'></script>
+<script src='{% static "js/counterup/counterup-active.js" %}'></script>
+<!-- mCustomScrollbar JS
+                    ============================================ -->
+<script
+        src='{% static "js/scrollbar/jquery.mCustomScrollbar.concat.min.js" %}'></script>
+<script src='{% static "js/scrollbar/mCustomScrollbar-active.js" %}'></script>
+<!-- metisMenu JS
+                    ============================================ -->
+<script src='{% static "js/metisMenu/metisMenu.min.js" %}'></script>
+<script src='{% static "js/metisMenu/metisMenu-active.js" %}'></script>
+<!-- plugins JS
+                    ============================================ -->
+<script src='{% static "js/plugins.js" %}'></script>
+<!-- main JS
+                    ============================================ -->
+<script src='{% static "js/main.js" %}'></script>
+<!-- tawk chat JS
+                    ============================================ -->
+{% include 'partial/tawk-script.html' %}
+<!-- slick-carousel JS  ============================================ -->
+<script type="text/javascript" src="//cdn.jsdelivr.net/npm/slick-carousel@1.8.1/slick/slick.min.js"></script>
+<!-- dropzone JS
+                ============================================ -->
+<script src='{% static "js/dropzone/dropzone.js" %}'></script>
+<script>
+    Dropzone.autoDiscover = false;
+    var CSRF_TOKEN = '{{ csrf_token }}';
+    $(document).ready(function(){
+        $('.product-images').slick({
+            dots: true,
+            autoplay: true,
+            infinite: true,
+            speed: 500,
+            fade: true,
+            cssEase: 'linear'
+        });
+    });
+
+
+
+
+
+
+
+</script>
+{% endblock %}

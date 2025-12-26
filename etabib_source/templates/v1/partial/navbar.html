@@ -1,0 +1,78 @@
+{% load static i18n %}
+{% load role_tags utils_tags %}
+<div class="header-top-area">
+    <div class="container-fluid">
+        <div class="row">
+            <div class="col-lg-12 col-md-12 col-sm-12 col-xs-12">
+                <div class="header-top-wraper">
+                    <div class="row">
+                        {% include 'partial/navbar-menu.html' %}
+                        <div class="col-lg-5 col-md-5 col-sm-12 col-xs-12">
+                            <div class="header-right-info">
+                                <ul class="nav navbar-nav mai-top-nav header-right-menu">
+                                    {% if user|is_doctor %}
+                                    <li id="nav-doc-credit" class="nav-item hidden-xs">
+                                        <a href="{% url 'doctor-points-history' %}">
+                                            <img src="{% static 'img/coins.svg' %}" alt="">
+                                        {{user.medecin.points}}
+                                        </a>
+                                    </li>
+                                    <li id="nav-doc-recharge" class="nav-item">
+                                        <a href="{% url 'epayment-recharge' %}?u={% user_id_hash user %}"
+                                           role="button"
+                                           aria-expanded="false" class="nav-link badge1">
+                                            <img src="{% static 'img/mastercard_credit.png' %}" alt="">
+                                        {{ user.medecin.solde.amount }} {{ user.medecin.solde.currency }}
+                                        </a>
+                                    </li>
+                                    <li id="nav-basket" class="nav-item hidden-xs">
+                                        <a id="cart_count" href="{% url 'shopping-cart-show' %}" role="button"
+                                           aria-expanded="false" class="nav-link badge1">
+                                            <i class="fa fa-shopping-basket dark-blue" style="font-size:21px"></i>
+                                        </a>
+                                    </li>
+                                    {% elif user|is_partner %}
+                                    <li id="nav-par-credit"  class="nav-item">
+                                        <a href="{% url 'partner-points-history' %}">
+                                            <img src="{% static 'img/coins.svg' %}" alt="">
+                                        {{user.partenaire.points}}
+                                        </a>
+                                    </li>
+                                    {% elif user|is_patient %}
+                                    <li id="nav-patient-recharge" class="nav-item">
+                                        <a href="{% url 'epayment-recharge' %}?u={% user_id_hash user %}"
+                                           role="button"
+                                           aria-expanded="false" class="nav-link badge1">
+                                            <img src="{% static 'img/mastercard_credit.png' %}" alt="">
+                                        {{ user.patient.solde.amount }} {{ user.patient.solde.currency }}
+                                        </a>
+                                    </li>
+                                    {% elif user|is_operator %}
+                                    {% comment %}
+                                    <li class="nav-item">
+                                        <a href="{% url 'rocketchat' %}" target="_blank" role="button"
+                                           aria-expanded="false" class="nav-link">
+                                            <i class="fa fa-weixin dark-blue" style="font-size:24px"></i>
+                                        </a>
+                                    </li>
+                                    {% endcomment %}
+                                    {% elif user|is_professionnal %}
+                                    <li class="nav-item">
+                                        <a href="{% url 'epayment-recharge' %}?u={% user_id_hash user %}"
+                                           role="button"
+                                           aria-expanded="false" class="nav-link badge1">
+                                            <img src="{% static 'img/mastercard_credit.png' %}" alt="">
+                                        </a>
+                                    </li>
+                                    {% endif %}
+                                    {% include 'partial/navbar-notifications.html' %}
+                                    {% include 'partial/navbar-user.html' %}
+                                </ul>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>

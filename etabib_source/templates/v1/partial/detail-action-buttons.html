@@ -1,0 +1,212 @@
+{% load i18n %}
+{% load role_tags %}
+{% load event_tags %}
+<div class="button-ap-list responsive-btn mg-b-15">
+    {% if action.active %}
+        {% if not action.detail_set.all %}
+            {% if action.cree_par.user == request.user %}
+            {% comment %}
+            <a title="{% trans 'Modifier' %}"
+               href="{% url 'update-action' action.pk %}"
+               class="btn btn-etabib fm-update"
+               data-fm-head="{{action.titre}}"
+               data-fm-callback="reload">
+                <i class="fa fa-pencil-square-o" aria-hidden="true"></i>
+                {% trans 'Modifier' %}
+            </a>
+            {% endcomment %}
+            {% endif %}
+        {% endif %}
+        {% if perms.core.crm_timeline_can_add_detail %}
+        <a title="{% trans 'Ajouter un détail' %}"
+           href="{% url 'create-detail-piste' action.pk %}"
+           class="btn btn-etabib fm-create"
+           data-fm-head="{{action.titre}}"
+           data-fm-callback="redirect"
+           data-fm-target="{% url 'action-detail' action.pk %}?pr">
+            <i class="fa fa-pencil" aria-hidden="true"></i>
+            {% trans 'Ajouter un détail' %}
+        </a>
+        {% endif %}
+        {% if action|is_tech_intervention %}
+            {% if perms.core.crm_timeline_can_add_technical_detail %}
+            <a title="{% trans 'Intervention technique' %}"
+               href="{% url 'technician-create-intervention' action.pk %}"
+               class="btn btn-etabib fm-create"
+               data-fm-head="{{action.titre}}"
+               data-fm-callback="reload">
+                <i class="fa fa-wrench" aria-hidden="true"></i>
+                {% trans 'Intervention technique' %}
+            </a>
+            {% endif %}
+            {% if perms.core.crm_timeline_can_set_demand_as_done %}
+            <a title="{% trans 'Marquer comme terminée' %}"
+               href="{% url 'inactivate-action' action.pk %}"
+               class="btn btn-etabib fm-create"
+               data-fm-head="Marquer comme terminée"
+               data-fm-callback="reload">
+                <i class="fa fa-check" aria-hidden="true"></i>
+                {% trans 'Marquer comme terminée' %}
+            </a>
+            {% endif %}
+        {% endif %}
+        {% if not action|is_tech_intervention  %}
+            {% if perms.core.crm_timeline_crm_can_add_next_meeting %}
+            <a id="next-meeting-id" title="{% trans 'prochaine rencontre' %}"
+               href="{% url 'create-meeting-piste' action.pk %}"
+               class="btn btn-etabib fm-create hide"
+               data-fm-head="Action à programmer la prochaine"
+               data-fm-callback="reload">
+                <i class="fa fa-calendar-plus-o" aria-hidden="true"></i>
+            </a>
+            {% endif %}
+        {% endif %}
+        {% if perms.core.crm_can_create_command %}
+            <span class="dropdown">
+            <button class="btn btn-etabib dropdown-toggle"
+                    title="{% trans 'Créer une commande' %}"
+                    type="button" id="dropdownMenu1" data-toggle="dropdown"
+                    aria-haspopup="true" aria-expanded="true">
+                <i class="fa fa-file-text"></i>
+                {% trans 'Créer une commande' %}
+                 <span class="caret"></span>
+            </button>
+            <ul class="dropdown-menu dropdown-menu-right" aria-labelledby="dropdownMenu1">
+                {% if action.contact|is_doctor or action.contact|is_professionnal or action.contact|has_no_role %}
+                <li>
+                    <a href="{% url 'commercial-create-order' action.pk %}">
+                        {% trans 'Offre Prépayée' %}</a>
+                </li>
+                <li role="separator" class="divider"></li>
+                <li>
+                    <a href="{% url 'commercial-create-custom-order' action.pk %}">
+                        {% trans 'Offre Personnalisée' %}</a>
+                </li>
+                <li role="separator" class="divider"></li>
+                {% endif %}
+                {% if action.contact|is_partner %}
+                <li>
+                    <a href="{% url 'commercial-create-partner-order' action.pk %}">
+                        {% trans 'Offre Partenaire' %}
+                        <span class="badge badge-primary">Nouveau</span>
+                    </a>
+                </li>
+                {% endif %}
+            </ul>
+        </span>
+        {% endif %}
+        {% if perms.core.crm_timeline_can_create_untreated_order %}
+        <a href="#" class="btn btn-etabib" data-toggle="modal" data-target="#orderModal">
+            <i class="fa fa-file"></i>
+            {% trans 'Ajouter une commande' %}
+        </a>
+        {% endif %}
+        {% if perms.core.crm_timeline_can_close_piste %}
+            <a title="{% trans 'clôture piste' %}"
+               href="{% url 'create-closing-piste' action.pk %}"
+               class="btn btn-etabib fm-create"
+               data-fm-head="Côturer la piste"
+               data-fm-callback="reload">
+                <i class="fa fa-check-square-o" aria-hidden="true"></i>
+                {% trans 'clôture piste' %}
+            </a>
+        {% endif %}
+        {% if perms.core.crm_can_create_demand %}
+            <span class="dropdown">
+            <button class="btn btn-etabib dropdown-toggle"
+                    title="{% trans 'Créer une demande' %}"
+                    type="button" id="dropdownMenu2" data-toggle="dropdown"
+                    aria-haspopup="true" aria-expanded="true">
+                <i class="fa fa-life-ring"></i>
+                {% trans 'Créer une demande' %}
+                 <span class="caret"></span>
+            </button>
+            <ul class="dropdown-menu dropdown-menu-right" aria-labelledby="dropdownMenu2">
+                <li>
+                    <a title="{% trans 'Demande d\'intervention' %}"
+                       href="{% url 'create-action-contact-type' action.contact.pk '3' %}"
+                       class="fm-create"
+                       data-fm-head="{% trans 'Demande d\'intervention' %}"
+                       data-fm-callback="reload">
+                        {% trans 'Demande d\'intervention' %}
+                    </a>
+                </li>
+                <li role="separator" class="divider"></li>
+                <li>
+                    <a title="{% trans 'Demande de formation' %}"
+                       href="{% url 'create-action-contact-type' action.contact.pk '4' %}"
+                       class="fm-create"
+                       data-fm-head="{% trans 'Demande de formation' %}"
+                       data-fm-callback="reload">
+                        {% trans 'Demande de formation' %}
+                    </a>
+                </li>
+            </ul>
+        </span>
+        {% endif %}
+        {% if perms.core.crm_can_view_sms_email %}
+            <span class="dropdown">
+            <button class="btn btn-etabib dropdown-toggle"
+                    title="{% trans 'SMS et Email' %}"
+                    type="button" id="dropdownMenu3" data-toggle="dropdown"
+                    aria-haspopup="true" aria-expanded="true">
+                <i class="fa fa-life-ring"></i>
+                {% trans 'SMS et Email' %}
+                <span class="caret"></span>
+            </button>
+             <ul class="dropdown-menu dropdown-menu-right" aria-labelledby="dropdownMenu3">
+                <li>
+                    <a title="{% trans 'Message' %}"
+                       href="{% url 'contact-send-sms' action.contact.pk %}"
+                       class="fm-create"
+                       data-fm-head=""
+                       data-fm-callback="reload">
+                        <i class="fa fa-envelope" aria-hidden="true"></i>
+                        {% trans 'Envoyer un SMS' %}
+                    </a>
+                </li>
+                 <li>
+                    <a title="{% trans 'Email' %}"
+                       href="{% url 'contact-send-email' action.contact.pk %}"
+                       class="fm-create"
+                       data-fm-head=""
+                       data-fm-callback="reload">
+                        <i class="fa fa-paper-plane" aria-hidden="true"></i>
+                        {% trans 'Envoyer un Email' %}
+                    </a>
+                </li>
+                <li>
+                    <a title="{% trans 'Créer une liste' %}"
+                       href="{% url 'listenvoi-statique-create'%}"
+                       class="fm-create"
+                       data-fm-head="{% trans 'Créer une liste d envoi' %}"
+                       data-fm-callback="">
+                        <i class="fa fa-list-alt" aria-hidden="true"></i>
+                        {% trans 'Créer une liste d\'envoi' %}
+                    </a>
+                </li>
+                <li>
+                    <a title="{% trans 'Ajouter a une liste d\'envoi' %}"
+                       href="{% url 'listenvoi-statique-add-contact' action.contact.pk %}"
+                       class="fm-create"
+                       data-fm-head="{% trans 'Ajouter a une liste d envoi' %}"
+                       data-fm-callback="reload">
+                       <i class="fa fa-external-link" aria-hidden="true"></i>
+                        {% trans 'Ajouter a une liste d\'envoi' %}
+                    </a>
+                 </li>
+             </ul>
+        </span>
+        {% endif %}
+        {% if perms.core.crm_timeline_can_create_account %}
+            {% if action.contact|has_no_role %}
+                <a title="{% trans 'Créer un compte' %}"
+               href="#"
+               class="btn btn-etabib btn-create-account">
+                <i class="fa fa-key" aria-hidden="true"></i>
+                {% trans 'Créer un compte' %}
+            </a>
+            {% endif %}
+        {% endif %}
+    {% endif %}
+</div>

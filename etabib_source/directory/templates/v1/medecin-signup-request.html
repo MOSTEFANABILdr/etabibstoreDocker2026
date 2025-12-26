@@ -1,0 +1,35 @@
+{% load i18n %}
+{% load static %}
+{% if MailExist %}
+<div class="hpanel">
+    <div class="panel-body mg-tb-30 text-center">
+        <h3 style="color:black;">Vous vous êtes déjà inscrit avec cet e-mail, Veuillez plutôt vous connecter</h3>
+        <a class="btn btn-link" target="_blank" href="https://store.etabib.dz/">Se Connecter</a>
+    </div>
+</div>
+{% else %}
+<div class="content-error">
+    <div class="hpanel">
+        <div class="panel-body mg-tb-30 text-center">
+            <h3 style="color:black;">لقد أرسلنا رمز الدخول السري الخاص بك على البريد الالكتروني</h3>
+            <h3 style="">{{email}}</h3>
+            <h3 class="mg-tb-30" style="font-size: 17px;color:black;">
+                Votre code d'accès a été envoyé sur la boite sus affichée
+            </h3>
+
+            <p>{% trans 'Veuillez accéder à votre Boite Mail et vérifier les messages reçus.' %} </p>
+            {% blocktrans %}
+            <p>utilisez votre adresse mail comme <strong>identifiant</strong></p>
+            <p>utilisez le code reçu comme <strong>mot de passe</strong></p>
+            {% endblocktrans %}
+            <hr>
+            <p style="font-weight:600; font-size: 12px;">
+                {% blocktrans %}
+                Attention: ce code est confidentiel il sécurise vos transactions, Ne le Partagez avec personne,
+                gardez le en un endroit sûr .
+                {% endblocktrans %}
+            </p>
+        </div>
+    </div>
+</div>
+{% endif %}

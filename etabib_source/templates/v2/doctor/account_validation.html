@@ -1,0 +1,44 @@
+{% extends "base.html" %}
+{% load i18n %}
+{% load static %}
+
+{% block title %} {% trans 'Validation' %} {% endblock %}
+
+{% block style %}
+
+{% endblock %}
+{% block content %}
+<div class="container">
+    <div class="row">
+        {% include 'partial/messages-alerts.html' %}
+        <div class="col-md-8 offset-md-2">
+            <h1 class="page-header">
+                <i class="fas fa-info-circle"></i>
+                {% trans "Your account must be verified" %}
+            </h1>
+            <div class="card border-success text-success m-b-10">
+                <div class="card-body">
+                    <p>
+                        {% blocktrans %}
+                        Félicitation ! Votre Compte est Désormais Crée, Vous pourrez Accéder à votre Profil une fois
+                        Vos Documents validés par un de nos Administrateurs, En général celà Prend au Maximum 24
+                        heures ( jours ouvrable) .
+                        {% endblocktrans %}
+                    </p>
+                    <p>
+                        {% blocktrans %}
+                        Si ce n'est pas le cas Veuillez nous contacter via notre messagerie Instantanée (la pastille
+                        bleue en bas à droite)
+                        {% endblocktrans %}
+                    </p>
+                </div>
+            </div>
+
+        </div>
+    </div>
+</div>
+{% endblock %}
+
+{% block js %}
+
+{% endblock %}

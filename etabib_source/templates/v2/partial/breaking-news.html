@@ -1,0 +1,25 @@
+{% load static feed_tags %}
+<div class="bn-breaking-news" id="newsTicker1">
+    <div class="bn-label">NEWS</div>
+    <div class="bn-news">
+        <ul>
+            {% get_annonces_web request as annonces %}
+            {% for annonce in annonces %}
+            <li data-comagne_id="{{ annonce.campagne_id }}" data-annonce_id="{{ annonce.annonce_id }}">
+                <a href="{{ annonce.annonce_url }}" target="_blank">
+                    <span class="bn-seperator" style="background-image: url('{% static 'img/logo/logdo.png' %}'); height: 38px;"></span>
+                    <strong>{{ annonce.titre }}:</strong> {{ annonce.corps }}
+                </a>
+            </li>
+            {% endfor %}
+        </ul>
+    </div>
+    <div class="bn-controls">
+        <button><span class="bn-arrow bn-prev"></span></button>
+        <button><span class="bn-action"></span></button>
+        <button><span class="bn-arrow bn-next">
+
+        </span>
+        </button>
+    </div>
+</div>

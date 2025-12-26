@@ -1,0 +1,80 @@
+{% load i18n %}
+{% if detail.cree_par.user == request.user %}
+<ul class="dropdown-menu dropdown-menu-right">
+    {% if detail.intervention %}
+    <li>
+        <a title="{% trans 'Modifier' %}"
+           href="{% url 'technician-update-intervention' detail.intervention.pk %}"
+           class="fm-update"
+           data-fm-head=""
+           data-fm-callback="reload">
+            <i class="fa fa-pencil-square-o" aria-hidden="true"></i>
+            {% trans 'Modifier' %}
+        </a>
+    </li>
+    {% elif detail.facture %}
+    <li>
+        {% if detail.facture.offre_prepa %}
+        <a title="{% trans 'Modifier' %}"
+           href="{% url 'commercial-update-order' detail.facture.pk %}"
+           class="fm-update"
+           data-fm-head=""
+           data-fm-callback="reload">
+            <i class="fa fa-pencil-square-o" aria-hidden="true"></i>
+            {% trans 'Modifier' %}
+        </a>
+        {% endif %}
+    </li>
+    {% elif detail.prochainerencontre %}
+    {% if not detail.is_treated %}
+    <li>
+        <a title="{% trans 'Modifier' %}"
+           href="{% url 'update-meeting-piste' detail.prochainerencontre.pk detail.action.pk %}"
+           class="fm-update"
+           data-fm-head=""
+           data-fm-callback="reload">
+            <i class="fa fa-pencil-square-o" aria-hidden="true"></i>
+            {% trans 'Modifier' %}
+        </a>
+    </li>
+    {% endif %}
+    <li>
+        <a title="{% trans 'Modifier' %}"
+           href="{% url 'treat-meeting-piste' detail.pk %}"
+           class="fm-update"
+           data-fm-head=""
+           data-fm-callback="redirect"
+           data-fm-target="{% url 'action-detail' detail.action.pk %}?pr">
+            <i class="fa fa-bolt" aria-hidden="true"></i>
+            {% trans 'Traiter' %}
+        </a>
+    </li>
+    {% elif detail.clotureaction %}
+    {% else %}
+    <li>
+        <a title="{% trans 'Modifier' %}"
+           href="{% url 'update-detail-action' detail.pk detail.action.pk %}"
+           class="fm-update"
+           data-fm-head=""
+           data-fm-callback="redirect"
+           data-fm-target="{% url 'action-detail' detail.action.pk %}?pr">
+            <i class="fa fa-pencil-square-o" aria-hidden="true"></i>
+            {% trans 'Modifier' %}
+        </a>
+    </li>
+    {% endif %}
+    {% if not detail.facture %}
+    <li>
+        <a title="{% trans 'Supprimer' %}"
+           href="{% url 'delete-detail-action' detail.pk %}"
+           class="fm-delete"
+           data-fm-ok="{% trans 'Supprimer' %}"
+           data-fm-head=""
+           data-fm-callback="reload">
+            <i class="fa fa-remove" aria-hidden="true"></i>
+            {% trans 'Supprimer' %}
+        </a>
+    </li>
+    {% endif %}
+</ul>
+{% endif %}

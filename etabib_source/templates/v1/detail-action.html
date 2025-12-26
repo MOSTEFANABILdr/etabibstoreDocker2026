@@ -1,0 +1,788 @@
+{% extends "base.html" %}
+{% load i18n %}
+{% load static %}
+{% load avatar_tags %}
+{% load event_tags %}
+{% load crispy_forms_tags %}
+{% load role_tags operator_tags %}
+{% block title %} {{title}} {% endblock %}
+{% block style %}
+<!-- Google Fonts
+                    ============================================ -->
+<link
+        href="https://fonts.googleapis.com/css?family=Roboto:100,300,400,700,900"
+        rel="stylesheet">
+<!-- Bootstrap CSS
+                    ============================================ -->
+<link rel="stylesheet" href='{% static "css/bootstrap.min.css" %}'>
+<!-- Bootstrap CSS
+                    ============================================ -->
+<link rel="stylesheet" href='{% static "css/font-awesome.min.css" %}'>
+<!-- animate CSS
+                    ============================================ -->
+<link rel="stylesheet" href='{% static "css/animate.css" %}'>
+<!-- normalize CSS
+                    ============================================ -->
+<link rel="stylesheet" href='{% static "css/normalize.css" %}'>
+<!-- meanmenu icon CSS
+                    ============================================ -->
+<link rel="stylesheet" href='{% static "css/meanmenu.min.css" %}'>
+<!-- main CSS
+                    ============================================ -->
+<link rel="stylesheet" href='{% static "css/main.css" %}'>
+<!-- educate icon CSS
+                    ============================================ -->
+<link rel="stylesheet" href='{% static "css/educate-custon-icon.css" %}'>
+<!-- mCustomScrollbar CSS
+                    ============================================ -->
+<link rel="stylesheet"
+      href='{% static "css/scrollbar/jquery.mCustomScrollbar.min.css" %}'>
+<!-- metisMenu CSS
+                    ============================================ -->
+<link rel="stylesheet"
+      href='{% static "css/metisMenu/metisMenu.min.css" %}'>
+<link rel="stylesheet"
+      href='{% static "css/metisMenu/metisMenu-vertical.css" %}'>
+<!-- modernizr JS
+                    ============================================ -->
+<script src='{% static "js/vendor/modernizr-2.8.3.min.js" %}'></script>
+<!-- dropzone CSS ============================================ -->
+<link rel="stylesheet" href='{% static "css/dropzone/dropzone.css" %}'>
+<!-- bootstrap3_player CSS ============================================ -->
+<link rel="stylesheet" href='{% static "css/bootstrap3_player/bootstrap3_player.css" %}'>
+<!-- lightbox CSS ============================================ -->
+<link href='{% static "css/lightbox2/css/lightbox.min.css" %}' rel="stylesheet"/>
+<link rel="stylesheet" href="//code.jquery.com/ui/1.12.1/themes/base/jquery-ui.css">
+<link href="https://cdn.jsdelivr.net/npm/smartwizard@5/dist/css/smart_wizard_all.min.css" rel="stylesheet" type="text/css" />
+<style>
+    .image-row {
+  text-align: center;
+}
+
+@media (min-width: 720px) {
+  .image-row {
+    text-align: left;
+  }
+}
+.example-image-link {
+  display: inline-block;
+  padding: 4px;
+  margin: 0 0.5rem 1rem 0.5rem;
+  background-color: var(--bg-color);
+  line-height: 0;
+  border-radius: var(--border-radius-large);
+}
+.example-image-link:hover {
+  background-color: var(--primary-color);
+}
+
+.example-image {
+  width: 7rem;
+  border-radius: var(--border-radius);
+}
+
+
+</style>
+{% endblock %}
+{% block content %}
+<div class="blog-details-area mg-b-15">
+    <div class="container-fluid">
+        <div class="row">
+            <div class="col-lg-12 col-md-12 col-sm-12 col-xs-12">
+                <div class="wrapper wrapper-content">
+                    <div class="ibox">
+                        <div class="ibox-content">
+                            {% if action.expired %}
+                            <div class="row">
+                                <div class="col-lg-12">
+                                    <div class="m-b-md">
+                                        <div class="alert alert-danger">
+                                            {% blocktrans %}
+                                            <strong>Avertissement!</strong> La piste est arrivée à la date de fin
+                                            {% endblocktrans %}
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                            {% endif %}
+                            {% if not action.active %}
+                            <div class="row">
+                                <div class="col-lg-12">
+                                    <div class="m-b-md">
+                                        <div class="alert alert-success">
+                                            <strong><i class="fa fa-2x fa-check green"></i></strong>
+                                            {% trans 'La piste est marquée comme résolue' %}
+                                            {% if action.date_cloture %}
+                                            {% trans ' à la date de: ' %}
+                                            {{action.date_cloture|date:'Y-m-d H:i'}}
+                                            {% endif %}
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                            {% endif %}
+                            <div class="row">
+                                <div class="col-lg-12">
+                                    {% include 'partial/messages-alerts.html' %}
+                                </div>
+                                <div class="col-lg-12">
+                                    <div class="m-b-md">
+                                        {% include 'partial/detail-action-buttons.html' %}
+                                        <h2 class="text-center">{{action.titre}}</h2>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="row">
+                                <div class="col-lg-5">
+                                    <dl class="dl-horizontal">
+                                        <dt>{% trans 'Etat' %}:</dt>
+                                        <dd>
+                                            {{ action|renderActionStatus|safe }}
+                                        </dd>
+                                        {% if action.contact %}
+                                        <dt>{% trans 'Contact' %}:</dt>
+                                        <dd>
+                                            <a href="{% url 'operator-detail-contact' action.contact.id %}">
+                                                {{action.contact}}
+                                            </a>
+                                        </dd>
+                                        {% endif %}
+                                        <dt>{% trans "Type d'action" %}:</dt>
+                                        <dd>
+                                            {{action.get_type_display}}
+                                        </dd>
+                                        <dt>{% trans 'Crée par' %}:</dt>
+                                        <dd>
+                                            {{action.cree_par}}
+                                        </dd>
+                                        {% if action.attribuee_a %}
+                                        <dt>{% trans 'Attribuèe à' %}:</dt>
+                                        <dd>
+                                            {{action.attribuee}}
+                                        </dd>
+                                        {% endif %}
+                                    </dl>
+                                </div>
+                                <div class="col-lg-7">
+                                    <dl class="dl-horizontal">
+                                        <dt>{% trans 'Date de création' %}:</dt>
+                                        <dd>
+                                            <i class="fa fa-clock-o"></i>
+                                            {{action.date_creation|date:"d M, Y h:i"}}
+                                        </dd>
+                                        <dt>{% trans 'Date de début' %}:</dt>
+                                        <dd>
+                                            <span><i class="fa fa-clock-o"></i></span>
+                                            {{action.date_debut|date:"d M, Y"}}
+                                        </dd>
+                                        <dt>{% trans "Date de fin" %}:</dt>
+                                        <dd>
+                                            <span><i class="fa fa-clock-o"></i></span>
+                                            {{action.date_fin|date:"d M, Y"}}
+                                        </dd>
+                                    </dl>
+                                </div>
+                            </div>
+                            <div class="row">
+                                <ul class="timeline">
+                                    {% for detail in action.detail_set.all %}
+                                    <li>
+                                        <div class="tldate {% timelineBadgeCssClass detail %}">
+                                            {{detail.date_creation|date:'Y-m-d H:i'}}
+                                        </div>
+                                    </li>
+                                    <li id="detail_{{detail.id}}" {% if forloop.counter|divisibleby:2 %}
+                                        class="timeline-inverted" {% endif %}>
+                                        <div class="timeline-badge {% timelineBadgeCssClass detail %}">
+                                            {% if detail.intervention %}
+                                            <i class="fa fa-wrench"></i>
+                                            {% elif detail.facture %}
+                                            <i class="fa fa-file-text"></i>
+                                            {% elif detail.prochainerencontre %}
+                                            <i class="fa fa-bell"></i>
+                                            {% elif detail.clotureaction %}
+                                            <i class="fa fa-check-square-o"></i>
+                                            {% else %}
+                                            <i class="fa fa-calendar"></i>
+                                            {% endif %}
+                                        </div>
+                                        <div class="timeline-panel {% timelinePanelCssClass detail %}">
+                                            <div class="timeline-heading">
+                                                <div class="row">
+                                                    {% renderTreatmentStatus detail %}
+                                                </div>
+                                                <div class="user-comment">
+                                                    {% avatar detail.cree_par.user class="message-avatar" %}
+                                                    <div class="comment-details">
+                                                        <h4>{{detail.cree_par.user.get_full_name}}
+                                                            <span class="comment-replay dropdown">
+                                                                 <a class="btn pull-right dropdown-toggle" type="button"
+                                                                    data-toggle="dropdown">
+                                                                    <i class="fa fa-ellipsis-v"></i>
+                                                                </a>
+                                                                {% include 'partial/detail-action-dropdown-menu.html' with detail=detail %}
+                                                            </span>
+                                                        </h4>
+                                                        <small class="text-muted"><i class="fa fa-clock-o"></i>
+                                                            {{detail.date_creation|date:'Y-m-d H:i'}}
+                                                        </small>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                            <div class="timeline-body">
+                                                <br>
+                                                {% if detail.intervention %}
+                                                <dl class="dl-horizontal">
+                                                    <dt>{% trans "Début d'exécution" %}:</dt>
+                                                    <dd>
+                                                        {{detail.intervention.debut_execution}}
+                                                    </dd>
+                                                    <dt>{% trans "Durée d'intervention" %}:</dt>
+                                                    <dd>
+                                                        {{detail.intervention.duree_reelle}}
+                                                    </dd>
+                                                    <dt>{% trans 'Rapport' %}:</dt>
+                                                    <dd>
+                                                        {{detail.intervention.rapport|safe}}
+                                                    </dd>
+                                                    {% if detail.intervention.probleme %}
+                                                    <dt>{% trans 'Problème lié' %}:</dt>
+                                                    <dd>
+                                                        {{detail.intervention.probleme.libelle}}
+                                                    </dd>
+                                                    {% endif %}
+                                                    {% if detail.intervention.screenshots.all %}
+                                                    <dt>{% trans 'Capture d\'écran' %}:</dt>
+                                                    <dd>
+                                                        <div class="image-row">
+                                                            <div class="image-set">
+                                                                {% for sc in detail.intervention.screenshots.all %}
+                                                                <a class="example-image-link" href="{{sc.image.url}}"
+                                                                   data-lightbox="{{sc.image.name}}"
+                                                                   data-title="{{sc.filename}}">
+                                                                    <img class="example-image" src="{{sc.image.url}}">
+                                                                </a>
+                                                                {% endfor %}
+                                                            </div>
+                                                        </div>
+                                                    </dd>
+                                                    {% endif %}
+                                                </dl>
+                                                {% elif detail.prochainerencontre %}
+                                                <dl class="dl-horizontal">
+                                                    <dt>{% trans 'Rencontre dans' %}:</dt>
+                                                    <dd>
+                                                        {{detail.prochainerencontre.date_rencontre|date:"d M, Y"}}
+                                                    </dd>
+                                                    {% if detail.type %}
+                                                    <dt>{% trans 'Pour' %}:</dt>
+                                                    <dd>
+                                                        {{detail.get_type_display}}
+                                                    </dd>
+                                                    {% endif %}
+                                                    {% if detail.description %}
+                                                    <dt>{% trans 'Description' %}:</dt>
+                                                    <dd>
+                                                        {{detail.description}}
+                                                    </dd>
+                                                    {% endif %}
+                                                    {% if detail.audio %}
+                                                    <dt>{% trans 'Fichier Audio' %}:</dt>
+                                                    <dd>
+                                                        <div class="row">
+                                                            <audio controls>
+                                                                <source src="{{detail.audio.file.url}}"
+                                                                        type="audio/wav">
+                                                                An html5-capable browser is required to play this audio.
+                                                            </audio>
+                                                        </div>
+                                                    </dd>
+                                                    {% endif %}
+                                                </dl>
+                                                {% elif detail.facture %}
+                                                <dl class="dl-horizontal">
+                                                    <dt>{% trans 'Type Commande' %}:</dt>
+                                                    <dd>
+                                                        <span class="badge bg-{% timelineBadgeCssClass detail %}">
+                                                        {% if detail.facture.offre_perso %}
+                                                        {% trans 'Offre Personnalisée' %}
+                                                        {% elif detail.facture.offre_prepa %}
+                                                        {% trans 'Offre Prépayée' %}
+                                                        {% elif detail.facture.offre_partenaire %}
+                                                        {% trans 'Offre Partenaire' %}
+                                                        {% endif %}
+                                                        </span>
+                                                    </dd>
+                                                    <dt>{% trans 'Commande N°' %}:</dt>
+                                                    <dd>
+                                                        <a href="{% url 'detail-order' detail.facture.pk %}">
+                                                            {{detail.facture.id}}
+                                                        </a>
+                                                    </dd>
+                                                </dl>
+                                                {% elif detail.clotureaction %}
+                                                <dl class="dl-horizontal">
+                                                    {% if detail.decision %}
+                                                    <dt>{% trans 'Décision à faire' %}:</dt>
+                                                    <dd>
+                                                        {{detail.get_decision_display}}
+                                                        {% if detail.decision_nb_jour %}
+                                                        {{detail.decision_nb_jour}}
+                                                        jour{{detail.decision_nb_jour|pluralize}}
+                                                        {% endif %}
+                                                    </dd>
+                                                    {% endif %}
+                                                    {% if detail.clotureaction.categorisations %}
+                                                    <dt>{% trans 'Catégorisation' %}:</dt>
+                                                    <dd>
+                                                        {{detail.clotureaction.get_categorisations_display}}
+                                                    </dd>
+                                                    {% endif %}
+                                                </dl>
+                                                {% elif detail.commande %}
+                                                <dl class="dl-horizontal">
+                                                    <dt>{% trans 'N° commande' %}:</dt>
+                                                    <dd>
+                                                        {{detail.commande.id}}
+                                                    </dd>
+                                                    <dt>{% trans 'Offre' %}:</dt>
+                                                    <dd>
+                                                        {{detail.commande.get_offre_display}}
+                                                    </dd>
+                                                    <dt>{% trans 'Quantité' %}:</dt>
+                                                    <dd>
+                                                        {{detail.commande.quantite}}
+                                                    </dd>
+                                                    <dt>{% trans 'Méthode de paiement' %}:</dt>
+                                                    <dd>
+                                                        {{detail.commande.get_methode_paiement_display}}
+                                                    </dd>
+                                                    <dt>{% trans 'TotalHt' %}:</dt>
+                                                    <dd>
+                                                        {{detail.commande.totalHt}}
+                                                    </dd>
+                                                    <dt>{% trans 'Versement initial' %}:</dt>
+                                                    <dd>
+                                                        {{detail.commande.versement_initial}}
+                                                    </dd>
+                                                    <dt>{% trans 'Document' %}:</dt>
+                                                    <dd>
+                                                        <a target='_blanc' href='{{detail.commande.image.image.url}}'>
+                                                            Voir Image
+                                                        </a>
+                                                    </dd>
+                                                </dl>
+                                                {% else %}
+                                                <dl class="dl-horizontal">
+                                                    {% if detail.type %}
+                                                    <dt>{% trans 'Stade de relation' %}:</dt>
+                                                    <dd>
+                                                        <span class="badge bg-{% timelineBadgeCssClass detail %}">
+                                                            {{detail.get_type_display}}
+                                                        </span>
+                                                    </dd>
+                                                    {% endif %}
+                                                    {% if detail.description %}
+                                                    <dt>{% trans 'Description' %}:</dt>
+                                                    <dd>
+                                                        {{detail.description|linebreaks}}
+                                                    </dd>
+                                                    {% endif %}
+                                                    {% if detail.pj %}
+                                                    <dt>{% trans 'Pièce jointe' %}:</dt>
+                                                    <dd>
+                                                        <div class="file-box">
+                                                            <div class="file">
+                                                                <a href="{{detail.pj.file.url}}">
+                                                                    <span class="corner"></span>
+                                                                    <div class="icon">
+                                                                        <i class="fa fa-file"></i>
+                                                                    </div>
+                                                                    <div class="file-name">
+                                                                        {{detail.pj.filename}}
+                                                                        <br>
+                                                                        <small>{{detail.pj.date_creation}}</small>
+                                                                    </div>
+                                                                </a>
+                                                            </div>
+                                                        </div>
+                                                    </dd>
+                                                    {% endif %}
+                                                    {% if detail.audio %}
+                                                    <dt>{% trans 'Fichier Audio' %}:</dt>
+                                                    <dd>
+                                                        <div class="row">
+                                                            <audio controls>
+                                                                <source src="{{detail.audio.file.url}}"
+                                                                        type="audio/wav">
+                                                                An html5-capable browser is required to play this audio.
+                                                            </audio>
+                                                        </div>
+                                                    </dd>
+                                                    {% endif %}
+                                                </dl>
+                                                {% endif %}
+                                            </div>
+                                        </div>
+                                    </li>
+                                    {% endfor %}
+                                </ul>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+{% if perms.core.crm_timeline_can_create_untreated_order %}
+<div class="modal fade" id="orderModal" data-current-step="4" data-backdrop="static" data-keyboard="false" tabindex="-1" role="dialog" aria-labelledby="orderModalLabel" aria-hidden="true">
+    <div class="modal-dialog modal-lg" role="document">
+        <div class="modal-content">
+            <div class="modal-body" id="smartwizard">
+                <ul class="nav">
+                   <li>
+                       <a class="nav-link" href="#step-1">
+                           {% trans 'Créer un compte' %}
+                       </a>
+                   </li>
+                   <li>
+                       <a class="nav-link" href="#step-2">
+                          {% trans 'Choisir une offre' %}
+                       </a>
+                   </li>
+                   <li>
+                       <a class="nav-link" href="#step-3">
+                           {% trans 'Méthode de Paiement' %}
+                       </a>
+                   </li>
+                    <li>
+                       <a class="nav-link" href="#step-4">
+                           {% trans 'Document' %}
+                       </a>
+                   </li>
+                </ul>
+                <div class="tab-content">
+                   <div id="step-1" class="tab-pane" role="tabpanel">
+                      {% crispy step1 %}
+                   </div>
+                   <div id="step-2" class="tab-pane" role="tabpanel">
+                      {% crispy step2 %}
+                   </div>
+                   <div id="step-3" class="tab-pane" role="tabpanel">
+                      {% crispy step3 %}
+                       <table class="table" id="tab-trim">
+                           <tbody>
+                                <tr>
+                                    <th>{% trans "Prix HT" %}</th>
+                                    <td id="price"></td>
+                                </tr>
+                                <tr>
+                                    <th>{% trans "Quantité" %}</th>
+                                    <td id="quantity"></td>
+                                </tr>
+                                <tr>
+                                    <th>{% trans "Total HT" %}</th>
+                                    <td id="totatHT"></td>
+                                </tr>
+                                <tr>
+                                    <th>{% trans "TVA 19%" %}</th>
+                                    <td id="tva"></td>
+                                </tr>
+                                <tr>
+                                    <th>{% trans "TTC" %}</th>
+                                    <td id="totalTc"></td>
+                                </tr>
+                                <tr id="trTimb">
+                                    <th>{% trans "TTC + 1% timbre" %}</th>
+                                    <td id="totalTcTim"></td>
+                                </tr>
+                           </tbody>
+                       </table>
+                   </div>
+                   <div id="step-4" class="tab-pane" role="tabpanel">
+                       <form action='{% url "upload-commande-image" %}' class="dropzone" id="my-great-dropzone"></form>
+                       <input type="hidden" id="commande_image_id" name="commande_image">
+                   </div>
+                </div>
+            </div>
+            <div class="modal-footer">
+                <button id="prev-btn"  class="btn btn-default sw-btn-prev">
+                    {% trans 'Précédent' %}
+                </button>
+                <button id="next-btn" class="btn btn-info sw-btn-next">
+                    {% trans 'Suivant' %}
+                </button>
+                <button id="submit-btn" class="btn btn-success hide">
+                    {% trans 'Envoyer' %}
+                </button>
+                <button class="btn btn-danger" data-dismiss="modal" aria-label="Close">
+                    {% trans 'Fermer' %}
+                </button>
+            </div>
+        </div>
+    </div>
+</div>
+{% endif %}
+{% endblock %}
+{% block js %}
+<!-- Datatable ============================================ -->
+<script type="text/javascript"
+        src="https://cdnjs.cloudflare.com/ajax/libs/moment.js/2.9.0/moment-with-locales.min.js"></script>
+<script type="text/javascript"
+        src="https://cdnjs.cloudflare.com/ajax/libs/bootstrap-datetimepicker/4.17.47/js/bootstrap-datetimepicker.min.js"></script>
+<!-- bootstrap JS
+                    ============================================ -->
+<script src='{% static "js/bootstrap.min.js" %}'></script>
+<!-- wow JS
+                    ============================================ -->
+<script src='{% static "js/wow.min.js" %}'></script>
+<!-- meanmenu JS
+                    ============================================ -->
+<script src='{% static "js/jquery.meanmenu.js" %}'></script>
+<!-- sticky JS
+                    ============================================ -->
+<script src='{% static "js/jquery.sticky.js" %}'></script>
+<!-- scrollUp JS
+                    ============================================ -->
+<script src='{% static "js/jquery.scrollUp.min.js" %}'></script>
+<!-- mCustomScrollbar JS
+                    ============================================ -->
+<script
+        src='{% static "js/scrollbar/jquery.mCustomScrollbar.concat.min.js" %}'></script>
+<script src='{% static "js/scrollbar/mCustomScrollbar-active.js" %}'></script>
+<!-- metisMenu JS
+                    ============================================ -->
+<script src='{% static "js/metisMenu/metisMenu.min.js" %}'></script>
+<script src='{% static "js/metisMenu/metisMenu-active.js" %}'></script>
+<!-- plugins JS ============================================ -->
+<script src='{% static "js/plugins.js" %}'></script>
+<!-- main JS  ============================================ -->
+<script src='{% static "js/main.js" %}'></script>
+<!-- bootstrap3_player JS  ============================================ -->
+<script src='{% static "js/bootstrap3_player/bootstrap3_player.js" %}'></script>
+<!-- tawk chat JS  ============================================ -->
+{% include 'partial/tawk-script.html' %}
+<!-- dropzone JS ============================================ -->
+<script src='{% static "js/dropzonee/dropzone.js" %}'></script>
+<script src='{% static "js/dropzonee/jquery.cookie.js" %}'></script>
+<!-- lightbox2 JS ============================================ -->
+<script src='{% static "js/lightbox2/js/lightbox.min.js" %}'></script>
+<script src="https://code.jquery.com/ui/1.12.1/jquery-ui.js"></script>
+<!--jquery-smartwizard-->
+<script src="https://cdn.jsdelivr.net/npm/smartwizard@5/dist/js/jquery.smartWizard.min.js" type="text/javascript"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/jquery-validate/1.19.3/jquery.validate.min.js" type="text/javascript"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/jquery-validate/1.19.3/additional-methods.min.js" type="text/javascript"></script>
+<script src="https://cdn.jsdelivr.net/npm/jquery-validation@1.17.0/dist/localization/messages_fr.js" type="text/javascript"></script>
+<script>
+	$(document).ready(function() {
+	    var scrollToElement = function(el, ms){
+            var speed = (ms) ? ms : 600;
+            $('html,body').animate({
+                scrollTop: $(el).offset().top
+            } , speed, function() {
+                // Animation complete.
+                $(el).effect("highlight", {}, 3000);
+             });
+        }
+
+        //var searchParams = new URLSearchParams(window.location.search);
+        var url = new URL(document.URL);
+        var searchParams = url.searchParams;
+        if (searchParams) {
+        if (searchParams.has('pr')) {
+            $("#next-meeting-id").trigger('click');
+            //remove '?pr' from url
+            var query = window.location.search.substring(1)
+            if(query.length) {
+               // are the new history methods available ?
+               if(window.history != undefined && window.history.pushState != undefined) {
+                    window.history.pushState({}, document.title, window.location.pathname);
+               }
+            }
+        }
+        if (searchParams.has('scrl')) {
+            const scrlDiv = searchParams.get('scrl');
+            if (scrlDiv) {
+                scrollToElement('#' + scrlDiv, 2000);
+                var query = window.location.search.substring(1)
+                if(query.length) {
+                   // are the new history methods available ?
+                   if(window.history != undefined && window.history.pushState != undefined) {
+                        window.history.pushState({}, document.title, window.location.pathname);
+                   }
+                }
+            }
+        }
+        }
+
+        //create account confirmation
+        $(".btn-create-account").click(function(e) {
+            e.preventDefault();
+            Lobibox.confirm({
+                title: 'Confirmation',
+                msg: "Voulez-vous créer un compte pour ce contact ?",
+                buttons: {
+                    yes: {
+                        text: "Oui",
+                        'class': 'btn btn-etabib',
+                        closeOnClick: true
+                    },
+                    no: {
+                        text: "Non",
+                        'class': 'btn btn-warning',
+                        closeOnClick: true
+                    },
+                },
+                callback: function(lobibox, type){
+                    var btnType;
+                    if (type === 'yes'){
+                        window.location.href = "{% url 'commercial-account-create' action.pk %}";
+                    }
+                }
+            });
+        });
+        {% if perms.core.crm_timeline_can_create_untreated_order %}
+        $('#smartwizard').smartWizard({
+            selected: 0,
+            theme: "default",
+            enableURLhash: false,
+            autoAdjustHeight: false,
+            toolbarSettings: {
+              showNextButton: false,
+              showPreviousButton: false,
+          },
+        });
+        $("#smartwizard").on("showStep", function(e, anchorObject, stepNumber, stepDirection, stepPosition) {
+              $("#prev-btn").removeClass('disabled');
+              $("#next-btn").removeClass('disabled');
+              if(stepPosition === 'first') {
+                  $("#prev-btn").addClass('disabled');
+              } else if(stepPosition === 'last') {
+                  $("#next-btn").addClass('disabled');
+              } else {
+                  $("#prev-btn").removeClass('disabled');
+                  $("#next-btn").removeClass('disabled');
+              }
+        });
+        $("#next-btn").click(function(e) {
+            $('#smartwizard').smartWizard("loader", "show");
+            var stepIndex = $('#smartwizard').smartWizard("getStepIndex");
+            if (stepIndex == 0 && $("#deleguestep1form").valid()) {
+                $('#smartwizard').smartWizard("next");
+            }
+            if (stepIndex == 1 && $("#deleguestep2form").valid()) {
+                $('#smartwizard').smartWizard("next");
+            }
+            if (stepIndex == 2 && $("#deleguestep3form").valid()) {
+                $('#smartwizard').smartWizard("next");
+            }
+            $('#smartwizard').smartWizard("loader", "hide");
+
+        });
+        $("#prev-btn").click(function(e) {
+            $('#smartwizard').smartWizard("prev");
+        });
+        $("#smartwizard").on("leaveStep", function(e, anchorObject, currentStepIndex, nextStepIndex, stepDirection) {
+            if (nextStepIndex == 3) {
+                $("#submit-btn").removeClass("hide");
+            }
+            else {
+                $("#submit-btn").addClass("hide");
+            }
+            return true;
+        });
+
+        //jquery validation
+        $("#deleguestep1form").validate({
+            rules: {
+                email: {
+                    required: true,
+                    email: true,
+                    remote: {
+                        url: '{% url 'verify-email' %}',
+                        type: 'GET',
+                    }
+                }
+            },
+             messages: {
+                email: {
+                    remote: '{% trans "Cette adresse e-mail est déjà utilisée" %}'
+                }
+             }
+        });
+        $("#deleguestep2form").validate();
+        $("#deleguestep3form").validate();
+
+          Dropzone.options.myGreatDropzone = {
+            paramName: "file", // The name that will be used to transfer the file
+            accept: function(file, done) {
+               done();
+            },
+            headers: {
+                'X-CSRFToken': "{{ csrf_token }}"
+            },
+            success: function(file, message) {
+                 $("#commande_image_id").val(message.file_id)
+            },
+          };
+
+        //step 3
+        var totalHt = 0;
+        $('#id_paiement').on('change', function() {
+            if ($("#id_offre").val() == 0) {
+                 var abonnement = 4500;
+            }
+            else if ($("#id_offre").val() == 1) {
+                 var abonnement = 11988;
+            }
+             else if ($("#id_offre").val() == 2) {
+                 var abonnement = 16182;
+            }
+            if (this.value == 0) {
+                $("#trTimb").show();
+            }
+            else {
+                $("#trTimb").hide();
+            }
+            var quantity = $("#id_quantite").val();
+            totalHt = abonnement * quantity;
+            var tva = totalHt * 19 / 100;
+            var ttc = totalHt + tva;
+            var timbre = ttc * 1 / 100;
+            var ttctimb = ttc + timbre;
+
+            $("#quantity").html(quantity);
+            $("#price").html(abonnement + " DA");
+            $("#totatHT").html(totalHt + " DA");
+            $("#tva").html(tva + " DA");
+            $("#totalTc").html(ttc + " DA");
+            $("#totalTcTim").html(ttctimb + " DA");
+        });
+
+        //step4 submit form
+        $("#submit-btn").click(function(e) {
+            e.preventDefault();
+            $('#smartwizard').smartWizard("loader", "show");
+            var data = {
+                "email": $("#id_email").val(),
+                "nom": $("#id_nom").val(),
+                "prenom": $("#id_prenom").val(),
+                "telephone": $("#id_telephone").val(),
+                "offre": $('#id_offre option:selected').val(),
+                "quantite": $('#id_quantite').val(),
+                "paiement": $('#id_paiement option:selected').val(),
+                "commande_image": $('#commande_image_id').val(),
+                "versement_initial": $('#id_versement_initial').val(),
+                "totalHt": totalHt,
+                "action_id": {{action.id}}
+            }
+             $.post("{% url 'commande_create' %}", data, function(data, status){
+                $('#smartwizard').smartWizard("loader", "hide");
+                location.href = data.redirection_url;
+             });
+        });
+        {% endif %}
+	});
+</script>
+{% endblock %}

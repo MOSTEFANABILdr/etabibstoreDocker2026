@@ -1,0 +1,51 @@
+{% extends "base.html" %}
+{% load i18n %}
+{% load static %}
+
+{% block title %} {% trans 'Mes demandes de rendez vous' %} {% endblock %}
+
+{% block style %}
+<!-- jquery.dataTables CSS ============================================ -->
+<link rel="stylesheet" href='{% static "js/data-table/jquery.dataTables.min.css" %}'>
+<link rel="stylesheet" type="text/css"
+      href="https://cdn.datatables.net/responsive/2.2.3/css/responsive.bootstrap.min.css">
+{% endblock %}
+
+{% block content %}
+<div class="container">
+    <div class="row">
+        <h1 class="page-header">
+            <i class="fas fa-calendar"></i>
+            {% trans 'Mes demandes de rendez vous' %}
+        </h1>
+        {% include 'partial/messages-alerts.html' %}
+        <div class="col-lg-12">
+            {{ datatable }}
+        </div>
+    </div>
+</div>
+{% endblock %}
+
+{% block js %}
+<!-- dataTables ============================================ -->
+<script type="text/javascript" charset="utf8" src='{% static "js/data-table/jquery.dataTables.min.js" %}'></script>
+<script type="text/javascript" charset="utf8" src="{% static 'js/data-table/datatableview.js' %}?v=1.0"></script>
+<script type="text/javascript" charset="utf8"
+        src="https://cdn.datatables.net/responsive/2.2.3/js/dataTables.responsive.js"></script>
+<script>
+	$(function () {
+		var common_options = {
+		    "language": {
+		        {% if LANGUAGE_CODE == 'ar' %}
+                "url": "https://cdn.datatables.net/plug-ins/1.10.20/i18n/Arabic.json"
+                {% else %}
+                "url": "https://cdn.datatables.net/plug-ins/1.10.20/i18n/French.json"
+                {% endif %}
+            },
+            "processing": "Loading...",
+             "loadingRecords": "&nbsp;",
+		};
+        var datatable = datatableview.initialize('.datatable', common_options);
+	});
+</script>
+{% endblock %}

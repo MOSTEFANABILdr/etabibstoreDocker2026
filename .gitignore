@@ -1,0 +1,38 @@
+# User Data & Artifacts
+media/
+static/
+mysql_data/
+ollama_data/
+medica-ai/ollama_data/
+
+# Environment & Secrets
+.env
+.env.prod
+*.pem
+authorized_keys/
+*.key
+id_rsa
+id_ed25519
+
+# Python
+__pycache__/
+*.pyc
+*.pyo
+*.pyd
+.Python
+env/
+venv/
+.venv/
+pip-log.txt
+
+# Deployment Packages & Backups
+offline_deployment_package/*.zip
+offline_deployment_package/*.tar.gz
+offline_deployment_package/*.sql
+offline_deployment_package_final.zip
+*.bak
+*.swp
+
+# Logs
+*.log
+client_secret_*.json

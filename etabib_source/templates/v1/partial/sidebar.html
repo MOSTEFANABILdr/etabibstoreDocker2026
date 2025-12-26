@@ -1,0 +1,25 @@
+{% load static %}
+<div class="left-sidebar-pro">
+    <nav id="sidebar" class="{% if request.COOKIES.sbc == '1' %}active{% endif %}">
+        <div class="sidebar-header">
+            <a type="button" id="sidebarCollapse">
+                <i class="fa fa-bars fa-3x logo-color blue-etabib"></i>
+            </a>
+            <a href="/">
+                <img class="main-logo" src='{% static "img/logo/etabib_126.png" %}' alt=""/>
+            </a>
+        </div>
+        <div class="language-selector text-center mg-0 visible-lg visible-md">
+            {% include 'partial/language-selector.html' with show_language_name=True %}
+        </div>
+        <div class="left-custom-menu-adp-wrap comment-scrollbar">
+            <nav class="sidebar-nav left-sidebar-menu-pro">
+                <ul class="metismenu" id="menu1">
+                    {% include 'partial/sidebar-items.html' with sidebar_lg=True %}
+                    {# this extra li was added to fix sidebar height #}
+                    <li style="min-height:150px"></li>
+                </ul>
+            </nav>
+        </div>
+    </nav>
+</div>

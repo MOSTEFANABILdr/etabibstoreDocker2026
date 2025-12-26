@@ -1,0 +1,72 @@
+{% load i18n utils_tags %}
+<div class="col-lg-12">
+    <h1>{{title}}</h1>
+    {% for file in files %}
+    <div class="col-lg-3 col-md-4 col-sm-6 col-xs-12">
+        <div class="file">
+            <a href="{% url 'patient-files-get' file.id %}">
+                <span class="corner"></span>
+                <div class="icon">
+                    <i class="fa fa-file"></i>
+                </div>
+                <div class="file-name">
+                    <span title="{{file.filename}}">{{file.filename}}</span>
+                    <br>
+                    <small title="{{file.date_creation|date:'Y-m-d H:m'}}">
+                        {% trans 'Ajouté' %}: {{file.date_creation|date:'Y-m-d H:m'}}
+                    </small>
+                    <p title="{% trans 'Propriétaire' %}: {{file.owner}}">
+                        <small>
+                            <i class="fa fa-user"></i>
+                            {{file.owner}}
+                        </small>
+                    </p>
+                </div>
+            </a>
+            <div class="btn-group" role="group" aria-label="Basic example">
+                {% if file.can_delete %}
+                <a title="{% trans 'Supprimer' %}" href="#"
+                   onclick="event.preventDefault();deleteFile('{{file.id}}', this);"
+                   class="btn btn-etabib">
+                    <i class="fa fa-trash"></i>
+                </a>
+                {% endif %}
+                <a title="{% trans 'Partager' %}" href="{% url 'file-share' file.id type %}"
+                   class="btn fm-create btn-etabib"
+                   data-fm-head="{% trans 'Partager le fichier avec' %}"
+                   data-fm-callback="reload">
+                    <i class="fa fa-share"></i>
+                </a>
+                <a title="{% trans 'Renommer' %}" href="{% url 'file-rename' file.id %}"
+                   class="btn fm-create btn-etabib"
+                   data-fm-head="{% trans 'Renommer le fichier' %}"
+                   data-fm-callback="reload">
+                    <i class="fa fa-pencil"></i>
+                </a>
+                <a title="{% trans 'Télécharger' %}" href="{% url 'patient-files-get' file.id %}"
+                   class="btn btn-etabib">
+                    <i class="fa fa-download"></i>
+                </a>
+            </div>
+        </div>
+    </div>
+    {% endfor %}
+</div>
+<div class="row">
+    <ul class="pager">
+        {% if previous %}
+        <li>
+            <a href="#" onclick="event.preventDefault();fetchFiles({{previous}});">
+                <i class="fa fa-arrow-left"></i>
+            </a>
+        </li>
+        {% endif %}
+        {% if next %}
+        <li>
+            <a href="#" onclick="event.preventDefault();fetchFiles({{next}}, {{type}});">
+                <i class="fa fa-arrow-right"></i>
+            </a>
+        </li>
+        {% endif %}
+    </ul>
+</div>

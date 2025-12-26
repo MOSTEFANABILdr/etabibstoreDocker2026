@@ -1,0 +1,30 @@
+{% extends "base.html" %} 
+{% load i18n %}
+{% load static %}
+
+{% block title %} {% trans 'Reçu de paiement' %} {% endblock %}
+
+{% block style %}
+
+{% endblock %}
+
+{% block content %}
+    {% include 'epayment-preview-partial.html' with opaiment=opaiment %}
+{% endblock %}
+
+{% block js %}
+<script src='{% static "js/printThis.js" %}'></script>
+<script>
+    function printTicket() {
+        $('#ticket').printThis({
+            pageTitle: "{% trans 'Reçu de paiemnt' %} {{opaiment.get_moyen_paiement_display}} {% trans 'N°' %}: {{opaiment.numero_autorisation}}",
+            beforePrint : function() {
+                $(".buttons").hide();
+            },
+            afterPrint : function() {
+                $(".buttons").show();
+            }
+        });
+     }
+</script>
+{% endblock %}

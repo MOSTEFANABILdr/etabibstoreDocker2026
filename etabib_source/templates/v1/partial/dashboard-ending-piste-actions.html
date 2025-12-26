@@ -1,0 +1,15 @@
+{% load i18n %}
+<a href="{% url 'extend-piste' action.id %}"
+   title="{% trans 'Prolonger' %}"
+   class="fm-create btn btn-etabib"
+   data-fm-head="Prolonger la piste: {{action.contact}}"
+   data-fm-callback="reload">
+    <i class="fa fa-calendar-plus-o" aria-hidden="true"></i>
+</a>
+<a title="{% trans 'clôture piste' %}"
+   href="{% url 'create-closing-piste' action.pk %}"
+   class="btn btn-etabib fm-create"
+   data-fm-head="Côturer la piste"
+   data-fm-callback="reload">
+    <i class="fa fa-check-square-o" aria-hidden="true"></i>
+</a>

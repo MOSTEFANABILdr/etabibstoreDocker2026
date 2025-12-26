@@ -1,0 +1,631 @@
+{% load i18n %}
+{% load static %}
+{% load widget_tweaks %}
+{% load avatar_tags %}
+{% load analytical %}
+<!doctype html>
+<html>
+<head>
+    {% analytical_head_top %}
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, maximum-scale=1">
+    <title>eTabib store</title>
+    <link rel="icon" href='{% static "landing/img/storlogogray.png" %}' type="image/png">
+    <link href='{% static "landing/css/bootstrap.css" %}' rel="stylesheet" type="text/css">
+    <link href='{% static "landing/css/linecons.css" %}' rel="stylesheet" type="text/css">
+    <link href='{% static "landing/css/font-awesome.css" %}' rel="stylesheet" type="text/css">
+    <link href='{% static "landing/css/animate.css" %}' rel="stylesheet" type="text/css">
+    <link href='{% static "landing/css/style.css" %}' rel="stylesheet" type="text/css">
+    <link href='{% static "landing/css/responsive.css" %}' rel="stylesheet" type="text/css">
+
+    <link rel="stylesheet" media="screen" href="{% static 'css/fonts/droid-arabic-kufi.css' %}" type="text/css"/>
+    <link href="https://fonts.googleapis.com/css?family=Open+Sans&display=swap" rel="stylesheet">
+    <link href='https://fonts.googleapis.com/css?family=Lato:400,900,700,700italic,400italic,300italic,300,100italic,100,900italic'
+          rel='stylesheet' type='text/css'>
+    <link href='https://fonts.googleapis.com/css?family=Dosis:400,500,700,800,600,300,200' rel='stylesheet'
+          type='text/css'>
+
+    <!-- =======================================================
+    Theme Name: Butterfly
+    Theme URL: https://bootstrapmade.com/butterfly-free-bootstrap-theme/
+    Author: BootstrapMade
+    Author URL: https://bootstrapmade.com
+    ======================================================= -->
+    <script type="text/javascript" src='{% static "landing/js/jquery.1.8.3.min.js" %}'></script>
+    <script type="text/javascript" src='{% static "landing/js/bootstrap.js" %}'></script>
+    <script type="text/javascript" src='{% static "landing/js/jquery-scrolltofixed.js" %}'></script>
+    <script type="text/javascript" src='{% static "landing/js/jquery.easing.1.3.js" %}'></script>
+    <script type="text/javascript" src='{% static "landing/js/jquery.isotope.js" %}'></script>
+    <script type="text/javascript" src='{% static "landing/js/wow.js" %}'></script>
+    <script type="text/javascript" src='{% static "landing/js/classie.js" %}'></script>
+
+
+    <script type="text/javascript">
+		$(document).ready(function(e) {
+			$('.res-nav_click').click(function() {
+				$('ul.toggle').slideToggle(600)
+			});
+
+			$(document).ready(function() {
+				$(window).bind('scroll', function() {
+					if ($(window).scrollTop() > 0) {
+						$('#header_outer').addClass('fixed');
+					} else {
+						$('#header_outer').removeClass('fixed');
+					}
+				});
+
+			});
+
+
+		});
+
+		function resizeText() {
+			var preferredWidth = 767;
+			var displayWidth = window.innerWidth;
+			var percentage = displayWidth / preferredWidth;
+			var fontsizetitle = 25;
+			var newFontSizeTitle = Math.floor(fontsizetitle * percentage);
+			$(".divclass").css("font-size", newFontSizeTitle)
+		}
+
+
+    </script>
+    <!-- <script>
+        console.log($("#boutton_change").text())
+        $("#boutton_change").html("Connexion" );
+    </script> -->
+    {% analytical_head_bottom %}
+</head>
+
+<body>
+{% analytical_body_top %}
+
+<!-- Modal -->
+<div class="modal fade" id="elegantModalForm" tabindex="-1" role="dialog" aria-labelledby="myModalLabel"
+     aria-hidden="true">
+    <div class="modal-dialog" role="document">
+        <!--Content-->
+        <div class="modal-content form-elegant">
+            <!--Header-->
+            <div class="modal-header text-center">
+                <h2 class="modal-title " id="myModalLabel">تسجيل الدخول</h2>
+                <h3 class="modal-title " id="myModalLabel">Connexion</h3>
+                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                    <span aria-hidden="true">&times;</span>
+                </button>
+            </div>
+            <!--Body-->
+            <div class="modal-body mx-4">
+                <form action="{% url 'account_login' %}" id="login_form" method="POST" id="loginForm">
+                    {% csrf_token %}
+                    <!--Body-->
+                    <div class="md-form mb-5">
+                        {% render_field loginform.login placeholder="Identifiant" value="" class="form-control validate" %}
+                    </div>
+                    <div class="md-form pb-3">
+                        {% render_field loginform.password placeholder="******" value="" class="form-control validate" %}
+                        <p class="font-small blue-text d-flex justify-content-center">
+                            <a class="blue-text ml-1" href="{% url 'account_reset_password' %}">
+                                <i class="fa fa-lock"></i> {% trans "Forgot Password ?" %}
+                            </a>
+                        </p>
+                    </div>
+
+                    <div class="text-center mb-3">
+                        <button type="submit" class="btn blue-gradient btn-block btn-rounded z-depth-1a">
+                            {% trans "Sign In" %}
+                        </button>
+                    </div>
+
+                    <p class="font-small dark-grey-text text-right d-flex justify-content-center mb-3 pt-2"> Ou
+                        connectez-vous
+                        avec :</p>
+                    <div class="row text-center ">
+                        {% load account socialaccount %}
+                        {% get_providers as socialaccount_providers %}
+                        <div class="col-lg-12 col-md-12 col-sm-12 col-xs-12">
+                            <div class="login-social-inner">
+                                {% for provider in socialaccount_providers %}
+                                {% comment %}
+                                {% if provider.name == "Facebook" %}
+                                <a title="{{provider.name}}"
+                                   href="{% provider_login_url provider.id process=process scope=scope auth_params=auth_params %}"
+                                   class="button btn-social basic-ele-mg-b-10 facebook span-left">
+                                    <span><i class="fa fa-facebook"></i></span> {{provider.name}}
+                                </a>
+                                {% endif %}
+                                {% endcomment %}
+                                {% if provider.name == "Google" %}
+                                <a title="{{provider.name}}"
+                                   href="{% provider_login_url provider.id process=process scope=scope auth_params=auth_params %}"
+                                   class="button btn-social basic-ele-mg-b-10 googleplus span-left">
+                                    <span><i class="fa fa-google-plus"></i></span> {{provider.name}}
+                                </a>
+                                {% endif %}
+                                {% endfor %}
+                            </div>
+                        </div>
+                    </div>
+                </form>
+            </div>
+            <!--Footer-->
+            <div class="modal-footer mx-5 pt-3 mb-1">
+                <p class="font-small grey-text d-flex justify-content-end">Vous n'avez pas encore de compte ? <a
+                        href="{% url 'account_signup' %}?type=1" class="blue-text ml-1">
+                    Inscrivez-vous</a></p>
+            </div>
+        </div>
+        <!--/.Content-->
+    </div>
+</div>
+<!-- Modal -->
+</div>
+<!--Header_section-->
+<header id="header_outer">
+    <div class="container-fluid">
+        <div class="header_section">
+            <div class="logo"><a href="#first_view"><img src='{% static "landing/img/stormarq.png" %}' alt=""></a></div>
+            <nav class="nav">
+                <ul class="toggle">
+                    <li style="margin-top:40px"><a href="#work_outer">لمحة<br><small>Overview</small></a></li>
+                    <li><a href="#apps"> تطبيقات<br><small>Applications</small></a></li>
+                    <li><a href="#contact">اتصل بنا<br><small>Contactez-Nous</small></a></li>
+                    <li><a href="{% url 'account_signup' %}?type=1"> انشاء حساب <br><small>Inscription</small> </a></li>
+                    {% if user.is_authenticated %}
+                    <li>
+                        <a href="{% url 'account_login' %}">
+                            فضـاء الزبـون
+                            <br><small>Mon espace</small>
+                        </a>
+                    </li>
+                    <li>
+                        <a href="/logout">
+                            تسجيل الخروج
+                            <br><small>Se déconnecter</small>
+                        </a>
+                    </li>
+                    {% else %}
+                    <li>
+                        <a href="#" data-toggle="modal" data-target="#elegantModalForm"> تسجيل الدخول<br>
+                            <small>Connexion</small>
+                        </a>
+                    </li>
+                    {% endif %}
+                </ul>
+                <ul class="nav navbar-nav">
+                    <li class="active"><a href="#work_outer">لمحة<br><small>Overview</small></a></li>
+                    <li><a href="#apps"> تطبيقات<br><small>Applications</small></a></li>
+                    <li><a href="#contact">اتصل بنا<br><small>Contactez-Nous</small></a></li>
+                </ul>
+                <ul class="nav navbar-nav navbar-right" style="margin:0">
+                    <li><a href="{% url 'account_signup' %}?type=1"> انشاء حساب <br><small>Inscription</small> </a></li>
+                    {% if user.is_authenticated %}
+                    <li class="dropdown">
+                        <a href="#" class="dropdown-toggle" data-toggle="dropdown">
+                            <span class="avatar">
+                                {% avatar user %}
+                            </span>
+                            <br>
+                            <b class="caret"></b>
+                        </a>
+                        <ul class="dropdown-menu">
+                            <li>
+                                 <a href="{% url 'account_login' %}">
+                                    فضـاء الزبـون
+                                    <br><small>Mon espace</small>
+                                </a>
+                            </li>
+                            <li>
+                                <a href="/logout">
+                                    تسجيل الخروج
+                                    <br><small>Se déconnecter</small>
+                                </a>
+                            </li>
+                        </ul>
+                    </li>
+                    {% else %}
+                    <li>
+                        <a href="#" data-toggle="modal" data-target="#elegantModalForm"> تسجيل الدخول<br><small>Connexion</small>
+                        </a>
+                    </li>
+                    {% endif %}
+                </ul>
+            </nav>
+            <a class="res-nav_click animated wobble wow" href="javascript:void(0)"><i class="fa-bars"></i></a>
+        </div>
+    </div>
+</header>
+<!--Header_section-->
+
+<!--Top_content-->
+<section id="first_view">
+
+    <div class="container">
+        <div class="top_content">
+            <div class="row">
+
+                <div class="d-flex justify-content-center" id="first_logo"><img
+                        src='{% static "landing/img/logocouleur.png" %}' alt=""></div>
+                <div class="col-lg-12" style="margin:auto">
+                    <div class="top_left_cont ">
+                        <h3>تطبيقات متخـصِـصَة لمهنة متطلبة</h3>
+                        <h2>Des Applications Spécifiques à un métier Exigeant</h2>
+                    </div>
+                </div>
+                <div class="row">
+                    <div class="col-lg-12 text-center" id="first_image"><img
+                            src='{% static "landing/img/etabibstore.png" %}' alt="">
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</section>
+<!--Top_content-->
+<!--Overview-->
+<section id="work_outer">
+
+    <div class="overflow">
+        <div class="container">
+            <h2>لمحة</h2>
+            <h6>Overview</h6>
+            <div class="">
+                <div class="row">
+                    <div class="col-lg-12">
+                        <p class="p_center">
+                            <b>eTabib®️ Store</b> est le premier magasin d'applications médicales en Afrique, il est destiné
+                            aux professionnels de la santé. Il enrichit notre espace de travail médical <b>eTabib®️
+                            Workspace</b> par des fonctionnalités innombrables pour qu'il épouse les exigences de chaque
+                            spécialité et les spécificités de chaque pratique.
+                            <br>
+                            Vous y trouverez plusieurs types d’applications : des aides à la décision, des calculateurs,
+                            diffèrent scores cliniques et pronostiques, des planificateurs de parcours de soins
+                            personnalisés, des assistants à la rédaction de comptes rendus divers, des applications
+                            d’organisation des plannings d'activité et de personnalisation des imprimés. Bref, <b>eTabib®️
+                            Store</b> abritera les applications qui répondent aux besoins d'aujourd'hui et ceux de demain
+                            <br>
+                            Que vous soyez <b>Médecin Généraliste ou Spécialiste</b>, Cherchez et installez les applications
+                            qui vous intéressent dès maintenant.
+                        </p>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</section>
+<!--Overview-->
+<!--ou commencer-->
+<section id="steps">
+
+    <div class="">
+        <div class="container">
+            <h2>البداية</h2>
+            <h6>Où commencer ?</h6>
+            <div class="">
+                <div class="row">
+                    <div class="service_block">
+                        <div class="col-lg-2 col-md-2 ">
+                            <div class=" icon_step"><img src='{% static "landing/img/icone1.png" %}' alt=""></div>
+                        </div>
+                        <div class="col-lg-10 col-md-10 ">
+                            <p class="p_step_big">Créer et activez Votre Compte <a href="{% url 'account_signup' %}?type=1"><b>ici</b></a>
+                        </div>
+                    </div>
+                </div>
+                <div class="row">
+                    <div class="service_block">
+                        <div class="col-lg-2 col-md-2 ">
+                            <div class=" icon_step"><img src='{% static "landing/img/icone2.png" %}' alt=""></div>
+                        </div>
+                        <div class="col-lg-10 col-md-10">
+                            <p class="p_step_big">
+                                Téléchargez et installez-sur votre ordinateur- <b>eTabib®️Workspace</b>
+                            </p>
+                        </div>
+                    </div>
+                </div>
+                <div class="row">
+                    <div class="service_block">
+                        <div class="col-lg-2 col-md-2 ">
+                            <div class=" icon_step"><img src='{% static "landing/img/icone3.png" %}' alt=""></div>
+                        </div>
+                        <div class="col-lg-10 col-md-10">
+                            <p class="p_step_big">
+                                Accédez à votre espace personnel et télécharger vos applications.
+                            </p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</section>
+<!--ou commencer-->
+<!--Caractéristiques-->
+<section id="apps">
+    <div class="container" id="container_apps">
+        <h2>تطبيقات</h2>
+        <h6>Applications</h6>
+        <h4>Plus de 90 applications à télécharger</h4>
+        <hr>
+        <div class="service_area">
+            {% for app in apps %}
+            {% if forloop.counter == 1 or forloop.counter == 5 %}
+            <div class="row">
+                {% endif %}
+                <div class="col-lg-3 col-sm-6 col-md-6">
+                    <div class="service_block">
+                        <!-- <div class="service_icon delay-03s animated wow  zoomIn"> <span><i class="fa-user"></i></span> </div> -->
+                        <div class=" delay-03s animated wow zoomIn">
+                            <a href="{% url 'etabib-store-item' app.id app.slug %}">
+                                <img src='{{app.icon.url}}' alt="">
+                            </a>
+                        </div>
+                        <h3 class="animated fadeInUp wow" id="app_title">
+                            <a href="{% url 'etabib-store-item' app.id app.slug %}">
+                                {{app.libelle}}
+                            </a>
+                        </h3>
+                        <p class="animated fadeInDown wow">{{app.description_breve|default_if_none:""}}</p>
+                    </div>
+                </div>
+                {% if forloop.counter == 4 or forloop.counter == 8 %}
+            </div>
+            {% endif %}
+            {% endfor %}
+        </div>
+<!--        <a href="{% url 'account_signup' %}?type=1" class="learn_more2" id="boutton_change">Inscription</a></div>-->
+        <a href="{% url 'account_signup' %}?type=2" class="learn_more2" >Devenir Partenaire</a></div>
+    </div>
+</section>
+<!--twitter-feed-end-->
+<footer class="footer_section" id="contact">
+    <div class="container">
+        <section class="main-section contact" id="contact">
+            <div class="contact_section">
+                <h2>تواصل معنا</h2>
+                <h6>Contactez-nous</h6>
+            </div>
+            <div class="row">
+                <div class="col-lg-6 col-md-6 wow fadeInLeft">
+                    <div class="contact-info-box address clearfix">
+                        <h3>N'hésitez pas à nous contacter</h3>
+                        <span>
+								   <i class="fa-home"></i><b> Siège social : </b>CyberParc Sidi Abdallah Technobridge, Rahmania Zeralda – Alger  BP 16121 <br>
+								   <i class="fa-home"></i><b> Pôle développement : </b>CyberParc Sidi Abdallah Technobridge, Rahmania Zeralda Alger<br>
+							</span>
+                        <span>
+									<i class="fa-pencil"></i>   <a
+                                href="mailto:contact@ibnhamza.com "> <b> Contact : </b> contact@ibnhamza.com </a> <br>
+									<i class="fa-pencil"></i>   <a href="mailto:s_technique@ibnhamza.com "> 	<b> Service Technique : </b>s_technique@ibnhamza.com </a> <br>
+									<i class="fa-pencil"></i>	<a href="mailto:s_commercial@ibnhamza.com ">  <b>	Commercial :</b> s_commercial@ibnhamza.com </a> <br>
+							</span>
+
+                        <span>
+									<i class="fa-phone"></i><b> Standard Mutualisé ( 7/7) : </b>(+213) 23 92 34 93 <br>
+									<i class="fa-phone"></i><b> Ligne Directe (jours ouvrable) : </b>(+213) 23 20 23 01<br>
+									<i class="fa-phone"></i> <b>Service commercial : </b>0782 345 160- 0791 505 797- 0657 625 271
+							</span>
+                    </div>
+                    <div>
+                        <ul class="social-link">
+                            <li class="facebook animated bounceIn wow delay-03s"><a
+                                    href="https://fr-fr.facebook.com/eTabib.IHSM/"><i class="fa-facebook"></i></a></li>
+                            <li class="twitter animated bounceIn wow delay-02s"><a
+                                    href="https://twitter.com/hashtag/etabib"><i class="fa-twitter"></i></a></li>
+                            <li class="linkedin animated bounceIn wow delay-02s"><a
+                                    href="https://fr.linkedin.com/showcase/etabib"><i class="fa-linkedin"></i></a></li>
+                            <li class="youtube animated bounceIn wow delay-02s"><a
+                                    href="https://www.youtube.com/watch?v=6gUsjjE6UwM"><i class="fa-youtube"></i></a>
+                            </li>
+                        </ul>
+                    </div>
+                </div>
+                {% comment %}
+                <div class="col-lg-6 col-md-6 wow fadeInUp delay-06s">
+                    <div class="form">
+                        <div id="sendmessage">{% trans 'Votre message a été envoyé. Merci' %}</div>
+                        <div id="errormessage"></div>
+                        <form method="POST" class="contactForm">
+                            {% csrf_token %}
+                            <div class="form-group">
+                                {% render_field contactform.nom placeholder="Nom" class="form-control input-text" %}
+                                <div class="validation"></div>
+                            </div>
+                            <div class="form-group">
+                                {% render_field contactform.email placeholder="Email" class="form-control input-text" %}
+                                <div class="validation"></div>
+                            </div>
+                            <div class="form-group">
+                                {% render_field contactform.object placeholder="Objet" class="form-control input-text"%}
+                                <div class="validation"></div>
+                            </div>
+                            <div class="form-group">
+                                {% render_field contactform.message placeholder="Message" class="form-control" %}
+                                <div class="validation"></div>
+                            </div>
+                            <button type="submit" class="btn input-btn">Envoyer</button>
+                        </form>
+                    </div>
+                </div>
+                {% endcomment %}
+            </div>
+        </section>
+    </div>
+    <div class="container">
+        <div class="footer_bottom">
+            {% include 'partial/footer.html' with type=2 %}
+        </div>
+    </div>
+</footer>
+<button onclick="topFunction()" id="myBtn" title="Go to top"><img src='{% static "landing/img/toTop.png" %}' alt=""
+                                                                  style="width:50px"></button>
+<script>
+	// When the user scrolls down 20px from the top of the document, show the button
+window.onscroll = function() {scrollFunction()};
+
+function scrollFunction() {
+  if (document.body.scrollTop > 40 || document.documentElement.scrollTop > 40) {
+    document.getElementById("myBtn").style.display = "block";
+  } else {
+    document.getElementById("myBtn").style.display = "none";
+  }
+}
+
+// When the user clicks on the button, scroll to the top of the document
+function topFunction() {
+ 
+  document.documentElement.scrollTop = 0; // For Chrome, Firefox, IE and Opera
+}
+
+
+
+
+
+
+
+
+
+</script>
+</script>
+	<script type="text/javascript">
+		$(document).ready(function(e) {
+			$('#header_outer').scrollToFixed();
+			$('.res-nav_click').click(function() {
+				$('.main-nav').slideToggle();
+				return false
+
+			});
+
+		});
+	</script>
+<script>
+		wow = new WOW({
+			animateClass: 'animated',
+			offset: 100
+		});
+		wow.init();
+<!--		document.getElementById('').onclick = function() {-->
+<!--			var section = document.createElement('section');-->
+<!--			section.className = 'wow fadeInDown';-->
+<!--			section.className = 'wow shake';-->
+<!--			section.className = 'wow zoomIn';-->
+<!--			section.className = 'wow lightSpeedIn';-->
+<!--			this.parentNode.insertBefore(section, this);-->
+<!--		};-->
+
+
+</script>
+<script type="text/javascript">
+		$(window).load(function() {
+
+			$('a').bind('click', function(event) {
+				var $anchor = $(this);
+
+				$('html, body').stop().animate({
+					scrollTop: $($anchor.attr('href')).offset().top - 91
+				}, 1500, 'easeInOutExpo');
+				/*
+				if you don't want to use the easing effects:
+				$('html, body').stop().animate({
+					scrollTop: $($anchor.attr('href')).offset().top
+				}, 1000);
+				*/
+				event.preventDefault();
+			});
+		})
+
+
+
+
+
+
+
+
+
+</script>
+
+<script type="text/javascript">
+		jQuery(document).ready(function($) {
+			// Portfolio Isotope
+			var container = $('#portfolio-wrap');
+
+
+			container.isotope({
+				animationEngine: 'best-available',
+				animationOptions: {
+					duration: 200,
+					queue: false
+				},
+				layoutMode: 'fitRows'
+			});
+
+			$('#filters a').click(function() {
+				$('#filters a').removeClass('active');
+				$(this).addClass('active');
+				var selector = $(this).attr('data-filter');
+				container.isotope({
+					filter: selector
+				});
+				setProjects();
+				return false;
+			});
+
+
+			function splitColumns() {
+				var winWidth = $(window).width(),
+					columnNumb = 1;
+
+
+				if (winWidth > 1024) {
+					columnNumb = 4;
+				} else if (winWidth > 900) {
+					columnNumb = 2;
+				} else if (winWidth > 479) {
+					columnNumb = 2;
+				} else if (winWidth < 479) {
+					columnNumb = 1;
+				}
+
+				return columnNumb;
+			}
+
+			function setColumns() {
+				var winWidth = $(window).width(),
+					columnNumb = splitColumns(),
+					postWidth = Math.floor(winWidth / columnNumb);
+
+				container.find('.portfolio-item').each(function() {
+					$(this).css({
+						width: postWidth + 'px'
+					});
+				});
+			}
+
+			function setProjects() {
+				setColumns();
+				container.isotope('reLayout');
+			}
+
+			container.imagesLoaded(function() {
+				setColumns();
+			});
+
+
+			$(window).bind('resize', function() {
+				setProjects();
+			});
+
+		});
+		$(window).load(function() {
+			jQuery('#all').click();
+			return false;
+		});
+</script>
+<script src='{% static "landing/contactform/contactform.js" %}'></script>
+<!-- tawk chat JS  ============================================ -->
+{% include 'partial/tawk-script.html' %}
+{% analytical_body_bottom %}
+</body>
+</html>

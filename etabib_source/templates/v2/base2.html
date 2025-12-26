@@ -1,0 +1,56 @@
+{% load static i18n %}
+<!DOCTYPE html>
+<html lang="en">
+<head>
+	<meta charset="utf-8" />
+	<title>{% block title %} {% endblock %} | eTabib</title>
+	<meta content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no" name="viewport" />
+	<meta content="" name="description" />
+	<meta content="" name="author" />
+	<!-- ================== favicon =============================== -->
+	<link rel="shortcut icon" type="image/x-icon" href='{% static "img/logo/logdo.png" %}'>
+	<!-- ================== BEGIN BASE CSS STYLE ================== -->
+	<link href="https://fonts.googleapis.com/css?family=Open+Sans:300,400,600,700" rel="stylesheet" />
+	<link href="{% static 'v2/plugins/simple-line-icons/css/simple-line-icons.css' %}" rel="stylesheet" />
+	<link href="{% static 'v2/css/default/app.min.css' %}" rel="stylesheet" />
+	<script src="{% static 'v2/js/app.min.js' %}"></script>
+	<!-- ================== END BASE CSS STYLE ================== -->
+	<!-- ================== BEGIN CUSTOM CSS STYLE ================== -->
+	<link href="{% static 'css/jquery-ticker/breaking-news-ticker.min.css' %}?v=1.2" rel="stylesheet"
+		type="text/css">
+	{% block style %} {% endblock %}
+	<link href="{% static 'v2/css/default/app.custom.css' %}?v=1.24" rel="stylesheet" />
+	<link href="{% static 'v2/css/default/app.responsive.css' %}?v=1.22" rel="stylesheet" />
+	<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/malihu-custom-scrollbar-plugin/3.1.5/jquery.mCustomScrollbar.min.css" integrity="sha512-6qkvBbDyl5TDJtNJiC8foyEVuB6gxMBkrKy67XpqnIDxyvLLPJzmTjAj1dRJfNdmXWqD10VbJoeN4pOQqDwvRA==" crossorigin="anonymous" referrerpolicy="no-referrer" />
+	<link rel="stylesheet" href='{% static "css/notifications/Lobibox.min.css" %}'>
+	<link rel="stylesheet" href='{% static "css/notifications/notifications.css" %}'>
+	<!-- ================== END CUSTOM CSS STYLE ================== -->
+</head>
+
+<body>
+	<!-- begin #page-container -->
+	<div id="page-container" class="fade page-without-sidebar page-with-wide-sidebar page-header-fixed page-with-top-menu">
+		<div id="content" class="content m-t-20">
+			{% block content %} {% endblock %}
+		</div>
+		<!-- end #content -->
+		<!-- begin scroll to top btn -->
+		<a href="javascript:;" class="btn btn-icon btn-circle btn-success btn-scroll-to-top fade"
+			data-click="scroll-top"><i class="fa fa-angle-up"></i></a>
+		<!-- end scroll to top btn -->
+	</div>
+	<!-- end page container -->
+
+	<!-- ================== BEGIN BASE JS ================== -->
+	<script src="{% static 'v2/js/theme/default.min.js' %}"></script>
+	<script src="{% static 'v2/js/app.custom.js' %}"></script>
+	<script src="{% static 'js/jquery-ticker/breaking-news-ticker.min.js' %}" type="text/javascript">
+	</script>
+	<script src="https://cdnjs.cloudflare.com/ajax/libs/malihu-custom-scrollbar-plugin/3.1.5/jquery.mCustomScrollbar.min.js" integrity="sha512-Yk47FuYNtuINE1w+t/KT4BQ7JaycTCcrvlSvdK/jry6Kcxqg5vN7/svVWCxZykVzzJHaxXk5T9jnFemZHSYgnw==" crossorigin="anonymous" referrerpolicy="no-referrer"></script>
+	<!-- ================== END BASE JS ================== -->
+	<!-- ================== BEGIN CUSTOM JS ================== -->
+    {% block js %} {% endblock %}
+    <!-- ================== END CUSTOM JS ================== -->
+</body>
+
+</html>

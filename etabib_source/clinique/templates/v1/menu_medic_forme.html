@@ -1,0 +1,11 @@
+{% load prescription_tags %}
+<div class="dropdown">
+{% for forme, details in formes.items %}
+    <a role="button" onclick="action({{details}})"
+       data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+      {% renderForme forme %}
+    </a>
+    <ul class="dropdown-menu multi-level mnmedic" role="menu" aria-labelledby="dropdownMenu">
+    </ul>
+{% endfor %}
+</div>

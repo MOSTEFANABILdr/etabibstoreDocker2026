@@ -1,0 +1,12 @@
+{% load el_pagination_tags teleconsultation_tags %}
+{% paginate 12 patients %}
+	{% for patient in patients %}
+		{% include 'contact_tile.html' with patient=patient  %}
+	{% endfor %}
+{% get_pages %}
+{% if pages.paginated %}
+<div class="col-lg-12 d-flex">
+	{% show_current_number as page_number %}
+	{% include 'partial/pagination.html' with pages=pages current_page_number=page_number extra=extra_args %}
+</div>
+{% endif %}

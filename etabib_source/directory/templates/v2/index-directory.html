@@ -1,0 +1,321 @@
+{% extends "base3.html" %}
+{% load i18n static crispy_forms_tags avatar_tags %}
+{% block title %} {% trans "Etabib" %} {%endblock %}
+{% block style %}
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/slick-carousel/1.8.1/slick.min.css"
+      integrity="sha512-yHknP1/AwR+yx26cB1y0cjvQUMvEa2PFzt1c9LlS4pRQ5NOTZFWbhBig+X9G9eYW/8m0/4OXNx8pxJ6z57x0dw=="
+      crossorigin="anonymous" referrerpolicy="no-referrer"/>
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/slick-carousel/1.8.1/slick-theme.css"
+      integrity="sha512-6lLUdeQ5uheMFbWm3CP271l14RsX1xtx+J5x2yeIDkkiBpeVTNhTqijME7GgRKKi6hCqovwCoBTlRBEC20M8Mg=="
+      crossorigin="anonymous" referrerpolicy="no-referrer"/>
+<style>
+    .select2.select2-container .selection .select2-selection.select2-selection--single {
+        height: 45px;
+    }
+    input#first_last_name {
+        background-color: #f8f9fa;
+        color: black;
+        font-weight: 600;
+        font-size: 15px;
+        text-align: center;
+    }
+    input#first_last_name::placeholder {
+      color: black;
+      text-align: center;
+    }
+
+    input#first_last_name:-ms-input-placeholder {
+      color: black;
+      text-align: center;
+    }
+
+    input#first_last_name::-ms-input-placeholder {
+        color: black;
+        text-align: center;
+    }
+
+    .select2-container--default .select2-selection--single {
+        background-color: #f8f9fa!important;
+    }
+
+    .select2-selection__placeholder {
+         color: black !important;
+         font-weight: 600;
+    }
+
+    .select2-container--default .select2-selection--single .select2-selection__rendered {
+         justify-content:center;
+         font-size: 15px;
+    }
+
+    .button-light {
+        width: 200px;
+        height: 200px;
+        background-color: rgb(40, 213, 255);
+    }
+
+    .ui-dialog {
+        background-color: rgb(205 238 251 / 90%) !important;
+    }
+
+    .modal-light {
+        padding: 20px !important;
+        width: 800px !important;
+    }
+    .no-close .ui-dialog-titlebar {
+      display: none;
+    }
+
+</style>
+{% endblock %}
+{% block extra_style %}
+<style>
+    .content {
+        padding-bottom: 0px!important;
+    }
+    @media (max-width: 575.98px) {
+        .content {
+            margin-top: 0px!important;
+        }
+        .modal-light {
+            width: auto !important;
+        }
+    }
+    .card-contact .card-footer .btn {
+        background-color: white;
+        border-color: #29D4FF;
+    }
+    .card-contact .card-footer .btn > i {
+        color: #29D4FF;
+    }
+    .card-contact .card-footer .btn:hover > i {
+        color: white;
+    }
+
+</style>
+{% endblock %}
+{% block content %}
+<div class="container">
+    <div class="row">
+        <div class="col-lg-4 col-md-4 col-sm-12">
+            <div class="form-group">
+                <input type="text" class="form-control center-block" id="first_last_name"
+                       placeholder="{% trans 'عن اي طبيب تبحث (الاسم أو اللقب) ؟' %}" style="height:45px">
+            </div>
+        </div>
+        <div class="col-lg-4 col-md-4 col-sm-12">
+            <div class="form-group">
+                {% csrf_token %}
+                {% crispy form_specialite %}
+                {{ form_specialite.media }}
+            </div>
+        </div>
+        <div class="col-lg-4 col-md-4 col-sm-12">
+            <div class="form-group">
+                {% csrf_token %}
+                {% crispy form_position %}
+                {{ form_position.media }}
+            </div>
+        </div>
+    </div>
+</div>
+<div class="container-fluid">
+    <h1 class="page-header">
+        <i class="fa fa-hospital"></i>
+        {% trans "دليل العيادات" %}
+    </h1>
+    <!-- begin #carousel -->
+    <div class="container" dir="ltr">
+        <div id="carousel-cabinet">
+            {% for cliniquevirtuelle in cliniquevirtuelles %}
+            <div class="card text-white">
+                <div>
+                    <img class="card-img" data-lazy="{{cliniquevirtuelle.image.image.url}}" alt="Card image">
+                </div>
+                <div class="card-img-overlay">
+                    <h5 class="card-title text-center">{{cliniquevirtuelle.titre}}</h5>
+                </div>
+                <div class="card-footer bg-transparent text-black text-center" style="border: none;">
+                    <p class="d-none d-sm-block">
+                        {% if cliniquevirtuelle.description %}
+                        {{cliniquevirtuelle.description|truncatewords:15}}
+                        {% else %}
+                        {{cliniquevirtuelle.description|default_if_none:""}}
+                        {% endif %}
+                    </p>
+                    <button type="button"
+                       class="btn btn-default card-footer-btn rounded cab-cls">
+                        {% trans "Entrez" %}
+                    </button>
+                </div>
+            </div>
+            {% empty %}
+            <p>{% trans 'Désolé, aucun résultat trouvé :(.' %}</p>
+            {% endfor %}
+        </div>
+        <!-- end #carousel -->
+    </div>
+    <h1 class="page-header mt-4">
+        <i class="fa fa-user-md"></i>
+        {% trans "دليل الأطباء" %}
+    </h1>
+    <div id="doctors" class="endless_page_template">
+        {% include page_template %}
+    </div>
+</div>
+<div class="modal" tabindex="-1" role="dialog" id="spinnerModal">
+    <div class="modal-dialog modal-dialog-centered text-center" role="document">
+        <span class="fa fa-spinner fa-spin fa-4x w-100 text-white"></span>
+    </div>
+</div>
+<div id="dialog" class="modal-light text-center" title="Dialog Title">
+    <p class="f-s-16">سجل نفسك للتحدث مع العيادة بالفيديو مجانا</p>
+    <div class="btn-toolbar justify-content-center" role="toolbar" >
+        <a target="_blank" href="{% url 'account_login' %}" class="btn button-light m-4">
+            <i class="fa fa-sign-in-alt fa-3x text-white mb-2"></i>
+            <br>
+            <span class="f-s-16">
+              اضغط هنا اذا سجلت
+              نفسك من قبل في
+              eTabib
+            </span>
+        </a>
+        <a target="_blank" href="{% url 'account_signup' %}" class="btn button-light m-4">
+            <i class="fa fa-user fa-3x text-white mb-2 "></i>
+            <br>
+            <span class="f-s-16">
+             اضغط هنا اذا كانت هذه اول مرة تستخدم فيها
+            eTabib
+            </span>
+        </a>
+    </div>
+</div>
+{% endblock %}
+{% block js %}
+<!-- endless pagination JS ============================================ -->
+<script src='{% static "el-pagination/js/el-pagination.js" %}'></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/slick-carousel/1.8.1/slick.min.js"
+        integrity="sha512-XtmMtDEcNz2j7ekrtHvOVR4iwwaD6o/FUJe6+Zq+HgcCsk3kj4uSQQR8weQ2QVj1o0Pk6PwYLohm206ZzNfubg=="
+        crossorigin="anonymous" referrerpolicy="no-referrer"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/iframe-resizer/4.3.2/iframeResizer.contentWindow.min.js"
+        integrity="sha512-14SY6teTzhrLWeL55Q4uCyxr6GQOxF3pEoMxo2mBxXwPRikdMtzKMYWy2B5Lqjr6PHHoGOxZgPaxUYKQrSmu0A=="
+        crossorigin="anonymous" referrerpolicy="no-referrer">
+</script>
+<script>
+	window.iFrameResizer = {
+		targetOrigin: "*"
+	}
+
+</script>
+<script>
+$(function () {
+	$.endlessPaginate({
+        onClick: function() {
+            $('#spinnerModal').modal('show');
+        },
+        onCompleted: function() {
+            $('#spinnerModal').modal('hide');
+        },
+    });
+
+    //Carousel
+    $('#carousel-cabinet').slick({
+        lazyLoad: 'progressive',
+        arrows: true,
+        infinite: true,
+        //autoplay: true,
+        speed: 300,
+        slidesToShow: 1,
+        slidesToScroll: 1,
+        centerMode: true,
+        prevArrow: "<button type='button' class='slick-prev pull-left slick-arrow'><i class='fa fa-angle-left' aria-hidden='true'></i></button>",
+        nextArrow: "<button type='button' class='slick-next pull-right slick-arrow'><i class='fa fa-angle-right' aria-hidden='true'></i></button>",
+        rtl: false,
+        responsive: [
+            {
+                breakpoint: 1024,
+                settings: {
+                    centerMode: true,
+                }
+            },
+            {
+                breakpoint: 600,
+                settings: {
+                    centerMode: false,
+                }
+            },
+            {
+                breakpoint: 480,
+                settings: {
+                    centerMode: false,
+                }
+            }
+            // You can unslick at a given breakpoint now by adding:
+            // settings: "unslick"
+            // instead of a settings object
+        ]
+    });
+
+    var specialite;
+    document.querySelector('select[name="specialite"]').onchange=function() {
+        specialite = $(this).val();
+    }
+    var position;
+    document.querySelector('select[name="position"]').onchange=function() {
+        position = $(this).val();
+    }
+
+
+     function searchDoctor() {
+	    first_last_name = $('#first_last_name').val();
+	    //clearing detail
+        $('#doctors').html("");
+        //showing spinner
+        $("#doctors").html("<div class='text-center'><i class='fa fa-spinner fa-spin fa-2x dark-blue'></i></div>")
+        //loading list
+        $('#doctors').load('{% url 'directory' %}', {
+		    'first_last_name': first_last_name,
+		    'position': position,
+		    'specialite': specialite,
+		    'csrfmiddlewaretoken': '{{csrf_token}}'
+		    },
+            function() {
+            }
+        );
+    };
+
+    $( "#first_last_name" ).keyup(function() {
+        searchDoctor();
+    });
+
+    $(document.body).on("change", "#id_specialite", function(){
+        searchDoctor();
+    });
+    $(document.body).on("change", "#id_position" , function(){
+        searchDoctor();
+    });
+    $("#dialog").dialog({
+        autoopen: false,
+        dialogClass: "no-close",
+        title: "",
+        modal: true,
+        width: 'auto',
+        position: {my: "center", at:"center top", of: window },
+        open: function(event, ui)
+        {
+            $('.ui-widget-overlay').bind('click',function(){
+                $('#dialog').dialog('close');
+            })
+        }
+
+    });
+     $('#dialog').dialog('close');
+
+    $(document).on('click', '.cab-cls', function(){
+        $( "#dialog" ).dialog( "open" );
+    });
+});
+
+
+</script>
+{% endblock %}

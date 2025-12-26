@@ -1,0 +1,50 @@
+{% load i18n utils_tags role_tags %}
+{% if type != 2 %}
+<footer class="footer">
+    <div class="footer-copyright-area">
+        <div class="container-fluid">
+            <div class="row">
+                <div class="col-lg-12">
+                    <div class="footer-copy-right">
+                        <p>
+                            Copyright © 2019-{% now "Y" %}. All rights reserved. <a href="#">IBn Hamza
+                            services & Micro Applications Sarl</a>
+                        </p>
+                        <p>
+                            <a href="#" class="tos">{% trans 'CGU - Confidentialité' %}</a>
+                        </p>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</footer>
+<script>
+$(document).ready(function(){
+    $('.tos').on('click', function(e){
+        {% if user|is_patient %}
+        var content = "{% settings_value 'TOS_PATIENT' %}";
+        {% elif user|is_doctor %}
+        var content = "{% settings_value 'TOS_DOCTOR' %}";
+        {% elif user|is_organizer %}
+        var content = "{% settings_value 'TOS_ETABIB_VISIO' %}";
+        {% else %}
+        var content = "";
+        {% endif %}
+        Lobibox.window({
+            title: "Les conditions d'utilisation",
+            width: $(window).width(),
+            content: '<iframe width="100%" height="500px" src=' + content + '></iframe>'
+        });
+    })
+})
+</script>
+{% elif type == 2 %}
+<div class="text-center login-footer">
+    <p>
+        Copyright © 2019-{% now "Y" %}. All rights reserved.
+        <br>
+        <a href="http://www.ibnhamza.com" target="_blank">IBn Hamza services & Micro Applications Sarl</a>
+    </p>
+</div>
+{% endif %}

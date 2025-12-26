@@ -1,0 +1,486 @@
+{% extends "base.html" %}
+{% load i18n %}
+{% load static embed_video_tags %}
+
+
+{% block title %} {% trans 'Virtual Office' %} {% endblock %}
+
+{% block style %}
+<link href="{% static 'v2/plugins/superbox/superbox.min.css' %}" rel="stylesheet"/>
+<link href="https://releases.transloadit.com/uppy/v2.6.0/uppy.min.css" rel="stylesheet">
+<link href="{% static 'v2/plugins/gritter/css/jquery.gritter.css' %}" rel="stylesheet"/>
+<link href="{% static 'v2/plugins/x-editable-bs4/dist/bootstrap4-editable/css/bootstrap-editable.css' %}"
+      rel="stylesheet"/>
+<link href="{% static 'v2/plugins/x-editable-bs4/dist/inputs-ext/address/address.css' %}" rel="stylesheet"/>
+<link href="{% static 'v2/plugins/x-editable-bs4/dist/inputs-ext/typeaheadjs/lib/typeahead.js-bootstrap.css' %}"
+      rel="stylesheet"/>
+<link href="{% static 'v2/plugins/bootstrap3-wysihtml5-bower/dist/bootstrap3-wysihtml5.min.css' %}" rel="stylesheet" />
+<link href="{% static 'v2/plugins/select2/dist/css/select2.min.css' %}" rel="stylesheet"/>
+<style>
+    #map_gps {
+        width: 100%!important;
+    }
+</style>
+{% endblock %}
+
+{% block content %}
+<div class="container">
+    <h1 class="page-header">{% trans "عيادتي" %}</h1>
+    <!-- begin row -->
+    <div class="row">
+        <!-- begin col-6 -->
+        <div class="col-xl-6">
+            <!-- begin panel -->
+            <div class="panel panel-default" data-sortable="false">
+                <div class="panel-heading">
+                    <h4 class="panel-title">
+                        {% trans "الصورة الأساسية للعيادة" %}
+                    </h4>
+                </div>
+                <div class="panel-body">
+                    <p>
+                        {% blocktrans %}
+                        حمل صورة تعبيرية للواجهة الأساسية لعيادتك أو إختر صورة من الصورة المتواجدة واضغط على
+                        حفظ.
+                        {% endblocktrans %}
+                    </p>
+                    <div id="superbox-container" class="superbox " data-offset="50">
+                    </div>
+                    <div class="column-full mt-2">
+                        <div id="UppyInput"></div>
+                        <div id="UppyInput-Progress"></div>
+                    </div>
+                    <a id="save-btn" class="btn btn-default mt-1">
+                        {% trans "حفظ" %}
+                    </a>
+                </div>
+            </div>
+            <!-- end panel -->
+            <!-- begin panel -->
+            <div class="panel panel-default" data-sortable="false">
+                <div class="panel-heading">
+                    <h4 class="panel-title">{% trans "فيديو للعيادة" %}</h4>
+                </div>
+                <div class="panel-body">
+                    <!-- begin table -->
+                    <div class="table-responsive">
+                        <p>{% trans "حمل مقطع فيديو على اليوتوب وقُم بوضع رابطه هُنا." %}</p>
+                        <table class="table table-profile">
+                            <tbody>
+                            <tr>
+                                <td class="field">{% trans 'Lien de la vidéo' %}</td>
+                                <td>
+                                    <label id="video" data-type="url"
+                                           data-params="{csrfmiddlewaretoken:'{{csrf_token}}'}"
+                                           data-url="{% url 'update-virtual-office' %}"
+                                           data-pk="{{clinique.id}}"
+                                           data-title="Vidéo">
+                                        {{clinique.video|default_if_none:""}}
+                                    </label>
+                                </td>
+                            </tr>
+                            </tbody>
+                        </table>
+                    </div>
+                    <!-- end table -->
+                    <div id="video-container">
+                        {% if clinique.video %}
+                        {% video clinique.video '100%x400' %}
+                        {% endif %}
+                    </div>
+                </div>
+            </div>
+            <!-- end panel -->
+        </div>
+        <!-- end col-6 -->
+        <!-- begin col-6 -->
+        <div class="col-xl-6">
+            <!-- begin panel -->
+            <div class="panel panel-default" data-sortable="false">
+                <div class="panel-heading">
+                    <h4 class="panel-title">{% trans "معلومات عن العيادة" %}</h4>
+                </div>
+                <div class="panel-body">
+                    <!-- begin table -->
+                    <div class="table-responsive">
+                        <table class="table table-profile">
+                            <tbody>
+                            <tr>
+                                <td class="field">{% trans 'Titre' %}</td>
+                                <td>
+                                    <label id="titre" data-type="text"
+                                           data-params="{csrfmiddlewaretoken:'{{csrf_token}}'}"
+                                           data-url="{% url 'update-virtual-office' %}"
+                                           data-pk="{{clinique.id}}"
+                                           data-title="Titre">
+                                        {{clinique.titre|default_if_none:""}}
+                                    </label>
+                                </td>
+                            </tr>
+                            <tr>
+                                <td class="field">{% trans 'Pays' %}</td>
+                                <td>
+                                    <label id="pays" data-type="select2"
+                                           data-params="{csrfmiddlewaretoken:'{{csrf_token}}'}"
+                                           data-url="{% url 'update-virtual-office' %}"
+                                           data-pk="{{clinique.id}}"
+                                           data-value='{{clinique.pays.id|default_if_none:""}}'
+                                           data-title="Select country">
+                                        {{clinique.pays.name|default_if_none:""}}
+                                    </label>
+                                </td>
+                            </tr>
+                            <tr>
+                                <td class="field">{% trans 'Ville' %}</td>
+                                <td>
+                                    <label id="ville" data-type="select2"
+                                           data-params="{csrfmiddlewaretoken:'{{csrf_token}}'}"
+                                           data-url="{% url 'update-virtual-office' %}"
+                                           data-pk="{{clinique.id}}"
+                                           data-value='{{clinique.ville.id|default_if_none:""}}'
+                                           data-title="Select city">
+                                        {{clinique.ville.name|default_if_none:""}}
+                                    </label>
+                                </td>
+                            </tr>
+                            <tr>
+                                <td class="field">{% trans 'Téléphone fixe' %}</td>
+                                <td>
+                                    <a id="fixe" data-type="tel"
+                                       data-params="{csrfmiddlewaretoken:'{{csrf_token}}'}"
+                                       data-url="{% url 'update-virtual-office' %}"
+                                       data-pk="{{clinique.id}}"
+                                       data-title="fixe">
+                                        {{clinique.fixe|default_if_none:""}}
+                                    </a>
+                                </td>
+                            </tr>
+                            <tr>
+                                <td class="field">{% trans 'Téléphone mobile' %}</td>
+                                <td>
+                                    <a id="mobile" data-type="tel"
+                                       data-params="{csrfmiddlewaretoken:'{{csrf_token}}'}"
+                                       data-url="{% url 'update-virtual-office' %}"
+                                       data-pk="{{clinique.id}}"
+                                       data-title="mobile">
+                                        {{clinique.mobile|default_if_none:""}}
+                                    </a>
+                                </td>
+                            </tr>
+                            <tr>
+                                <td class="field">{% trans 'Facebook URL' %}</td>
+                                <td>
+                                    <a id="facebook" data-type="url"
+                                       data-params="{csrfmiddlewaretoken:'{{csrf_token}}'}"
+                                       data-url="{% url 'update-virtual-office' %}"
+                                       data-pk="{{clinique.id}}"
+                                       data-title="Facebook">
+                                        {{clinique.facebook|default_if_none:""}}
+                                    </a>
+                                </td>
+                            </tr>
+                            <tr>
+                                <td class="field">{% trans 'Instagram URL' %}</td>
+                                <td>
+                                    <a id="instagram" data-type="url"
+                                       data-params="{csrfmiddlewaretoken:'{{csrf_token}}'}"
+                                       data-url="{% url 'update-virtual-office' %}"
+                                       data-pk="{{clinique.id}}"
+                                       data-title="Instagram">
+                                        {{clinique.instagram|default_if_none:""}}
+                                    </a>
+                                </td>
+                            </tr>
+                            <tr>
+                                <td class="field">{% trans 'Site Web' %}</td>
+                                <td>
+                                    <a id="pageweb" data-type="url"
+                                       data-params="{csrfmiddlewaretoken:'{{csrf_token}}'}"
+                                       data-url="{% url 'update-virtual-office' %}"
+                                       data-pk="{{clinique.id}}"
+                                       data-title="Site Web">
+                                        {{clinique.pageweb|default_if_none:""}}
+                                    </a>
+                                </td>
+                            </tr>
+                            <tr>
+                                <td class="field">{% trans 'Description' %}</td>
+                                <td>
+                                    <label id="description" data-type="textarea"
+                                           data-params="{csrfmiddlewaretoken:'{{csrf_token}}'}"
+                                           data-url="{% url 'update-virtual-office' %}"
+                                           data-pk="{{clinique.id}}"
+                                           data-title="Description">
+                                        {{clinique.description|default_if_none:""}}
+                                    </label>
+                                </td>
+                            </tr>
+                            <tr>
+                                <td class="field">{% trans 'Prestations et tarifs' %}</td>
+                                <td>
+                                    <label id="prestations" data-type="wysihtml5"
+                                           data-params="{csrfmiddlewaretoken:'{{csrf_token}}'}"
+                                           data-url="{% url 'update-virtual-office' %}"
+                                           data-pk="{{clinique.id}}"
+                                           data-title="Prestations et tarifs">
+                                        {{clinique.prestations|safe}}
+                                    </label>
+                                </td>
+                            </tr>
+                            <tr>
+                                <td class="field">{% trans 'Gps' %}</td>
+                                <td>
+                                    {{locationForm.media}}
+                                    {{locationForm.gps}}
+                                </td>
+                            </tr>
+                            </tbody>
+                        </table>
+                    </div>
+                    <!-- end table -->
+                </div>
+            </div>
+            <!-- end panel -->
+        </div>
+        <!-- end col-6 -->
+    </div>
+    <!-- end row -->
+</div>
+<!-- template -->
+<div id="superbox_template" class="hide">
+    <div id="superbox-list" data-id="##id##" class="superbox-list">
+        <div class="superbox-img-wrap">
+            <a href="#" class="superbox-remove">&times;</a>
+            <a href="#" class="superbox-selected">
+                <i class="fa fa-check-circle"></i>
+            </a>
+            <a href="javascript:;" class="superbox-img">
+                <img data-img="##img##" data-id="##id##"/>
+                <span style="background: url(##img##);"></span>
+            </a>
+        </div>
+    </div>
+</div>
+<!-- end template -->
+{% endblock %}
+{% block js %}
+<script src="{% static 'v2/plugins/superbox/jquery.superbox.min.js' %}"></script>
+<script src="https://releases.transloadit.com/uppy/v2.6.0/uppy.min.js"></script>
+<script src="https://releases.transloadit.com/uppy/locales/v2.0.6/fr_FR.min.js"></script>
+<script src="https://releases.transloadit.com/uppy/locales/v2.0.6/ar_SA.min.js"></script>
+<script src="{% static 'v2/plugins/gritter/js/jquery.gritter.js' %}"></script>
+<script src="{% static 'v2/plugins/jquery-migrate/dist/jquery-migrate.min.js' %}"></script>
+<script src="{% static 'v2/plugins/x-editable-bs4/dist/bootstrap4-editable/js/bootstrap-editable.min.js' %}"></script>
+<script src="{% static 'v2/plugins/x-editable-bs4/dist/inputs-ext/address/address.js' %}"></script>
+<script src="{% static 'v2/plugins/x-editable-bs4/dist/inputs-ext/typeaheadjs/lib/typeahead.js' %}"></script>
+<script src="{% static 'v2/plugins/x-editable-bs4/dist/inputs-ext/typeaheadjs/typeaheadjs.js' %}"></script>
+<script src="{% static 'v2/plugins/x-editable-bs4/dist/inputs-ext/wysihtml5/wysihtml5.js' %}"></script>
+<script src="{% static 'v2/plugins/bootstrap3-wysihtml5-bower/dist/bootstrap3-wysihtml5.all.min.js' %}"></script>
+<script src="{% static 'v2/plugins/select2/dist/js/select2.full.min.js' %}"></script>
+<script>
+	  $(function () {
+        var defaultImages = [
+            {% for vimage in vimages %}
+            {
+                "id": {{vimage.id}},
+                "name": "{{vimage.image.url}}",
+                "default": {{vimage.default|yesno:"true,false" }},
+                "active": {% if clinique.image.id == vimage.id %}true{% else %}false{% endif %}
+            },
+            {% endfor %}
+        ]
+
+        var handleGritterNotification = function() {
+            $.gritter.add({
+                title: 'Information updated',
+                fade_out_speed: 100,
+                fade_in_speed: '100'
+
+            });
+        };
+
+	  	var handleSuperboxGallery = function() {
+			"use strict";
+			$('.superbox').SuperBox({
+				background : '#242a30',
+				border : 'rgba(0,0,0,0.1)',
+				xColor : '#a8acb1',
+				xShadow : 'embed'
+			});
+		};
+
+		var GalleryV2 = function () {
+			"use strict";
+			return {
+				//main function
+				init: function () {
+				    $.each(defaultImages, function (i, img) {
+				        var $clone = $("#superbox_template").clone().removeClass("hide").removeAttr("id");
+				        if (img.default) {
+                            $clone.find(".superbox-remove").remove();
+				        }
+				        if (!img.active) {
+				            $clone.find(".superbox-selected").remove();
+				        }
+                        $clone = $clone.html().replaceAll("##img##", img.name).replaceAll("##id##", img.id);
+                        $("#superbox-container").append($clone);
+                    });
+					handleSuperboxGallery();
+				}
+			};
+		}();
+
+        GalleryV2.init();
+        $("#save-btn").click(function(e) {
+            if ($(".superbox-list").hasClass("superbox-O")) {
+                var data = {
+                    'csrfmiddlewaretoken': "{{ csrf_token }}",
+                    "id": $(".superbox-list.superbox-O").data("id")
+                }
+                $.post("{% url 'update-virtual-office' %}",  data ,function(data, status){
+                    handleGritterNotification();
+                });
+            }
+            else {
+                alert("Select an image");
+            }
+        });
+
+        var uppy = new Uppy.Core({"autoProceed": true})
+            .use(Uppy.FileInput, { target: '#UppyInput', pretty: true })
+                .use(Uppy.StatusBar, {
+                    id: 'StatusBar',
+                    hideAfterFinish: true,
+                    showProgressDetails: true,
+                    target: '#UppyInput-Progress',
+                    locale: Uppy.locales.fr_FR
+            })
+            .use(Uppy.XHRUpload, {
+                fieldName: 'image',
+                endpoint: '{% url "upload-vcimage" %}',
+                headers: {
+                    'X-CSRFToken': "{{ csrf_token }}"
+                }
+            });
+
+        uppy.on('file-added', (file) => {
+            uppy.setFileMeta(file.id, {
+                t: "1"
+            })
+        });
+        uppy.on("upload-success", (status, event) => {
+            defaultImages.unshift({"id": event.body.image_id, "name": event.body.image_url});
+            $("#superbox-container").html("");
+            GalleryV2.init();
+        });
+
+        //xeditable
+        $.fn.editable.defaults.mode = 'inline';
+        $.fn.editable.defaults.emptytext = '{% trans "Cliquez pour modifier" %}';
+		$.fn.editable.defaults.inputclass = 'form-control input-sm';
+        $('#titre, #description, #facebook, #instagram, #pageweb, #fixe, #mobile, #prestations').editable();
+        $('#video').editable({
+            success: function(response, newValue) {
+              $(this).html('$' + newValue);
+              console.log(response);
+              $("#video-container").html(response.video_html);
+            }
+        });
+        var cTmp='{{clinique.pays.id|default_if_none:""}}';
+        $('#pays').editable({
+		    type: 'select2',
+		    tpl: '<select id="country-select"></select>',
+		    id: function (item) {
+                return item.id;
+            },
+			select2: {
+			    ajax: {
+                    dataType: 'json',
+                    url: "{% url 'country-autocomplete' %}",
+                    data: function (params) {
+                        var query = {
+                            q: params.term,
+                            page: params.page
+                        }
+                      return query;
+                    },
+                    results: function (data, page) {
+                        return { results: data.results };
+                    }
+                },
+				width: 200,
+				placeholder: '{% trans "Select country" %}',
+				allowClear: true,
+			},
+            display: function(value, sourceData, response) {
+                var that = $(this);
+                cTmp = value;
+                $.get( "/api/country/" + value, function( data ) {
+                    $(that).html(data.name);
+                });
+            }
+
+		});
+		$('#ville').editable({
+			tpl: '<select id="city-select"></select>',
+			select2: {
+			    ajax: {
+                    dataType: 'json',
+                    url: "{% url 'city-autocomplete' %}",
+                    data: function (params) {
+                        var query = {
+                            q: params.term,
+                            page: params.page
+                        }
+                        if (cTmp)  {
+                            query["forward"] = '{"country":' + cTmp + '}';
+                        }
+                      return query;
+                    },
+                    results: function (data, page) {
+                        return { results: data.results };
+                    }
+                },
+				width: 200,
+				placeholder: '{% trans "Select city" %}',
+				allowClear: true
+			},
+			display: function(value, sourceData, response) {
+                var that = $(this);
+                $.get( "/api/city/" + value, function( data ) {
+                    $(that).html(data.name);
+                });
+            }
+		});
+
+        //remove image
+        $(".superbox-remove").click(function(e) {
+            $that = $(this);
+            e.preventDefault();
+            e.stopPropagation();
+            var vimgid = $(this).closest(".superbox-list").data("id");
+            var data = {
+                "id": vimgid,
+                'csrfmiddlewaretoken': "{{ csrf_token }}",
+            }
+            $.post("{% url 'remove-vcimage' %}",  data ,function(data, status){
+                $that.closest(".superbox-list").remove();
+            });
+        });
+
+        //
+        /* TODO: this code is not working */
+        $('body').on('change', 'input[name="gps"]', function() {
+            console.log("dfsdf");
+            var data = {
+                'csrfmiddlewaretoken': "{{ csrf_token }}",
+                "name": "gps",
+                "value": $('#id_gps').val()
+            }
+            $.post("{% url 'update-virtual-office' %}",  data ,function(data, status){
+
+            });
+        });
+	  });
+</script>
+{% endblock %}

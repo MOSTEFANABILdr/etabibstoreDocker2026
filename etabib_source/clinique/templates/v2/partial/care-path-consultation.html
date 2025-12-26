@@ -1,0 +1,81 @@
+{% load i18n historique_tags %}
+<div class="timeline-content">
+    <div class="row">
+        <div class="col-lg-4 col-sm-12">
+            <div class="note note-light">
+                <div class="note-content">
+                    <h6><b>{% trans 'Motif' %}</b></h6>
+                    <p> {{ consultation | consultation_motif }}</p>
+                </div>
+            </div>
+        </div>
+        <div class="col-lg-4 col-sm-12">
+            <div class="note note-light">
+                <div class="note-content">
+                    <h6><b>{% trans 'Interrogatoire' %}</b></h6>
+                    <p>{{ consultation | consultation_interrogatoire }}</p>
+                </div>
+            </div>
+        </div>
+        <div class="col-lg-4 col-sm-12">
+            <div class="note note-light">
+                <div class="note-content">
+                    <h6><b>{% trans 'Diagnostique supposé' %}</b></h6>
+                    <p>{{ consultation | consultation_diagsuppose }}</p>
+                </div>
+            </div>
+        </div>
+    </div>
+    <div class="row">
+        <div class="col-lg-4 col-sm-12">
+            <div class="note note-light">
+                <div class="note-content">
+                    <h6><b>{% trans 'Examen Clinique' %}</b></h6>
+                    <p>{{ consultation | consultation_examenclinique }}</p>
+                </div>
+            </div>
+        </div>
+        <div class="col-lg-4 col-sm-12">
+            <div class="note note-light">
+                <div class="note-content">
+                    <h6><b>{% trans 'Examen Demandé' %}</b></h6>
+                    <p>{{ consultation | consultation_examendemande }} </p>
+                </div>
+            </div>
+        </div>
+        <div class="col-lg-4 col-sm-12">
+            <div class="note note-light">
+                <div class="note-content">
+                    <h6><b>{% trans 'Résultats Examen' %}</b></h6>
+                    <p>{{ consultation | consultation_resultatexamen }}</p>
+                </div>
+            </div>
+        </div>
+    </div>
+    <div class="row">
+        <div class="col-lg-6 col-sm-12">
+            <div class="note note-light">
+                <div class="note-content">
+                    <h6><b>{% trans 'Diagnostique Retenu' %}</b></h6>
+                    <p>{{ consultation | consultation_diagretenu }}</p>
+                </div>
+            </div>
+        </div>
+        <div class="col-lg-6 col-sm-12">
+            <div class="note note-light">
+                <div class="note-content">
+                    <h6><b>{% trans 'Conduite a Tenir' %}</b></h6>
+                    <p>{{ consultation | consultation_conduitetenir }} </p>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+<div class="timeline-footer">
+    <a href="{% url 'consultation-update' consultation.id %}"
+       data-fm-ok="{% trans 'Modifier' %}" data-fm-cancel="{% trans 'Annuler' %}"
+       class="m-r-15 btn btn-default fm-update" data-fm-callback="reload">
+        <i class="fa fa-edit"></i>
+        {% trans "Modifier" %}
+    </a>
+</div>

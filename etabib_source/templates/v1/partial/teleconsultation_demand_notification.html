@@ -1,0 +1,17 @@
+{% load i18n role_tags%}
+<div class='text-center'>
+    <a class='btn btn-sm btn-default' href='{{teleconsultation_url}}'
+       onclick="Lobibox.notify.closeAll();"
+       target="_blank">
+        <i class='fa fa-check'></i> {% trans 'Accpter' %}
+    </a>
+    {% if recipient|is_doctor %}
+        <a href="{% url 'doctor-im-busy' teleconsultationDemand.pk %}?notif_id={{notification_id}}" class="fm-create btn btn-sm btn-danger"
+           onclick="Lobibox.notify.closeAll();"
+           data-fm-head="{% trans 'Activer les notifications après' %}"
+           data-fm-callback="reload">
+            <i class="fa fa-remove"></i>
+            {% trans 'Je suis occupé' %}
+        </a>
+    {% endif %}
+</div>
